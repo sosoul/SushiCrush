@@ -1,0 +1,48 @@
+﻿Build started 2014/11/17 22:09:35.
+     1>Project "E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\proj.win32\SushiCrash.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\cocos\audio\include" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\external" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\external\chipmunk\include\chipmunk" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\extensions" /I..\Classes /I.. /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\cocos\editor-support" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\cocos" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\cocos\platform" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\cocos\platform\desktop" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\external\glfw3\include\win32" /I"E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\external\win32-specific\gles\include\OGLES" /ZI /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USE_MATH_DEFINES /D GL_GLEXT_PROTOTYPES /D CC_ENABLE_CHIPMUNK_INTEGRATION=1 /D COCOS2D_DEBUG=1 /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _VARIADIC_MAX=10 /D _USING_V110_SDK71_ /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc120.pdb" /Gd /TP /wd4267 /wd4251 /wd4244 /analyze- /errorReport:prompt ..\Classes\AppDelegate.cpp ..\Classes\View\Layer\PlayLayer.cpp ..\Classes\View\Sprite\SushiSprite.cpp
+         AppDelegate.cpp
+         PlayLayer.cpp
+         SushiSprite.cpp
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\sprite\sushisprite.cpp(84): warning C4996: 'cocos2d::Sprite::setDisplayFrame': was declared deprecated
+                 e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\cocos2d\cocos\2d\ccsprite.h(231) : see declaration of 'cocos2d::Sprite::setDisplayFrame'
+                 e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\cocos2d\cocos\2d\ccsprite.h(231) : see declaration of 'cocos2d::Sprite::setDisplayFrame'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(209): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(495): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(496): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(525): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(526): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(558): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>e:\download codes\cocos2d-x-3.3rc0\projects\sushicrash\classes\view\layer\playlayer.cpp(580): warning C4305: 'argument' : truncation from 'double' to 'float'
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\bin\rc.exe /D _USING_V110_SDK71_ /D _UNICODE /D UNICODE /l"0x0409" /nologo /fo"Debug.win32\game.res" game.rc 
+       PreLinkEvent:
+         if not exist "E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\" mkdir "E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\"
+         xcopy /Y /Q "E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\cocos2d\cocos\2d\..\..\external\websockets\prebuilt\win32\*.*" "E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\"
+         :VCEnd
+         复制了 2 个文件
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\SushiCrash.exe" /INCREMENTAL /NOLOGO /LIBPATH:"E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\\" /LIBPATH:"E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\\" opengl32.lib glew32.lib libzlib.lib libpng.lib libjpeg.lib libtiff.lib libwebp.lib libiconv.lib glfw3.lib freetype250.lib winmm.lib ws2_32.lib libchipmunk.lib libbox2d.lib libSpine.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\SushiCrash.pdb" /SUBSYSTEM:WINDOWS,"5.01" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\SushiCrash.lib" /MACHINE:X86 /SAFESEH Debug.win32\game.res
+         Debug.win32\AppDelegate.obj
+         Debug.win32\GameController.obj
+         Debug.win32\HelloWorldScene.obj
+         Debug.win32\TypeDefine.obj
+         Debug.win32\MainLayer.obj
+         Debug.win32\MovesLayer.obj
+         Debug.win32\PlayLayer.obj
+         Debug.win32\ScoreLayer.obj
+         Debug.win32\TargetLayer.obj
+         Debug.win32\SushiSprite.obj
+         Debug.win32\main.obj
+         "E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\libcocos2d.lib"
+         "E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\libSpine.lib"
+         "E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\libbox2d.lib"
+     1>AppDelegate.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+            Creating library E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\SushiCrash.lib and object E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\SushiCrash.exp
+         SushiCrash.vcxproj -> E:\Download Codes\cocos2d-x-3.3rc0\build\Debug.win32\SushiCrash.exe
+     1>Done Building Project "E:\Download Codes\cocos2d-x-3.3rc0\projects\SushiCrash\proj.win32\SushiCrash.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.83

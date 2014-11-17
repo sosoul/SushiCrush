@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{cbf27687-a65d-4f4f-8323-8ea5110bc490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{96bae0ba-b993-4602-b6ea-9401c9681dfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Layer">
+      <UniqueIdentifier>{19c5025e-5ffd-4607-aa67-4193d848370c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Sprite">
+      <UniqueIdentifier>{abeb23a9-7b0d-4d97-a77b-d73ae6bd6875}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\Controller\GameController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\MovesLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\PlayLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\ScoreLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\TargetLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Sprite\SushiSprite.cpp">
+      <Filter>View\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\MainLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TypeDefine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\Controller\GameController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\MovesLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\PlayLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\ScoreLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\TargetLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Sprite\SushiSprite.h">
+      <Filter>View\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\MainLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TypeDefine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
