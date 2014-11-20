@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0AED0D38-BD47-4061-BBDA-A7C87B7FAAE8}</ProjectGuid>
+    <ProjectGuid>{76A39BB2-9B84-4C65-98A5-654D86B86F2A}</ProjectGuid>
     <RootNamespace>test_win32</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
@@ -140,12 +140,12 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Controller\GameController.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
-    <ClCompile Include="..\Classes\TypeDefine.cpp" />
     <ClCompile Include="..\Classes\View\Layer\MainLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\MovesLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\PlayLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\ScoreLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\TargetLayer.cpp" />
+    <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp" />
     <ClCompile Include="..\Classes\View\Sprite\SushiSprite.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -153,12 +153,15 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Controller\GameController.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
-    <ClInclude Include="..\Classes\TypeDefine.h" />
+    <ClInclude Include="..\Classes\Messages.h" />
+    <ClInclude Include="..\Classes\Resource.h" />
+    <ClInclude Include="..\Classes\Types.h" />
     <ClInclude Include="..\Classes\View\Layer\MainLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\MovesLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\PlayLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\ScoreLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\TargetLayer.h" />
+    <ClInclude Include="..\Classes\View\Scene\PlayScene.h" />
     <ClInclude Include="..\Classes\View\Sprite\SushiSprite.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

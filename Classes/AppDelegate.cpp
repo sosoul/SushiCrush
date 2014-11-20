@@ -2,6 +2,9 @@
 
 #include "HelloWorldScene.h"
 #include "View/Layer/PlayLayer.h"
+#include "Controller/GameController.h"
+#include "View/Layer/MainLayer.h"
+#include "View/Scene/PlayScene.h"
 
 USING_NS_CC;
 
@@ -25,6 +28,8 @@ void AppDelegate::initGLContextAttrs()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+	initialize();
+
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
@@ -34,9 +39,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
 	// resolution adaption
-	glview->setDesignResolutionSize(320.0, 480.0, ResolutionPolicy::SHOW_ALL);
+	glview->setDesignResolutionSize(720, 480.0, ResolutionPolicy::SHOW_ALL);
 	std::vector<std::string> searchPath;
 	searchPath.push_back("w640");
+	searchPath.push_back("fonts");
 	CCFileUtils::getInstance()->setSearchPaths(searchPath);
 	director->setContentScaleFactor(640.0 / 320.0);
 
@@ -47,7 +53,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-	auto scene = PlayLayer::createScene();
+	//auto scene = MainLayer::createScene();
+	auto scene = PlayScene::create();
+	//auto scene = new PlayScene();
 
     // run
     director->runWithScene(scene);
@@ -69,4 +77,8 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+}
+
+void AppDelegate::initialize() {
+	GameController::getInstance()->init();
 }

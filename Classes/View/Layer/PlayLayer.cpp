@@ -1,5 +1,8 @@
 #include "View/Layer/PlayLayer.h"
 
+#include "Controller/GameController.h"
+#include "Messages.h"
+#include "Types.h"
 #include "View/Sprite/SushiSprite.h"
 
 #define MATRIX_WIDTH (7)
@@ -18,7 +21,8 @@ PlayLayer::PlayLayer() : m_spriteSheet(NULL),
 						 m_isTouchEnable(true),
 						 m_srcSushi(NULL),
 						 m_destSushi(NULL),
-						 m_movingVertical(true)  // drop animation is vertical
+						 m_movingVertical(true),  // drop animation is vertical
+						 m_round(1)
 {
 }
 
@@ -43,9 +47,15 @@ bool PlayLayer::init()
 		return false;
 	}
 
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayLayer::onRoundChanged),
+		MSG_ROUND_CHANGED, nullptr);
+
+	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	onRoundChanged((Ref*)(intptr_t)roundInfo.m_round);
+
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("background.png");
+	auto background = Sprite::create("playBackground.png");
 	background->setAnchorPoint(Point(0, 1));
 	background->setPosition(Point(0, winSize.height));
 	this->addChild(background);
@@ -60,7 +70,7 @@ bool PlayLayer::init()
 	m_height = MATRIX_HEIGHT;
 
 	// init position value
-	m_matrixLeftBottomX = (winSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
+	m_matrixLeftBottomX = 0;// (winSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
 	m_matrixLeftBottomY = (winSize.height - SushiSprite::getContentWidth() * m_height - (m_height - 1) * SUSHI_GAP) / 2;
 
 	// init point array
@@ -235,6 +245,7 @@ void PlayLayer::swapSushi()
 		|| rowChainListOfFirst.size() >= 3
 		|| colChainListOfSecond.size() >= 3
 		|| rowChainListOfSecond.size() >= 3) {
+		GameController::getInstance()->onSwapSushiCompleted();
 		// just swap
 		m_srcSushi->runAction(MoveTo::create(time, posOfDest));
 		m_destSushi->runAction(MoveTo::create(time, posOfSrc));
@@ -464,6 +475,8 @@ void PlayLayer::removeSushi()
 	// make sequence remove
 	m_isAnimationing = true;
 
+	int removeCount = 0;
+
 	for (int i = 0; i < m_height * m_width; i++) {
 		SushiSprite *sushi = m_matrix[i];
 		if (!sushi) {
@@ -483,9 +496,11 @@ void PlayLayer::removeSushi()
 				explodeSpecialV(sushi->getPosition());
 			}
 			explodeSushi(sushi);
-
+			++removeCount;
 		}
 	}
+	if (0 != removeCount)
+		GameController::getInstance()->onRemoveSushiCompleted(removeCount);
 }
 
 void PlayLayer::explodeSpecialH(Point point)
@@ -677,4 +692,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 			}
 		}
 	}
+}
+
+void PlayLayer::onRoundChanged(Ref* obj) {
 }

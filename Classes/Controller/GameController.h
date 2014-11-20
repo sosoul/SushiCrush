@@ -1,52 +1,41 @@
 #ifndef __CONTROLLER_GAME_CONTROLLER_H__
 #define __CONTROLLER_GAME_CONTROLLER_H__
 
+#include "Types.h"
 #include "View/Layer/PlayLayer.h"
-
-namespace {
 
 #define TOTAL_ROUND	(10)
 
-class GamController : public PlayLayer::Delegate
+class GameController : public Ref
 {
 public:
-	struct RoundInfo {
-		int m_round;
-		int m_totalMoves;
-		int m_leftMoves;
-		int m_gotScore;
-		int m_targetScroe;
+	static GameController *getInstance();
+	static void destroyInstance();
 
-		RoundInfo() : m_round(0),
-					  m_totalMoves(0),
-					  m_leftMoves(0),
-					  m_gotScore(0),
-					  m_targetScroe(0) {
-		}
-	};
-
-	GamController();
-	~GamController();
+	GameController();
+	~GameController();
 
 	void init();
+	void uninit();
+	const RoundInfo& get_cur_round_info() { return m_curRoundInfo; }
+	RoundInfo* getRoundInfo(int round);
 
-	// Overridden from Player::Delegate
-	virtual void onRemoveSushiCompleted(int count) override;
-
+	void onSwapSushiCompleted();
+	void onRemoveSushiCompleted(int count);
 	void roundChanged(int curRound);
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
 
-private:
-	void writeToDB(RoundInfo* m_curRoundInfo);
 
-	typedef std::vector<RoundInfo*> RoundInfoVec;
-	typedef RoundInfoVec::iterator RoundInfoVecIt;
-	RoundInfoVec m_roundInfoList;
-	RoundInfo* m_curRoundInfo;
+private:
+	void writeToDB(const RoundInfo& m_curRoundInfo);
+
+	typedef std::map<int, RoundInfo> RoundInfMap;
+	typedef RoundInfMap::iterator RoundInfMapIt;
+	RoundInfMap m_roundInfoMap;
+	RoundInfo m_curRoundInfo;
 
 };
 
-}  // namespace
 
 #endif // __CONTROLLER_GAME_CONTROLLER_H__

@@ -22,6 +22,9 @@
     <Filter Include="View\Sprite">
       <UniqueIdentifier>{abeb23a9-7b0d-4d97-a77b-d73ae6bd6875}</UniqueIdentifier>
     </Filter>
+    <Filter Include="View\Scene">
+      <UniqueIdentifier>{c6ac9f29-ed1e-44f4-8dbd-79e74f6a77aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -50,7 +53,9 @@
     <ClCompile Include="..\Classes\View\Layer\MainLayer.cpp">
       <Filter>View\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\TypeDefine.cpp" />
+    <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp">
+      <Filter>View\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -79,7 +84,12 @@
     <ClInclude Include="..\Classes\View\Layer\MainLayer.h">
       <Filter>View\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\TypeDefine.h" />
+    <ClInclude Include="..\Classes\Messages.h" />
+    <ClInclude Include="..\Classes\Types.h" />
+    <ClInclude Include="..\Classes\Resource.h" />
+    <ClInclude Include="..\Classes\View\Scene\PlayScene.h">
+      <Filter>View\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

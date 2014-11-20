@@ -14,6 +14,10 @@ public:
 
 	virtual bool init() override;
 
+	// notifications
+	void onRoundChanged(Ref* obj);
+	void onScoreChanged(Ref* obj);
+
 private:
 
 };

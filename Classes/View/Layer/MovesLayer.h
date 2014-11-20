@@ -12,8 +12,14 @@ public:
 	~MovesLayer();
 	CREATE_FUNC(MovesLayer);
 
-private:
+	virtual bool init() override;
 
+	// notifications
+	void onRoundChanged(Ref* obj);
+	void onMovesChanged(Ref* obj);
+
+private:
+	LabelAtlas* label_;
 };
 
 #endif // __VIEW_LAYER_MOVES_LAYER_H__

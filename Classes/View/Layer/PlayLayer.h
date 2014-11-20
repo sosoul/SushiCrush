@@ -10,13 +10,6 @@ class SushiSprite;
 class PlayLayer : public Layer
 {
 public:
-	class Delegate {
-	public:
-		virtual void onRemoveSushiCompleted(int count) {}
-	protected:
-		Delegate() {}
-		~Delegate() {}
-	};
 	PlayLayer();
 	~PlayLayer();
 	static Scene* createScene();
@@ -26,6 +19,9 @@ public:
 	virtual void update(float dt) override;
 	virtual bool onTouchBegan(Touch *touch, Event *unused) override;
 	virtual void onTouchMoved(Touch *touch, Event *unused) override;
+
+	// notifications
+	void onRoundChanged(Ref* obj);
 
 private:
 	SpriteBatchNode *m_spriteSheet;
@@ -60,8 +56,8 @@ private:
 	void swapSushi();
 	void markRemove(SushiSprite *sushi);
 
-	Delegate* delegate_;
-	void set_delegate(Delegate* delegate) { delegate_ = delegate; }
+	int m_round;
+	
 };
 
 #endif // __PLAY_LAYER_H__

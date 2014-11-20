@@ -12,6 +12,11 @@ public:
 	~MainLayer();
 	CREATE_FUNC(MainLayer);
 
+	virtual bool init() override;
+
+	// notifications
+	void onRoundChanged(Ref* obj);
+
 private:
 
 };

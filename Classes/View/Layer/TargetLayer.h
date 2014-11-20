@@ -14,8 +14,10 @@ public:
 
 	virtual bool init() override;
 
+	void onRoundChanged(Ref* obj);
+
 private:
-	void roundChanged(Ref* obj);
+	
 
 };
 
