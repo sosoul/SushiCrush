@@ -56,6 +56,12 @@
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp">
       <Filter>View\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\PostPlayLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\PrePlayLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -89,6 +95,12 @@
     <ClInclude Include="..\Classes\Resource.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h">
       <Filter>View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\PostPlayLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\PrePlayLayer.h">
+      <Filter>View\Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

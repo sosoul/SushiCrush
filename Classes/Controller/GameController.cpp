@@ -57,19 +57,65 @@ void GameController::onSwapSushiCompleted() {
 	if (0 == m_curRoundInfo.m_leftMoves) {
 		if (m_curRoundInfo.m_gotScore < m_curRoundInfo.m_targetScroe) {
 			//CCASSERT(false, "You lose!");
-			NotificationCenter::getInstance()->postNotification(MSG_ROUND_COMPLETED, (Ref*)(false));
+			//NotificationCenter::getInstance()->postNotification(MSG_ROUND_COMPLETED, (Ref*)(false));
+			//return;
+
+			//NotificationCenter::getInstance()->postNotification(MSG_TARGET_FAIL, (Ref*)(false));
+			targetFail();
+
 			return;
 		}
-
+		targetSuccess();
 		// achieve the target score, go into next round
-		int round = m_curRoundInfo.m_round;
-		++round;
-		CCASSERT(round > 0, "Error round!");
-		CCASSERT(round != TOTAL_ROUND, "Game Over.");
-		writeToDB(m_curRoundInfo);
-		m_curRoundInfo = m_roundInfoMap[round];
-		roundChanged(round);
+		//int round = m_curRoundInfo.m_round;
+		//++round;
+		//CCASSERT(round > 0, "Error round!");
+		//CCASSERT(round != TOTAL_ROUND, "Game Over.");
+		//writeToDB(m_curRoundInfo);
+		//m_curRoundInfo = m_roundInfoMap[round];
+		//roundChanged(round);
 	}
+}
+
+void GameController::targetSuccess(){
+
+	//achieve the target score, go into next round
+	int round = m_curRoundInfo.m_round;
+	CCASSERT(round >= 0, "Error round!");
+	CCASSERT(round != TOTAL_ROUND, "Game Over.");
+	writeToDB(m_curRoundInfo);
+
+	NotificationCenter::getInstance()->postNotification(MSG_TARGET_SUCCESS, (Ref*)(&m_curRoundInfo));
+}
+
+void GameController::resume(){
+	//achieve the target score, go into next round
+	int round = m_curRoundInfo.m_round;
+	CCASSERT(round >= 0, "Error round!");
+	CCASSERT(round != TOTAL_ROUND, "Game Over.");
+	writeToDB(m_curRoundInfo);
+	m_curRoundInfo = m_roundInfoMap[round];
+	roundChanged(round);
+
+	NotificationCenter::getInstance()->postNotification(MSG_RESUME, nullptr);
+}
+
+void GameController::nextround(){
+	//achieve the target score, go into next round
+	int round = m_curRoundInfo.m_round;
+	round++;
+	CCASSERT(round >= 0, "Error round!");
+	CCASSERT(round != TOTAL_ROUND, "Game Over.");
+	writeToDB(m_curRoundInfo);
+	m_curRoundInfo = m_roundInfoMap[round];
+	roundChanged(round);
+
+	NotificationCenter::getInstance()->postNotification(MSG_NEXT_ROUND, nullptr);
+}
+
+
+void GameController::targetFail(){
+	NotificationCenter::getInstance()->postNotification(MSG_TARGET_FAIL, (Ref*)(&m_curRoundInfo));
 }
 
 void GameController::onRemoveSushiCompleted(int count) {

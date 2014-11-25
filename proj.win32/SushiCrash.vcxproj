@@ -143,6 +143,8 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\View\Layer\MainLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\MovesLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\PlayLayer.cpp" />
+    <ClCompile Include="..\Classes\View\Layer\PostPlayLayer.cpp" />
+    <ClCompile Include="..\Classes\View\Layer\PrePlayLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\ScoreLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\TargetLayer.cpp" />
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp" />
@@ -159,6 +161,8 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\View\Layer\MainLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\MovesLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\PlayLayer.h" />
+    <ClInclude Include="..\Classes\View\Layer\PostPlayLayer.h" />
+    <ClInclude Include="..\Classes\View\Layer\PrePlayLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\ScoreLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\TargetLayer.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h" />

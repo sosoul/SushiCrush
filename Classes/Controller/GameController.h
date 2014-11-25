@@ -26,6 +26,16 @@ public:
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
 
+	void targetSuccess();
+	void targetFail();
+
+	void resume();
+	void nextround();
+
+
+
+
+
 
 private:
 	void writeToDB(const RoundInfo& m_curRoundInfo);

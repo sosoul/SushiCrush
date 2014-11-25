@@ -37,8 +37,23 @@ void PlayScene::onEnter()
 	addChild(movesLayer);
 	addChild(scoreLayer);
 
+	postPlayLayer = PostPlayLayer::create();
+	Size winSize = Director::getInstance()->getWinSize();
+	postPlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
+	addChild(postPlayLayer);
+	postPlayLayer->setVisible(false);
+
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundCompleted),
 		MSG_ROUND_COMPLETED, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onSuccess),
+		MSG_TARGET_SUCCESS, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onResume),
+		MSG_RESUME, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onNextRound),
+		MSG_NEXT_ROUND, nullptr);
 }
 
 void PlayScene::onRoundCompleted(Ref* obj) {
@@ -54,4 +69,32 @@ void PlayScene::onRoundCompleted(Ref* obj) {
 	auto actionBy = JumpBy::create(2, Vec2(0, 50), 50, 4);
 	auto actionByBack = actionBy->reverse();
 	sprite->runAction(Sequence::create(actionBy, actionByBack, nullptr));
+}
+
+void PlayScene::onSuccess(Ref* obj) {
+	//bool result = (bool)obj;
+	//if (result)
+	//{
+	//	//sprite = Sprite::create(s_pathLose);
+	//}
+	//else
+	//{
+	//	//sprite = Sprite::create(s_pathWin);
+	//}
+	postPlayLayer->setVisible(true);
+
+	/*Size winSize = Director::getInstance()->getWinSize();
+	sprite->setPosition(winSize.width / 2, winSize.height / 2);
+	auto actionBy = JumpBy::create(2, Vec2(0, 50), 50, 4);
+	auto actionByBack = actionBy->reverse();
+	sprite->runAction(Sequence::create(actionBy, actionByBack, nullptr));*/
+}
+
+
+void PlayScene::onResume(Ref* obj) {
+	postPlayLayer->setVisible(false);
+}
+
+void PlayScene::onNextRound(Ref* obj) {
+	postPlayLayer->setVisible(false);
 }
