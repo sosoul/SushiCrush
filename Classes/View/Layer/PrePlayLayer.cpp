@@ -95,7 +95,7 @@ bool PrePlayLayer::init()
 	return true;
 }
 
-void PrePlayLayer::start(Object* object, ui::TouchEventType type)
+void PrePlayLayer::start(Ref* object, ui::TouchEventType type)
 {
 	switch (type)
 	{

@@ -16,7 +16,7 @@ public:
 
 	virtual bool init() override;
 
-	void start(Object* object, ui::TouchEventType type);
+	void start(Ref* object, ui::TouchEventType type);
 	void onResume(Ref* obj);
 	void onNextRound(Ref* obj);
 private:

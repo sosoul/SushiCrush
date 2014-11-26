@@ -16,8 +16,8 @@ public:
 
 	virtual bool init() override;
 
-	void resume(Object* object, ui::TouchEventType type);
-	void nextRound(Object* object, ui::TouchEventType type);
+	void resume(Ref* object, ui::TouchEventType type);
+	void nextRound(Ref* object, ui::TouchEventType type);
 
 	void onTargetSuccess(Ref* obj);
 	void onTargetFail(Ref* obj);

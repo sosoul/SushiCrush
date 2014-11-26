@@ -94,7 +94,7 @@ bool PostPlayLayer::init()
 	return true;
 }
 
-void PostPlayLayer::resume(Object* object, ui::TouchEventType type)
+void PostPlayLayer::resume(Ref* object, ui::TouchEventType type)
 {
 	switch (type)
 	{
@@ -110,7 +110,7 @@ void PostPlayLayer::resume(Object* object, ui::TouchEventType type)
 	}
 }
 
-void PostPlayLayer::nextRound(Object* object, ui::TouchEventType type)
+void PostPlayLayer::nextRound(Ref* object, ui::TouchEventType type)
 {
 	switch (type)
 	{
