@@ -9,6 +9,7 @@
 #define MSG_TARGET_FAIL		"TargetFail"
 #define MSG_RESUME			"Resume"
 #define MSG_NEXT_ROUND		"NextRound"
+#define MSG_START			"Start"
 
 #endif // _MESSAGES_H_
 

@@ -36,12 +36,18 @@ void PlayScene::onEnter()
 	addChild(targetLayer);
 	addChild(movesLayer);
 	addChild(scoreLayer);
+	
+	Size winSize = Director::getInstance()->getWinSize();
 
 	postPlayLayer = PostPlayLayer::create();
-	Size winSize = Director::getInstance()->getWinSize();
 	postPlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
 	addChild(postPlayLayer);
 	postPlayLayer->setVisible(false);
+
+	prePlayLayer = PrePlayLayer::create();
+	prePlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
+	addChild(prePlayLayer);
+	prePlayLayer->setVisible(false);
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundCompleted),
 		MSG_ROUND_COMPLETED, nullptr);
@@ -54,6 +60,9 @@ void PlayScene::onEnter()
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onNextRound),
 		MSG_NEXT_ROUND, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onStart),
+		MSG_START, nullptr);
 }
 
 void PlayScene::onRoundCompleted(Ref* obj) {
@@ -93,8 +102,14 @@ void PlayScene::onSuccess(Ref* obj) {
 
 void PlayScene::onResume(Ref* obj) {
 	postPlayLayer->setVisible(false);
+	prePlayLayer->setVisible(true);
 }
 
 void PlayScene::onNextRound(Ref* obj) {
 	postPlayLayer->setVisible(false);
+	prePlayLayer->setVisible(true);
+}
+
+void PlayScene::onStart(Ref* obj) {
+	prePlayLayer->setVisible(false);
 }

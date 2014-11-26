@@ -95,9 +95,21 @@ void GameController::resume(){
 	CCASSERT(round != TOTAL_ROUND, "Game Over.");
 	writeToDB(m_curRoundInfo);
 	m_curRoundInfo = m_roundInfoMap[round];
+	//roundChanged(round);
+
+	NotificationCenter::getInstance()->postNotification(MSG_RESUME, (Ref*)(&m_curRoundInfo));
+}
+
+void GameController::start(){
+	//achieve the target score, go into next round
+	int round = m_curRoundInfo.m_round;
+	CCASSERT(round >= 0, "Error round!");
+	CCASSERT(round != TOTAL_ROUND, "Game Over.");
+	writeToDB(m_curRoundInfo);
+	m_curRoundInfo = m_roundInfoMap[round];
 	roundChanged(round);
 
-	NotificationCenter::getInstance()->postNotification(MSG_RESUME, nullptr);
+	NotificationCenter::getInstance()->postNotification(MSG_START, nullptr);
 }
 
 void GameController::nextround(){
@@ -108,9 +120,9 @@ void GameController::nextround(){
 	CCASSERT(round != TOTAL_ROUND, "Game Over.");
 	writeToDB(m_curRoundInfo);
 	m_curRoundInfo = m_roundInfoMap[round];
-	roundChanged(round);
+	//roundChanged(round);
 
-	NotificationCenter::getInstance()->postNotification(MSG_NEXT_ROUND, nullptr);
+	NotificationCenter::getInstance()->postNotification(MSG_NEXT_ROUND, (Ref*)(&m_curRoundInfo));
 }
 
 

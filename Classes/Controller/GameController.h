@@ -31,6 +31,7 @@ public:
 
 	void resume();
 	void nextround();
+	void start();
 
 
 
