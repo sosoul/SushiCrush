@@ -796,5 +796,14 @@ void PlayLayer::onRoundEnd(Ref* obj) {
 }
 
 void PlayLayer::onRoundStart(Ref* obj) {
-	
+	SushiSprite *sushi;
+	// 1. reset ingnore flag
+	for (int i = 0; i < m_height * m_width; i++) {
+		sushi = m_matrix[i];
+		if (!sushi) {
+			continue;
+		}
+		sushi->setIsNeedRemove(true);
+		markRemove(sushi);
+	}
 }

@@ -109,6 +109,10 @@ void GameController::onClickStart(){
 
 void GameController::onRemoveSushiCompleted(int count) {
 	// TODO
+	if (m_curRoundInfo.m_leftMoves == m_curRoundInfo.m_totalMoves)
+	{
+		return;
+	}
 	m_curRoundInfo.m_gotScore += count*kPerSushiScore;
 	scoreChanged(m_curRoundInfo.m_gotScore);
 	
