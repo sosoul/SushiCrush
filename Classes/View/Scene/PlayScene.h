@@ -15,16 +15,13 @@ public:
 
 	virtual void onEnter() override;
 
-	void onRoundCompleted(Ref* obj);
-	void onSuccess(Ref* obj);
-
-	void onResume(Ref* obj);
-	void onNextRound(Ref* obj);
-	void onStart(Ref* obj);
+	void onRoundEnd(Ref* obj);
+	void onRoundReady(Ref* obj);
+	void onRoundStart(Ref* obj);
 
 private:
-	PostPlayLayer* postPlayLayer;
-	PrePlayLayer* prePlayLayer;
+	PostPlayLayer* m_postPlayLayer;
+	PrePlayLayer* m_prePlayLayer;
 };
 
 #endif // __VIEW_SCENE_PLAY_SCENE_H__

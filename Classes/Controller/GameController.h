@@ -22,15 +22,17 @@ public:
 
 	void onSwapSushiCompleted();
 	void onRemoveSushiCompleted(int count);
-	void roundChanged(int curRound);
+	void onActualMoveEnd();
+
+
+	void onClickStart();
+	void onClickResume();
+	void onClickGoNextRound();
+
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
 
-	void targetSuccess();
-	void targetFail();
 
-	void resume();
-	void nextround();
 	void start();
 
 

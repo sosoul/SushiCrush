@@ -19,8 +19,7 @@ public:
 	void resume(Ref* object, ui::TouchEventType type);
 	void nextRound(Ref* object, ui::TouchEventType type);
 
-	void onTargetSuccess(Ref* obj);
-	void onTargetFail(Ref* obj);
+	void onRoundEnd(Ref* obj);
 
 private:
 };

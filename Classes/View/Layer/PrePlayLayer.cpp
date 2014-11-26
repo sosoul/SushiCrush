@@ -46,10 +46,8 @@ bool PrePlayLayer::init()
 	if (!Layer::init())
 		return false;
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PrePlayLayer::onResume),
-		MSG_RESUME, nullptr);
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PrePlayLayer::onNextRound),
-		MSG_NEXT_ROUND, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PrePlayLayer::onRoundReady),
+		MSG_ROUND_READY, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -101,7 +99,7 @@ void PrePlayLayer::start(Ref* object, ui::TouchEventType type)
 	{
 	case ui::TouchEventType::TOUCH_EVENT_ENDED:
 	{
-		GameController::getInstance()->start();
+		GameController::getInstance()->onClickStart();
 	}
 		break;
 	default:
@@ -109,31 +107,7 @@ void PrePlayLayer::start(Ref* object, ui::TouchEventType type)
 	}
 }
 
-
-void PrePlayLayer::onResume(Ref* obj)
-{
-	this->setVisible(true);
-	RoundInfo* roundInfo = (RoundInfo*)obj;
-	if (!roundInfo)
-		return;
-	int target = roundInfo->m_targetScroe;
-	int round = roundInfo->m_round;
-	auto labelTarget = (LabelAtlas*)getChildByTag(kLabelTargetTag);
-	labelTarget->setString("target:" + StringUtils::toString(target));
-	auto labelRound = (LabelAtlas*)getChildByTag(kLabelRoundTag);
-	labelRound->setString("round:" + StringUtils::toString(round));
-
-	auto start1 = (Sprite*)getChildByTag(kStart1Tag);
-	start1->setVisible(true);
-	auto start2 = (Sprite*)getChildByTag(kStart2Tag);
-	start2->setVisible(true);
-	auto start3 = (Sprite*)getChildByTag(kStart3Tag);
-	start3->setVisible(true);
-	int score = roundInfo->m_gotScore;
-
-}
-
-void PrePlayLayer::onNextRound(Ref* obj)
+void PrePlayLayer::onRoundReady(Ref* obj)
 {
 	this->setVisible(true);
 	RoundInfo* roundInfo = (RoundInfo*)obj;

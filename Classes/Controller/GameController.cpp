@@ -54,93 +54,64 @@ void GameController::uninit() {
 void GameController::onSwapSushiCompleted() {
 	m_curRoundInfo.m_leftMoves--;
 	movesChanged(m_curRoundInfo.m_leftMoves);
+	
+}
+
+void GameController::onActualMoveEnd() {
 	if (0 == m_curRoundInfo.m_leftMoves) {
 		if (m_curRoundInfo.m_gotScore < m_curRoundInfo.m_targetScroe) {
-			//CCASSERT(false, "You lose!");
-			//NotificationCenter::getInstance()->postNotification(MSG_ROUND_COMPLETED, (Ref*)(false));
-			//return;
-
-			//NotificationCenter::getInstance()->postNotification(MSG_TARGET_FAIL, (Ref*)(false));
-			targetFail();
-
+			NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
 			return;
 		}
-		targetSuccess();
-		// achieve the target score, go into next round
-		//int round = m_curRoundInfo.m_round;
-		//++round;
-		//CCASSERT(round > 0, "Error round!");
-		//CCASSERT(round != TOTAL_ROUND, "Game Over.");
-		//writeToDB(m_curRoundInfo);
-		//m_curRoundInfo = m_roundInfoMap[round];
-		//roundChanged(round);
+		// achieve the target score store relate data
+		int round = m_curRoundInfo.m_round;
+		CCASSERT(round >= 0, "Error round!");
+		CCASSERT(round != TOTAL_ROUND, "Game Over.");
+		writeToDB(m_curRoundInfo);
+		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(true));
+		m_curRoundInfo = m_roundInfoMap[round];
 	}
 }
 
-void GameController::targetSuccess(){
-
-	//achieve the target score, go into next round
-	int round = m_curRoundInfo.m_round;
-	CCASSERT(round >= 0, "Error round!");
-	CCASSERT(round != TOTAL_ROUND, "Game Over.");
-	writeToDB(m_curRoundInfo);
-
-	NotificationCenter::getInstance()->postNotification(MSG_TARGET_SUCCESS, (Ref*)(&m_curRoundInfo));
-}
-
-void GameController::resume(){
-	//achieve the target score, go into next round
+void GameController::onClickResume(){
+	//resume this round
 	int round = m_curRoundInfo.m_round;
 	CCASSERT(round >= 0, "Error round!");
 	CCASSERT(round != TOTAL_ROUND, "Game Over.");
 	writeToDB(m_curRoundInfo);
 	m_curRoundInfo = m_roundInfoMap[round];
-	//roundChanged(round);
 
-	NotificationCenter::getInstance()->postNotification(MSG_RESUME, (Ref*)(&m_curRoundInfo));
+	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
 }
 
-void GameController::start(){
-	//achieve the target score, go into next round
-	int round = m_curRoundInfo.m_round;
-	CCASSERT(round >= 0, "Error round!");
-	CCASSERT(round != TOTAL_ROUND, "Game Over.");
-	writeToDB(m_curRoundInfo);
-	m_curRoundInfo = m_roundInfoMap[round];
-	roundChanged(round);
-
-	NotificationCenter::getInstance()->postNotification(MSG_START, nullptr);
-}
-
-void GameController::nextround(){
-	//achieve the target score, go into next round
+void GameController::onClickGoNextRound(){
+	//go into next round
 	int round = m_curRoundInfo.m_round;
 	round++;
 	CCASSERT(round >= 0, "Error round!");
 	CCASSERT(round != TOTAL_ROUND, "Game Over.");
 	writeToDB(m_curRoundInfo);
 	m_curRoundInfo = m_roundInfoMap[round];
-	//roundChanged(round);
 
-	NotificationCenter::getInstance()->postNotification(MSG_NEXT_ROUND, (Ref*)(&m_curRoundInfo));
+	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
 }
 
+void GameController::onClickStart(){
+	//achieve the target score, go into next round
+	int round = m_curRoundInfo.m_round;
+	CCASSERT(round >= 0, "Error round!");
+	CCASSERT(round != TOTAL_ROUND, "Game Over.");
+	writeToDB(m_curRoundInfo);
+	m_curRoundInfo = m_roundInfoMap[round];
 
-void GameController::targetFail(){
-	NotificationCenter::getInstance()->postNotification(MSG_TARGET_FAIL, (Ref*)(&m_curRoundInfo));
+	NotificationCenter::getInstance()->postNotification(MSG_ROUND_START, (Ref*)(&m_curRoundInfo));
 }
 
 void GameController::onRemoveSushiCompleted(int count) {
 	// TODO
-
 	m_curRoundInfo.m_gotScore += count*kPerSushiScore;
 	scoreChanged(m_curRoundInfo.m_gotScore);
 	
-}
-
-void GameController::roundChanged(int curRound) {
-	NotificationCenter::getInstance()->postNotification(MSG_ROUND_COMPLETED, (Ref*)(false));
-	NotificationCenter::getInstance()->postNotification(MSG_ROUND_CHANGED, (Ref*)(intptr_t)curRound);
 }
 
 void GameController::movesChanged(int leftMoves) {

@@ -21,7 +21,8 @@ public:
 	virtual void onTouchMoved(Touch *touch, Event *unused) override;
 
 	// notifications
-	void onRoundChanged(Ref* obj);
+	void onRoundEnd(Ref* obj);
+	void onRoundStart(Ref* obj);
 
 private:
 	SpriteBatchNode *m_spriteSheet;
@@ -55,7 +56,7 @@ private:
 	SushiSprite *sushiOfPoint(Point *point);
 	void swapSushi();
 	void markRemove(SushiSprite *sushi);
-
+	bool checkActualRoundEnd();
 	int m_round;
 	
 };

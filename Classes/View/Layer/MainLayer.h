@@ -16,7 +16,7 @@ public:
 	virtual bool init() override;
 
 	// notifications
-	void onRoundChanged(Ref* obj);
+	void onRoundReady(Ref* obj);
 
 private:
 	void onBackToStartButtonTouched(Ref *pSender, ui::TouchEventType type);

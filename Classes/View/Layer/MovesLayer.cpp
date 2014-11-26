@@ -29,8 +29,10 @@ bool MovesLayer::init() {
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MovesLayer::onMovesChanged),
 		MSG_MOVES_CHANGED, nullptr);
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MovesLayer::onRoundChanged),
-		MSG_ROUND_CHANGED, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MovesLayer::onRoundEnd),
+		MSG_ROUND_END, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MovesLayer::onRoundReady),
+		MSG_ROUND_READY, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -62,12 +64,20 @@ void MovesLayer::onMovesChanged(Ref* obj) {
 	labelMoves->setString(StringUtils::toString(moves));
 }
 
-void MovesLayer::onRoundChanged(Ref* obj) {
-	int round = (int)obj;
-	RoundInfo* roundInfo = GameController::getInstance()->getRoundInfo(round);
+void MovesLayer::onRoundEnd(Ref* obj) {
+	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	int moves = roundInfo.m_totalMoves;
+	auto labelMoves = (LabelAtlas*)getChildByTag(kLabelMovesTag);
+	labelMoves->setString(StringUtils::toString(moves));
+}
+
+
+void MovesLayer::onRoundReady(Ref* obj)
+{
+	RoundInfo* roundInfo = (RoundInfo*)obj;
 	if (!roundInfo)
 		return;
-	int moves = roundInfo->m_totalMoves;
 	auto labelMoves = (LabelAtlas*)getChildByTag(kLabelMovesTag);
+	int moves = roundInfo->m_totalMoves;
 	labelMoves->setString(StringUtils::toString(moves));
 }

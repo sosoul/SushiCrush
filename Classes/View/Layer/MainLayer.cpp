@@ -21,8 +21,8 @@ bool MainLayer::init() {
 	if (!Layer::init())
 		return false;
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundChanged),
-		MSG_ROUND_CHANGED, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundReady),
+		MSG_ROUND_READY, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -38,9 +38,10 @@ bool MainLayer::init() {
 	backToStartButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
 	addChild(backToStartButton);
 	backToStartButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackToStartButtonTouched));
+	return true;
 }
 
-void MainLayer::onRoundChanged(Ref* obj) {
+void MainLayer::onRoundReady(Ref* obj) {
 }
 
 void MainLayer::onBackToStartButtonTouched(Ref *pSender, ui::TouchEventType type) {

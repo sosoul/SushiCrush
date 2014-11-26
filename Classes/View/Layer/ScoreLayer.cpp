@@ -25,8 +25,10 @@ ScoreLayer::~ScoreLayer()
 bool ScoreLayer::init() {
 	if (!Layer::init())
 		return false;
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(ScoreLayer::onRoundChanged),
-		MSG_ROUND_CHANGED, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(ScoreLayer::onRoundEnd),
+		MSG_ROUND_END, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(ScoreLayer::onRoundReady),
+		MSG_ROUND_READY, nullptr);
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(ScoreLayer::onScoreChanged),
 		MSG_SCORE_CHANGED, nullptr);
 
@@ -59,7 +61,12 @@ void ScoreLayer::onScoreChanged(Ref* obj) {
 	labelScore->setString(StringUtils::toString(score));
 }
 
-void ScoreLayer::onRoundChanged(Ref* obj) {
+void ScoreLayer::onRoundEnd(Ref* obj) {
+	
+}
+
+void ScoreLayer::onRoundReady(Ref* obj)
+{
 	auto labelScore = (LabelAtlas*)getChildByTag(kLabelScoreTag);
-	labelScore->setString("0");
+	labelScore->setString(StringUtils::toString(0));
 }

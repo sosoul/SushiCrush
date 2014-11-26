@@ -47,11 +47,11 @@ bool PlayLayer::init()
 		return false;
 	}
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayLayer::onRoundChanged),
-		MSG_ROUND_CHANGED, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayLayer::onRoundEnd),
+		MSG_ROUND_END, nullptr);
 
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	onRoundChanged((Ref*)(intptr_t)roundInfo.m_round);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayLayer::onRoundStart),
+		MSG_ROUND_START, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -400,6 +400,95 @@ void PlayLayer::checkAndRemoveChain()
 	removeSushi();
 }
 
+bool PlayLayer::checkActualRoundEnd()
+{
+	SushiSprite *sushi;
+	// 1. reset ingnore flag
+	for (int i = 0; i < m_height * m_width; i++) {
+		sushi = m_matrix[i];
+		if (!sushi) {
+			continue;
+		}
+		sushi->setIgnoreCheck(false);
+	}
+
+	// 2. check chain
+	for (int i = 0; i < m_height * m_width; i++) {
+		sushi = m_matrix[i];
+		if (!sushi) {
+			continue;
+		}
+
+		if (sushi->getIsNeedRemove()) {
+			continue;// 已标记过的跳过检查
+		}
+		if (sushi->getIgnoreCheck()) {
+			continue;// 新变化的特殊寿司，不消除
+		}
+
+		// start count chain
+		std::list<SushiSprite *> colChainList;
+		getColChain(sushi, colChainList);
+
+		std::list<SushiSprite *> rowChainList;
+		getRowChain(sushi, rowChainList);
+
+		std::list<SushiSprite *> &longerList = colChainList.size() > rowChainList.size() ? colChainList : rowChainList;
+		if (longerList.size() < 3) {
+			continue;// 小于3个不消除
+		}
+
+		std::list<SushiSprite *>::iterator itList;
+		bool isSetedIgnoreCheck = false;
+		for (itList = longerList.begin(); itList != longerList.end(); itList++) {
+			sushi = (SushiSprite *)*itList;
+			if (!sushi) {
+				continue;
+			}
+
+			if (longerList.size() > 3) {
+				// 4消产生特殊寿司
+				if (sushi == m_srcSushi || sushi == m_destSushi) {
+					isSetedIgnoreCheck = true;
+					sushi->setIgnoreCheck(true);
+					sushi->setIsNeedRemove(false);
+					sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_VERTICAL : DISPLAY_MODE_HORIZONTAL);
+					continue;
+				}
+			}
+
+			markRemove(sushi);
+		}
+
+		// 如何是自由掉落产生的4消, 取最后一个变化为特殊寿司
+		if (!isSetedIgnoreCheck && longerList.size() > 3) {
+			sushi->setIgnoreCheck(true);
+			sushi->setIsNeedRemove(false);
+			sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_VERTICAL : DISPLAY_MODE_HORIZONTAL);
+		}
+	}
+
+	int removeCount = 0;
+
+	for (int i = 0; i < m_height * m_width; i++) {
+		SushiSprite *sushi = m_matrix[i];
+		if (!sushi) {
+			continue;
+		}
+
+		if (sushi->getIsNeedRemove()) {
+			++removeCount;
+		}
+	}
+	if (0 != removeCount)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
 void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList)
 {
 	chainList.push_back(sushi);// add first sushi
@@ -500,7 +589,9 @@ void PlayLayer::removeSushi()
 		}
 	}
 	if (0 != removeCount)
+	{
 		GameController::getInstance()->onRemoveSushiCompleted(removeCount);
+	}
 }
 
 void PlayLayer::explodeSpecialH(Point point)
@@ -647,6 +738,12 @@ void PlayLayer::fillVacancies()
 	}
 
 	free(colEmptyInfo);
+
+	bool isActualEnd = checkActualRoundEnd();
+	if (isActualEnd)
+	{
+		GameController::getInstance()->onActualMoveEnd();
+	}
 }
 
 void PlayLayer::markRemove(SushiSprite *sushi)
@@ -694,5 +791,10 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 	}
 }
 
-void PlayLayer::onRoundChanged(Ref* obj) {
+void PlayLayer::onRoundEnd(Ref* obj) {
+
+}
+
+void PlayLayer::onRoundStart(Ref* obj) {
+	
 }

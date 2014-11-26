@@ -15,9 +15,9 @@ public:
 	virtual bool init() override;
 
 	// notifications
-	void onRoundChanged(Ref* obj);
+	void onRoundEnd(Ref* obj);
 	void onScoreChanged(Ref* obj);
-
+	void onRoundReady(Ref* obj);
 private:
 
 };

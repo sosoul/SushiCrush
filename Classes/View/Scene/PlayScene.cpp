@@ -34,77 +34,49 @@ void PlayScene::onEnter()
 	
 	Size winSize = Director::getInstance()->getWinSize();
 
-	postPlayLayer = PostPlayLayer::create();
-	postPlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
-	addChild(postPlayLayer);
-	postPlayLayer->setVisible(false);
+	m_postPlayLayer = PostPlayLayer::create();
+	m_postPlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
+	addChild(m_postPlayLayer);
+	m_postPlayLayer->setVisible(false);
 
-	prePlayLayer = PrePlayLayer::create();
-	prePlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
-	addChild(prePlayLayer);
-	prePlayLayer->setVisible(false);
+	m_prePlayLayer = PrePlayLayer::create();
+	m_prePlayLayer->setPosition(winSize.width / 2 - 100, winSize.height / 2 - 200);
+	addChild(m_prePlayLayer);
+	m_prePlayLayer->setVisible(false);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundCompleted),
-		MSG_ROUND_COMPLETED, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundEnd),
+		MSG_ROUND_END, nullptr);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onSuccess),
-		MSG_TARGET_SUCCESS, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundReady),
+		MSG_ROUND_READY, nullptr);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onResume),
-		MSG_RESUME, nullptr);
-
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onNextRound),
-		MSG_NEXT_ROUND, nullptr);
-
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onStart),
-		MSG_START, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundStart),
+		MSG_ROUND_START, nullptr);
 }
 
-void PlayScene::onRoundCompleted(Ref* obj) {
+void PlayScene::onRoundEnd(Ref* obj) {
 	bool result = (bool)obj;
 	Sprite* sprite = NULL;
 	if (result)
-		sprite = Sprite::create(s_pathLose);
-	else
 		sprite = Sprite::create(s_pathWin);
+	else
+		sprite = Sprite::create(s_pathLose);
 	addChild(sprite);
 	Size winSize = Director::getInstance()->getWinSize();
 	sprite->setPosition(winSize.width / 2, winSize.height / 2);
 	auto actionBy = JumpBy::create(2, Vec2(0, 50), 50, 4);
 	auto actionByBack = actionBy->reverse();
 	sprite->runAction(Sequence::create(actionBy, actionByBack, nullptr));
+
+	m_postPlayLayer->setVisible(true);
+	m_prePlayLayer->setVisible(false);
 }
 
-void PlayScene::onSuccess(Ref* obj) {
-	//bool result = (bool)obj;
-	//if (result)
-	//{
-	//	//sprite = Sprite::create(s_pathLose);
-	//}
-	//else
-	//{
-	//	//sprite = Sprite::create(s_pathWin);
-	//}
-	postPlayLayer->setVisible(true);
-
-	/*Size winSize = Director::getInstance()->getWinSize();
-	sprite->setPosition(winSize.width / 2, winSize.height / 2);
-	auto actionBy = JumpBy::create(2, Vec2(0, 50), 50, 4);
-	auto actionByBack = actionBy->reverse();
-	sprite->runAction(Sequence::create(actionBy, actionByBack, nullptr));*/
+void PlayScene::onRoundReady(Ref* obj) {
+	m_postPlayLayer->setVisible(false);
+	m_prePlayLayer->setVisible(true);
 }
 
-
-void PlayScene::onResume(Ref* obj) {
-	postPlayLayer->setVisible(false);
-	prePlayLayer->setVisible(true);
-}
-
-void PlayScene::onNextRound(Ref* obj) {
-	postPlayLayer->setVisible(false);
-	prePlayLayer->setVisible(true);
-}
-
-void PlayScene::onStart(Ref* obj) {
-	prePlayLayer->setVisible(false);
+void PlayScene::onRoundStart(Ref* obj) {
+	m_prePlayLayer->setVisible(false);
 }

@@ -28,8 +28,11 @@ bool TargetLayer::init()
 	if (!Layer::init())
 		return false;
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(TargetLayer::onRoundChanged),
-		MSG_ROUND_CHANGED, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(TargetLayer::onRoundEnd),
+		MSG_ROUND_END, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(TargetLayer::onRoundReady),
+		MSG_ROUND_READY, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -50,17 +53,22 @@ bool TargetLayer::init()
 
 	// init target
 	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	onRoundChanged((Ref*)(intptr_t)roundInfo.m_round);
+	int target = roundInfo.m_targetScroe;
+	labelTarget->setString(StringUtils::toString(target));
 	return true;
 }
 
-void TargetLayer::onRoundChanged(Ref* obj)
+void TargetLayer::onRoundEnd(Ref* obj)
 {
-	int round = (int)obj;
-	RoundInfo* roundInfo = GameController::getInstance()->getRoundInfo(round);
+	
+}
+
+void TargetLayer::onRoundReady(Ref* obj)
+{
+	RoundInfo* roundInfo = (RoundInfo*)obj;
 	if (!roundInfo)
 		return;
-	int target = roundInfo->m_targetScroe;
 	auto labelTarget = (LabelAtlas*)getChildByTag(kLabelTargetTag);
+	int target = roundInfo->m_targetScroe;
 	labelTarget->setString(StringUtils::toString(target));
 }
