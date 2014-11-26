@@ -13,8 +13,6 @@ public:
 	~PlayScene();
 	CREATE_FUNC(PlayScene);
 
-	static Scene* createScene();
-
 	virtual void onEnter() override;
 
 	void onRoundCompleted(Ref* obj);

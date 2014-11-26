@@ -56,6 +56,12 @@
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp">
       <Filter>View\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\View\Scene\StartScene.cpp">
+      <Filter>View\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\StartLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\View\Layer\PostPlayLayer.cpp">
       <Filter>View\Layer</Filter>
     </ClCompile>
@@ -95,6 +101,12 @@
     <ClInclude Include="..\Classes\Resource.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h">
       <Filter>View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Scene\StartScene.h">
+      <Filter>View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\StartLayer.h">
+      <Filter>View\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\View\Layer\PostPlayLayer.h">
       <Filter>View\Layer</Filter>

@@ -18,11 +18,6 @@ PlayScene::~PlayScene()
 {
 }
 
-Scene* PlayScene::createScene() {
-	auto scene = Scene::create();
-	return scene;
-}
-
 void PlayScene::onEnter()
 {
 	Scene::onEnter();

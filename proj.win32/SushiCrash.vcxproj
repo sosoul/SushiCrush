@@ -146,8 +146,10 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\View\Layer\PostPlayLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\PrePlayLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\ScoreLayer.cpp" />
+    <ClCompile Include="..\Classes\View\Layer\StartLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\TargetLayer.cpp" />
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp" />
+    <ClCompile Include="..\Classes\View\Scene\StartScene.cpp" />
     <ClCompile Include="..\Classes\View\Sprite\SushiSprite.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -164,8 +166,10 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\View\Layer\PostPlayLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\PrePlayLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\ScoreLayer.h" />
+    <ClInclude Include="..\Classes\View\Layer\StartLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\TargetLayer.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h" />
+    <ClInclude Include="..\Classes\View\Scene\StartScene.h" />
     <ClInclude Include="..\Classes\View\Sprite\SushiSprite.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 #define __VIEW_LAYER_MAIN_LAYER_H__
 
 #include "cocos2d.h"
+#include "ui/UIWidget.h"
 
 USING_NS_CC;
 
@@ -18,6 +19,7 @@ public:
 	void onRoundChanged(Ref* obj);
 
 private:
+	void onBackToStartButtonTouched(Ref *pSender, ui::TouchEventType type);
 
 };
 
