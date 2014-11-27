@@ -34,7 +34,7 @@ bool MainLayer::init() {
 	// buttons
 	auto backToStartButton = ui::Button::create();
 	backToStartButton->setTouchEnabled(true);
-	backToStartButton->loadTextures("backToStartNormal.png", "backToStartSelected.jpg", "");
+	backToStartButton->loadTextures("backToStartNormal.png", "backToStartSelected.png", "");
 	backToStartButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
 	addChild(backToStartButton);
 	backToStartButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackToStartButtonTouched));
@@ -45,6 +45,10 @@ void MainLayer::onRoundReady(Ref* obj) {
 }
 
 void MainLayer::onBackToStartButtonTouched(Ref *pSender, ui::TouchEventType type) {
-	auto scene = StartScene::create();
-	Director::getInstance()->replaceScene(scene);
+	if (ui::TOUCH_EVENT_ENDED == type) {
+		auto scene = StartScene::create();
+		float time = 2.0f;
+		CCTransitionScene * transScene = CCTransitionPageTurn::create(time, scene, false);
+		CCDirector::sharedDirector()->replaceScene(transScene);
+	}
 }
