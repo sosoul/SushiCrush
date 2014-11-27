@@ -65,17 +65,37 @@ void PlayScene::onRoundEnd(Ref* obj) {
 	addChild(sprite);
 	Size winSize = Director::getInstance()->getWinSize();
 	sprite->setPosition(winSize.width / 2, winSize.height / 2);
-	auto actionBy = JumpBy::create(2, Vec2(0, 50), 50, 4);
+	auto actionBy = JumpBy::create(1, Vec2(0, 50), 50, 2);
 	auto actionByBack = actionBy->reverse();
-	sprite->runAction(Sequence::create(actionBy, actionByBack, nullptr));
+	auto hideAction = Hide::create();
+	sprite->runAction(Sequence::create(actionBy, actionByBack, hideAction, nullptr));
 
-	m_postPlayLayer->setVisible(true);
+	
 	m_prePlayLayer->setVisible(false);
+
+	m_postPlayLayer->setPosition(winSize.width / 2 - 300, winSize.height / 2 - 200);
+	m_postPlayLayer->setVisible(true);
+	MoveBy* act1 = MoveBy::create(0.5, Point(200, 0));
+	m_postPlayLayer->runAction(Repeat::create(act1, 1));
+
 }
 
 void PlayScene::onRoundReady(Ref* obj) {
-	m_postPlayLayer->setVisible(false);
+
+	Size winSize = Director::getInstance()->getWinSize();
+	m_prePlayLayer->setPosition(winSize.width / 2 - 500, winSize.height / 2 - 200);
+
+	auto hideAction = Hide::create();
+	MoveBy* actMoveRight = MoveBy::create(0.5, Point(400, 0));
+
+	auto seq1 = Sequence::create(
+		actMoveRight,
+		hideAction,
+		nullptr);
 	m_prePlayLayer->setVisible(true);
+	MoveBy* actMoveRight2 = MoveBy::create(0.5, Point(400, 0));
+	m_prePlayLayer->runAction(Repeat::create(actMoveRight2, 1));
+	m_postPlayLayer->runAction(seq1);
 }
 
 void PlayScene::onRoundStart(Ref* obj) {
