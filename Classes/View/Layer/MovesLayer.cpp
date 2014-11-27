@@ -21,6 +21,7 @@ MovesLayer::MovesLayer() : label_(NULL)
 
 MovesLayer::~MovesLayer()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool MovesLayer::init() {
@@ -60,6 +61,7 @@ bool MovesLayer::init() {
 // notifications
 void MovesLayer::onMovesChanged(Ref* obj) {
 	int moves = (int)obj;
+	int count = getChildrenCount();
 	auto labelMoves = (LabelAtlas*)getChildByTag(kLabelMovesTag);
 	labelMoves->setString(StringUtils::toString(moves));
 }

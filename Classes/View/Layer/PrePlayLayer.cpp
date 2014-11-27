@@ -39,6 +39,7 @@ PrePlayLayer::PrePlayLayer()
 
 PrePlayLayer::~PrePlayLayer()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool PrePlayLayer::init()
@@ -99,7 +100,7 @@ void PrePlayLayer::start(Ref* object, ui::TouchEventType type)
 	{
 	case ui::TouchEventType::TOUCH_EVENT_ENDED:
 	{
-		GameController::getInstance()->onClickStart();
+		GameController::getInstance()->onRoundStart();
 	}
 		break;
 	default:

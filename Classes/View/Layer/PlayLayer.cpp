@@ -31,6 +31,7 @@ PlayLayer::~PlayLayer()
 	if (m_matrix) {
 		free(m_matrix);
 	}
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 Scene *PlayLayer::createScene()
@@ -742,7 +743,7 @@ void PlayLayer::fillVacancies()
 	bool isActualEnd = checkActualRoundEnd();
 	if (isActualEnd)
 	{
-		GameController::getInstance()->onActualMoveEnd();
+		GameController::getInstance()->onExplosionStopped();
 	}
 }
 

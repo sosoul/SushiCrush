@@ -21,6 +21,7 @@ TargetLayer::TargetLayer()
 
 TargetLayer::~TargetLayer()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool TargetLayer::init()

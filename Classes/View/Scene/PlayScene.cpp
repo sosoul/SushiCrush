@@ -16,6 +16,7 @@ PlayScene::PlayScene()
 
 PlayScene::~PlayScene()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 void PlayScene::onEnter()

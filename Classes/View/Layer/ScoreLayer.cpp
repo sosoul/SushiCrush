@@ -20,6 +20,7 @@ ScoreLayer::ScoreLayer()
 
 ScoreLayer::~ScoreLayer()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool ScoreLayer::init() {
@@ -57,6 +58,7 @@ bool ScoreLayer::init() {
 
 void ScoreLayer::onScoreChanged(Ref* obj) {
 	int score = (int)obj;
+	int count = getChildrenCount();
 	auto labelScore = (LabelAtlas*)getChildByTag(kLabelScoreTag);
 	labelScore->setString(StringUtils::toString(score));
 }

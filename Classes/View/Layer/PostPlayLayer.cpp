@@ -35,6 +35,7 @@ PostPlayLayer::PostPlayLayer()
 
 PostPlayLayer::~PostPlayLayer()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool PostPlayLayer::init()
@@ -98,7 +99,7 @@ void PostPlayLayer::resume(Ref* object, ui::TouchEventType type)
 	{
 		case ui::TouchEventType::TOUCH_EVENT_ENDED:
 		{
-			GameController::getInstance()->onClickResume();
+			GameController::getInstance()->onRoundReady(ACTION_RESUME);
 		}
 			break;
 		default:
@@ -112,7 +113,7 @@ void PostPlayLayer::nextRound(Ref* object, ui::TouchEventType type)
 	{
 		case ui::TouchEventType::TOUCH_EVENT_ENDED:
 		{
-			GameController::getInstance()->onClickGoNextRound();
+			GameController::getInstance()->onRoundReady(ACTION_NEXT_ROUND);
 		}
 			break;
 		default:

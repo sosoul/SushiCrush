@@ -6,6 +6,12 @@
 
 #define TOTAL_ROUND	(10)
 
+enum READY_ACTION_TYPE
+{
+	ACTION_RESUME = 0,
+	ACTION_NEXT_ROUND,
+};
+
 class GameController : public Ref
 {
 public:
@@ -22,23 +28,12 @@ public:
 
 	void onSwapSushiCompleted();
 	void onRemoveSushiCompleted(int count);
-	void onActualMoveEnd();
-
-
-	void onClickStart();
-	void onClickResume();
-	void onClickGoNextRound();
+	void onExplosionStopped();
+	void onRoundReady(READY_ACTION_TYPE actionType);
+	void onRoundStart();
 
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
-
-
-	void start();
-
-
-
-
-
 
 private:
 	void writeToDB(const RoundInfo& m_curRoundInfo);

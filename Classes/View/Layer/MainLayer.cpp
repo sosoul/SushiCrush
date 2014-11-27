@@ -15,6 +15,7 @@ MainLayer::MainLayer()
 
 MainLayer::~MainLayer()
 {
+	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool MainLayer::init() {

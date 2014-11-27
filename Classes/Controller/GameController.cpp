@@ -57,7 +57,7 @@ void GameController::onSwapSushiCompleted() {
 	
 }
 
-void GameController::onActualMoveEnd() {
+void GameController::onExplosionStopped() {
 	if (0 == m_curRoundInfo.m_leftMoves) {
 		if (m_curRoundInfo.m_gotScore < m_curRoundInfo.m_targetScroe) {
 			NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
@@ -73,37 +73,20 @@ void GameController::onActualMoveEnd() {
 	}
 }
 
-void GameController::onClickResume(){
-	//resume this round
-	int round = m_curRoundInfo.m_round;
-	CCASSERT(round >= 0, "Error round!");
-	CCASSERT(round != TOTAL_ROUND, "Game Over.");
-	writeToDB(m_curRoundInfo);
-	m_curRoundInfo = m_roundInfoMap[round];
-
+void GameController::onRoundReady(READY_ACTION_TYPE actionType) {
+	if (ACTION_NEXT_ROUND == actionType) {
+		int round = m_curRoundInfo.m_round;
+		round++;
+		CCASSERT(round >= 0, "Error round!");
+		CCASSERT(round != TOTAL_ROUND, "Game Over.");
+		writeToDB(m_curRoundInfo);
+		m_curRoundInfo = m_roundInfoMap[round];
+	}
+	
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
 }
 
-void GameController::onClickGoNextRound(){
-	//go into next round
-	int round = m_curRoundInfo.m_round;
-	round++;
-	CCASSERT(round >= 0, "Error round!");
-	CCASSERT(round != TOTAL_ROUND, "Game Over.");
-	writeToDB(m_curRoundInfo);
-	m_curRoundInfo = m_roundInfoMap[round];
-
-	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
-}
-
-void GameController::onClickStart(){
-	//achieve the target score, go into next round
-	int round = m_curRoundInfo.m_round;
-	CCASSERT(round >= 0, "Error round!");
-	CCASSERT(round != TOTAL_ROUND, "Game Over.");
-	writeToDB(m_curRoundInfo);
-	m_curRoundInfo = m_roundInfoMap[round];
-
+void GameController::onRoundStart() {
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_START, (Ref*)(&m_curRoundInfo));
 }
 
