@@ -25,6 +25,7 @@ public:
 	void uninit();
 	const RoundInfo& get_cur_round_info() { return m_curRoundInfo; }
 	RoundInfo* getRoundInfo(int round);
+	void setCurRound(int round);
 
 	void onSwapSushiCompleted();
 	void onRemoveSushiCompleted(int count);

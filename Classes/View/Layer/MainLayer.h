@@ -19,7 +19,7 @@ public:
 	void onRoundReady(Ref* obj);
 
 private:
-	void onBackToStartButtonTouched(Ref *pSender, ui::TouchEventType type);
+	void onBackButtonTouched(Ref *pSender, ui::TouchEventType type);
 
 };
 

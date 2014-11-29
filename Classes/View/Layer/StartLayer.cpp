@@ -4,7 +4,7 @@
 #include "Messages.h"
 #include "ui/UIButton.h"
 #include "ui/UIWidget.h"
-#include "View/Scene/PlayScene.h"
+#include "View/Scene/GuideMapScene.h"
 
 StartLayer::StartLayer()
 {
@@ -60,9 +60,9 @@ bool StartLayer::init()
 
 void StartLayer::onStartButtonTouched(Ref *pSender, ui::TouchEventType type) {
 	if (ui::TOUCH_EVENT_ENDED == type) {
-		auto scene = PlayScene::create();
-		float time = 2.0f;
-		CCTransitionScene * transScene = CCTransitionSlideInT::create(time, scene);
+		auto scene = GuideMapScene::create();
+		float time = 1.0f;
+		CCTransitionScene * transScene = CCTransitionFadeTR::create(time, scene);
 		CCDirector::sharedDirector()->replaceScene(transScene);
 	}
 }

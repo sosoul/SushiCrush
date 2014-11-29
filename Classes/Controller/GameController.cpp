@@ -119,3 +119,8 @@ RoundInfo* GameController::getRoundInfo(int round) {
 	return &(it->second);
 }
 
+void GameController::setCurRound(int round) {
+	RoundInfMapIt it = m_roundInfoMap.find(round);
+	if (m_roundInfoMap.end() != it)
+		m_curRoundInfo = it->second;
+}

@@ -6,7 +6,7 @@
 #include "View/Layer/ScoreLayer.h"
 #include "View/Layer/TargetLayer.h"
 #include "Resource.h"
-#include "View/Scene/StartScene.h"
+#include "View/Scene/GuideMapScene.h"
 #include "ui/UIButton.h"
 
 MainLayer::MainLayer()
@@ -33,23 +33,23 @@ bool MainLayer::init() {
 	addChild(background);
 
 	// buttons
-	auto backToStartButton = ui::Button::create();
-	backToStartButton->setTouchEnabled(true);
-	backToStartButton->loadTextures("backToStartNormal.png", "backToStartSelected.png", "");
-	backToStartButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
-	addChild(backToStartButton);
-	backToStartButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackToStartButtonTouched));
+	auto backButton = ui::Button::create();
+	backButton->setTouchEnabled(true);
+	backButton->loadTextures("backToStartNormal.png", "backToStartSelected.png", "");
+	backButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
+	addChild(backButton);
+	backButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackButtonTouched));
 	return true;
 }
 
 void MainLayer::onRoundReady(Ref* obj) {
 }
 
-void MainLayer::onBackToStartButtonTouched(Ref *pSender, ui::TouchEventType type) {
+void MainLayer::onBackButtonTouched(Ref *pSender, ui::TouchEventType type) {
 	if (ui::TOUCH_EVENT_ENDED == type) {
-		auto scene = StartScene::create();
-		float time = 2.0f;
-		CCTransitionScene * transScene = CCTransitionPageTurn::create(time, scene, false);
+		auto scene = GuideMapScene::create();
+		float time = 1.0f;
+		CCTransitionScene * transScene = CCTransitionCrossFade::create(time, scene);
 		CCDirector::sharedDirector()->replaceScene(transScene);
 	}
 }

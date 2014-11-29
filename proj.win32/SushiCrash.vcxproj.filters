@@ -68,6 +68,12 @@
     <ClCompile Include="..\Classes\View\Layer\PrePlayLayer.cpp">
       <Filter>View\Layer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\View\Scene\GuideMapScene.cpp">
+      <Filter>View\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\GuideMapLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -112,6 +118,12 @@
       <Filter>View\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\View\Layer\PrePlayLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Scene\GuideMapScene.h">
+      <Filter>View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\GuideMapLayer.h">
       <Filter>View\Layer</Filter>
     </ClInclude>
   </ItemGroup>
