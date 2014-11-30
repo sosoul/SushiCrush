@@ -2,7 +2,7 @@
 
 #include "Controller/GameController.h"
 #include "Messages.h"
-#include "Types.h"
+#include "Resource.h"
 
 namespace {
 const int kLabelTitleTag = 0;
@@ -15,7 +15,7 @@ const int kLabelMovesX = 470;
 const int kLabelMovesY = 420;
 }
 
-MovesLayer::MovesLayer() : label_(NULL)
+MovesLayer::MovesLayer()
 {
 }
 
@@ -37,7 +37,7 @@ bool MovesLayer::init() {
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("moves.png");
+	auto background = Sprite::create(s_moves);
 	background->setPosition(Vec2(kBackgroundX, kBackgroundY));
 	addChild(background);
 

@@ -1,9 +1,7 @@
 #include "View/Layer/StartLayer.h"
 
-#include "Controller/GameController.h"
-#include "Messages.h"
+#include "Resource.h"
 #include "ui/UIButton.h"
-#include "ui/UIWidget.h"
 #include "View/Scene/GuideMapScene.h"
 
 StartLayer::StartLayer()
@@ -21,7 +19,7 @@ bool StartLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("startBackground.png");
+	auto background = Sprite::create(s_startBackground);
 	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	background->setPosition(Point(winSize.width/2, winSize.height/2));
 	addChild(background);
@@ -29,28 +27,28 @@ bool StartLayer::init()
 	// buttons
 	auto startButton = ui::Button::create();
 	startButton->setTouchEnabled(true);
-	startButton->loadTextures("startNormal.png", "startSelected.png", "");
+	startButton->loadTextures(s_startNormal, s_startSelected, "");
 	startButton->setPosition(Point(winSize.width / 2, winSize.height / 2) + Point(0, -50));
 	addChild(startButton);
 	startButton->addTouchEventListener(this, ui::SEL_TouchEvent(&StartLayer::onStartButtonTouched));
 
 	auto musicButton = ui::Button::create();
 	musicButton->setTouchEnabled(true);
-	musicButton->loadTextures("musicNormal.png", "musicSelected.png", "");
+	musicButton->loadTextures(s_musicNormal, s_musicSelected, "");
 	musicButton->setPosition(Point(winSize.width / 2, winSize.height / 2) + Point(-100, -150));
 	addChild(musicButton);
 	musicButton->addTouchEventListener(this, ui::SEL_TouchEvent(&StartLayer::onMusicButtonTouched));
 
 	auto soundButton = ui::Button::create();
 	soundButton->setTouchEnabled(true);
-	soundButton->loadTextures("soundNormal.png", "soundSelected.png", "");
+	soundButton->loadTextures(s_soundNormal, s_soundSelected, "");
 	soundButton->setPosition(Point(winSize.width / 2, winSize.height / 2) + Point(0, -150));
 	addChild(soundButton);
 	soundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&StartLayer::onMusicButtonTouched));
 
 	auto rateButton = ui::Button::create();
 	rateButton->setTouchEnabled(true);
-	rateButton->loadTextures("rateNormal.png", "rateSelected.png", "");
+	rateButton->loadTextures(s_rateNormal, s_rateSelected, "");
 	rateButton->setPosition(Point(winSize.width / 2, winSize.height / 2) + Point(100, -150));
 	addChild(rateButton);
 	rateButton->addTouchEventListener(this, ui::SEL_TouchEvent(&StartLayer::onMusicButtonTouched));

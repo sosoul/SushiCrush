@@ -1,10 +1,6 @@
 #include "View/Layer/MainLayer.h"
 
 #include "Messages.h"
-#include "View/Layer/MovesLayer.h"
-#include "View/Layer/PlayLayer.h"
-#include "View/Layer/ScoreLayer.h"
-#include "View/Layer/TargetLayer.h"
 #include "Resource.h"
 #include "View/Scene/GuideMapScene.h"
 #include "ui/UIButton.h"
@@ -27,7 +23,7 @@ bool MainLayer::init() {
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("mainBackground.jpg");
+	auto background = Sprite::create(s_mainBackground);
 	background->setAnchorPoint(Point(0, 1));
 	background->setPosition(Point(0, winSize.height));
 	addChild(background);
@@ -35,7 +31,7 @@ bool MainLayer::init() {
 	// buttons
 	auto backButton = ui::Button::create();
 	backButton->setTouchEnabled(true);
-	backButton->loadTextures("backToStartNormal.png", "backToStartSelected.png", "");
+	backButton->loadTextures(s_backToStartButtonNormal, s_backToStartButtonSelected, "");
 	backButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
 	addChild(backButton);
 	backButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackButtonTouched));

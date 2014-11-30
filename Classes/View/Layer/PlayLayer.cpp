@@ -2,7 +2,7 @@
 
 #include "Controller/GameController.h"
 #include "Messages.h"
-#include "Types.h"
+#include "Resource.h"
 #include "View/Sprite/SushiSprite.h"
 
 #define MATRIX_WIDTH (7)
@@ -56,7 +56,7 @@ bool PlayLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("playBackground.png");
+	auto background = Sprite::create(s_playBackground);
 	background->setAnchorPoint(Point(0, 1));
 	background->setPosition(Point(0, winSize.height));
 	this->addChild(background);
@@ -604,7 +604,7 @@ void PlayLayer::explodeSpecialH(Point point)
 	Point startPosition = point;
 	float speed = 0.6f;
 
-	auto colorSpriteRight = Sprite::create("colorHRight.png");
+	auto colorSpriteRight = Sprite::create(s_colorHRight);
 	addChild(colorSpriteRight, 10);
 	Point endPosition1 = Point(point.x - size.width, point.y);
 	colorSpriteRight->setPosition(startPosition);
@@ -613,7 +613,7 @@ void PlayLayer::explodeSpecialH(Point point)
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteRight)),
 		NULL));
 
-	auto colorSpriteLeft = Sprite::create("colorHLeft.png");
+	auto colorSpriteLeft = Sprite::create(s_colorLRight);
 	addChild(colorSpriteLeft, 10);
 	Point endPosition2 = Point(point.x + size.width, point.y);
 	colorSpriteLeft->setPosition(startPosition);
@@ -634,7 +634,7 @@ void PlayLayer::explodeSpecialV(Point point)
 	Point startPosition = point;
 	float speed = 0.6f;
 
-	auto colorSpriteDown = Sprite::create("colorVDown.png");
+	auto colorSpriteDown = Sprite::create(s_colorVDown);
 	addChild(colorSpriteDown, 10);
 	Point endPosition1 = Point(point.x, point.y - size.height);
 	colorSpriteDown->setPosition(startPosition);
@@ -643,7 +643,7 @@ void PlayLayer::explodeSpecialV(Point point)
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteDown)),
 		NULL));
 
-	auto colorSpriteUp = Sprite::create("colorVUp.png");
+	auto colorSpriteUp = Sprite::create(s_colorVUp);
 	addChild(colorSpriteUp, 10);
 	Point endPosition2 = Point(point.x, point.y + size.height);
 	colorSpriteUp->setPosition(startPosition);
@@ -671,7 +671,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 		NULL));
 
 	// 2. action for circle
-	auto circleSprite = Sprite::create("circle.png");
+	auto circleSprite = Sprite::create(s_circle);
 	addChild(circleSprite, 10);
 	circleSprite->setPosition(sushi->getPosition());
 	circleSprite->setScale(0);// start size
@@ -680,7 +680,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 		NULL));
 
 	// 3. particle effect
-	auto particleStars = ParticleSystemQuad::create("stars.plist");
+	auto particleStars = ParticleSystemQuad::create(s_stars);
 	particleStars->setAutoRemoveOnFinish(true);
 	particleStars->setBlendAdditive(false);
 	particleStars->setPosition(sushi->getPosition());

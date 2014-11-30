@@ -1,11 +1,10 @@
 #include "View/Layer/GuideMapLayer.h"
 
 #include "Controller/GameController.h"
-#include "Messages.h"
-#include "ui/UIButton.h"
-#include "ui/UIWidget.h"
+#include "Resource.h"
 #include "View/Scene/PlayScene.h"
 #include "View/Scene/StartScene.h"
+#include "ui/UIButton.h"
 
 GuideMapLayer::GuideMapLayer()
 {
@@ -23,7 +22,7 @@ bool GuideMapLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = CCSprite::create("guideMap.jpg");
+	auto background = CCSprite::create(s_guideMap);
 	background->retain();
 	background->setAnchorPoint(Vec2::ZERO);
 	background->setPosition(Vec2::ZERO);
@@ -71,13 +70,8 @@ void GuideMapLayer::createRoundButton(int round) {
 	auto roundButton = ui::Button::create();
 	roundButton->setTouchEnabled(true);
 
-	std::string normalButton = "round";
-	normalButton += StringUtils::toString(round);
-	normalButton += "ButtonNormal.png";
-
-	std::string selectedButton = "round";
-	selectedButton += StringUtils::toString(round);
-	selectedButton += "ButtonSelected.png";
+	std::string normalButton = s_roundButtonsNormal[round];
+	std::string selectedButton = s_roundButtonsSelected[round];
 
 	roundButton->loadTextures(normalButton, selectedButton, "");
 	const int step = 60;

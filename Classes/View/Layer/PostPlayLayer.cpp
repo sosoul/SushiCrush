@@ -2,7 +2,8 @@
 
 #include "Controller/GameController.h"
 #include "Messages.h"
-#include "ui/UIDeprecated.h"
+#include "Resource.h"
+#include "ui/UIButton.h"
 
 namespace{
 	const int kBackPrePlayX = 100;
@@ -48,25 +49,25 @@ bool PostPlayLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("postplay/back.png");
+	auto background = Sprite::create(s_postPlayBackground);
 	background->setScaleX(0.5);
 	background->setScaleY(0.5);
 	background->setPosition(Vec2(kBackPrePlayX, kBackYPrePlay));
 	addChild(background);
 
-	auto sprite1 = Sprite::create("postplay/star.png");
+	auto sprite1 = Sprite::create(s_postPlaySatr);
 	sprite1->setScaleX(0.1);
 	sprite1->setScaleY(0.1);
 	sprite1->setPosition(Vec2(kStar1X, kStar1Y));
 	addChild(sprite1, 0, kStart1Tag);
 
-	auto sprite2 = Sprite::create("postplay/star.png");
+	auto sprite2 = Sprite::create(s_postPlaySatr);
 	sprite2->setScaleX(0.1);
 	sprite2->setScaleY(0.1);
 	sprite2->setPosition(Vec2(kStar2X, kStar2Y));
 	addChild(sprite2, 0, kStart2Tag);
 
-	auto sprite3 = Sprite::create("postplay/star.png");
+	auto sprite3 = Sprite::create(s_postPlaySatr);
 	sprite3->setScaleX(0.1);
 	sprite3->setScaleY(0.1);
 	sprite3->setPosition(Vec2(kStar3X, kStar3Y));
@@ -74,14 +75,14 @@ bool PostPlayLayer::init()
 
 
 	ui::Button* resumeBtn = nullptr;
-	resumeBtn = ui::Button::create("postplay/resume.png", "postplay/resume.png", "postplay/resume.png", ui::TextureResType::LOCAL);
+	resumeBtn = ui::Button::create(s_postPlayResume, s_postPlayResume, s_postPlayResume);
 	resumeBtn->setScale(0.1);
 	resumeBtn->addTouchEventListener(this, ui::SEL_TouchEvent(&PostPlayLayer::resume));
 	resumeBtn->setPosition(Vec2(kResumePlayX, kResumePlayY));
 	addChild(resumeBtn);
 
 	ui::Button* nextBtn = nullptr;
-	nextBtn = ui::Button::create("postplay/next.png", "postplay/next.png", "postplay/next.png", ui::TextureResType::LOCAL);
+	nextBtn = ui::Button::create(s_postPlayNext, s_postPlayNext, s_postPlayNext);
 	nextBtn->setScale(1);
 	nextBtn->addTouchEventListener(this, ui::SEL_TouchEvent(&PostPlayLayer::nextRound));
 	nextBtn->setPosition(Vec2(kNextPlayX, kNextPlayY));

@@ -2,6 +2,7 @@
 
 #include "Controller/GameController.h"
 #include "Messages.h"
+#include "Resource.h"
 
 namespace {
 const int kLabelTitleTag = 0;
@@ -37,7 +38,7 @@ bool TargetLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create("target.png");
+	auto background = Sprite::create(s_target);
 	background->setPosition(Vec2(kBackgroundX, kBackgroundY));
 	addChild(background);
 

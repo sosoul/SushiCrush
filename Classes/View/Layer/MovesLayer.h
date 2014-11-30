@@ -18,8 +18,9 @@ public:
 	void onRoundEnd(Ref* obj);
 	void onMovesChanged(Ref* obj);
 	void onRoundReady(Ref* obj);
+
 private:
-	LabelAtlas* label_;
+
 };
 
 #endif // __VIEW_LAYER_MOVES_LAYER_H__

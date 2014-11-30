@@ -3,7 +3,6 @@
 
 #include "cocos2d.h"
 #include "ui/UIWidget.h"
-#include "ui/UIButton.h"
 
 USING_NS_CC;
 

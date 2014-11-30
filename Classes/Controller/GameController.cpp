@@ -1,11 +1,6 @@
 #include "Controller/GameController.h"
 
 #include "Messages.h"
-#include "View/Layer/MainLayer.h"
-#include "View/Layer/MovesLayer.h"
-#include "View/Layer/ScoreLayer.h"
-#include "View/Layer/TargetLayer.h"
-
 
 const int kPerSushiScore = 10;
 

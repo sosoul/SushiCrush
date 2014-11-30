@@ -2,7 +2,6 @@
 #define __VIEW_LAYER_GUIDE_MAP_LAYER_H__
 
 #include "cocos2d.h"
-#include "deprecated/CCDictionary.h"
 #include "ui/UIWidget.h"
 
 USING_NS_CC;

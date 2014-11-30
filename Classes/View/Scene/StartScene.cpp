@@ -1,13 +1,6 @@
 #include "View/Scene/StartScene.h"
 
 #include "Controller/GameController.h"
-#include "View/Layer/MainLayer.h"
-#include "View/Layer/MovesLayer.h"
-#include "View/Layer/PlayLayer.h"
-#include "View/Layer/ScoreLayer.h"
-#include "View/Layer/TargetLayer.h"
-#include "Messages.h"
-#include "Resource.h"
 #include "View/Layer/StartLayer.h"
 
 
@@ -29,6 +22,4 @@ void StartScene::onEnter()
 void StartScene::run() {
 	auto layer = StartLayer::create();
 	addChild(layer);
-
-	//Director::getInstance()->replaceScene(this);
 }

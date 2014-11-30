@@ -1,9 +1,10 @@
 #ifndef __VIEW_SCENE_PLAY_SCENE_H__
 #define __VIEW_SCENE_PLAY_SCENE_H__
 
-#include "cocos2d.h"
 #include "View/Layer/PostPlayLayer.h"
 #include "View/Layer/PrePlayLayer.h"
+#include "cocos2d.h"
+
 USING_NS_CC;
 
 class PlayScene : public Scene

@@ -2,7 +2,6 @@
 #define __CONTROLLER_GAME_CONTROLLER_H__
 
 #include "Types.h"
-#include "View/Layer/PlayLayer.h"
 
 #define TOTAL_ROUND	(10)
 

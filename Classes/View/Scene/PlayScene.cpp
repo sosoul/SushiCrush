@@ -1,13 +1,13 @@
 #include "View/Scene/PlayScene.h"
 
 #include "Controller/GameController.h"
+#include "Messages.h"
+#include "Resource.h"
 #include "View/Layer/MainLayer.h"
 #include "View/Layer/MovesLayer.h"
 #include "View/Layer/PlayLayer.h"
 #include "View/Layer/ScoreLayer.h"
 #include "View/Layer/TargetLayer.h"
-#include "Messages.h"
-#include "Resource.h"
 
 namespace{
 	const int kPlayLayerTag = 1;
