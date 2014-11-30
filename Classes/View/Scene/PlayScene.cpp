@@ -9,6 +9,9 @@
 #include "Messages.h"
 #include "Resource.h"
 
+namespace{
+	const int kPlayLayerTag = 1;
+}
 
 PlayScene::PlayScene()
 {
@@ -28,7 +31,7 @@ void PlayScene::onEnter()
 	auto movesLayer = MovesLayer::create();
 	auto scoreLayer = ScoreLayer::create();
 	addChild(mainLayer);
-	addChild(playLayer);
+	addChild(playLayer, 0, kPlayLayerTag);
 	addChild(targetLayer);
 	addChild(movesLayer);
 	addChild(scoreLayer);
@@ -53,6 +56,9 @@ void PlayScene::onEnter()
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundStart),
 		MSG_ROUND_START, nullptr);
+
+	playLayer->setVisible(false);
+	GameController::getInstance()->onRoundReady(ACTION_RESUME);
 }
 
 void PlayScene::onRoundEnd(Ref* obj) {
@@ -78,6 +84,11 @@ void PlayScene::onRoundEnd(Ref* obj) {
 	MoveBy* act1 = MoveBy::create(0.5, Point(200, 0));
 	m_postPlayLayer->runAction(Repeat::create(act1, 1));
 
+	auto playLayer = (PlayLayer*)getChildByTag(kPlayLayerTag);
+	MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
+	auto hideAction1 = Hide::create();
+	playLayer->setPosition(0, 0);
+	playLayer->runAction(Sequence::create(actMoveUp, hideAction1, nullptr));
 }
 
 void PlayScene::onRoundReady(Ref* obj) {
@@ -88,16 +99,22 @@ void PlayScene::onRoundReady(Ref* obj) {
 	auto hideAction = Hide::create();
 	MoveBy* actMoveRight = MoveBy::create(0.5, Point(400, 0));
 
-	auto seq1 = Sequence::create(
+	auto preSeq = Sequence::create(
 		actMoveRight,
 		hideAction,
 		nullptr);
 	m_prePlayLayer->setVisible(true);
 	MoveBy* actMoveRight2 = MoveBy::create(0.5, Point(400, 0));
 	m_prePlayLayer->runAction(Repeat::create(actMoveRight2, 1));
-	m_postPlayLayer->runAction(seq1);
+	m_postPlayLayer->runAction(preSeq);
 }
 
 void PlayScene::onRoundStart(Ref* obj) {
 	m_prePlayLayer->setVisible(false);
+
+	auto playLayer = (PlayLayer*)getChildByTag(kPlayLayerTag);
+	playLayer->setPosition(0, 500);
+	playLayer->setVisible(true);
+	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
+	playLayer->runAction(Repeat::create(actMoveDown, 1));
 }
