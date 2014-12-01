@@ -1,11 +1,13 @@
 #ifndef __VIEW_SCENE_PLAY_SCENE_H__
 #define __VIEW_SCENE_PLAY_SCENE_H__
 
-#include "View/Layer/PostPlayLayer.h"
-#include "View/Layer/PrePlayLayer.h"
 #include "cocos2d.h"
 
 USING_NS_CC;
+
+class PlayLayer;
+class PrePlayLayer;
+class PostPlayLayer;
 
 class PlayScene : public Scene
 {
@@ -21,6 +23,10 @@ public:
 	void onRoundStart(Ref* obj);
 
 private:
+	void onPlayLayerActionEnded();
+	void onPrePlayLayerActionEnded();
+	void onPostPlayLayerActionEnded();
+	PlayLayer* m_playLayer;
 	PostPlayLayer* m_postPlayLayer;
 	PrePlayLayer* m_prePlayLayer;
 };
