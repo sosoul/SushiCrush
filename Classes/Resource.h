@@ -38,7 +38,7 @@ const char s_roundButtonsSelected[][26] = { "round1ButtonSelected.png",
 // Play scene
 const char s_pathLose[] = "lose.png";
 const char s_pathWin[] = "win.png";
-const char s_mainBackground[] = "mainBackground.jpg";
+const char s_mainBackground[] = "mainBackground.png";
 const char s_backToStartButtonNormal[] = "backToStartNormal.png";
 const char s_backToStartButtonSelected[] = "backToStartSelected.png";
 const char s_moves[] = "moves.png";

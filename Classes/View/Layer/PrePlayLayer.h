@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "ui/UIWidget.h"
 
+class RoundInfo;
+
 USING_NS_CC;
 
 class PrePlayLayer : public Layer
@@ -16,8 +18,7 @@ public:
 	virtual bool init() override;
 
 	void start(Ref* object, ui::TouchEventType type);
-
-	void onRoundReady(Ref* obj);
+	
 private:
 };
 

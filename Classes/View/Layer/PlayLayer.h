@@ -10,10 +10,9 @@ class SushiSprite;
 class PlayLayer : public Layer
 {
 public:
-	PlayLayer();
+	PlayLayer(int round);
 	~PlayLayer();
-	static Scene* createScene();
-	CREATE_FUNC(PlayLayer);
+	static PlayLayer* create(int round);
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
@@ -38,6 +37,7 @@ private:
 	bool m_isAnimationing;
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
+	int m_round;
 
 	void initMatrix();
 	void createAndDropSushi(int row, int col);
@@ -57,7 +57,7 @@ private:
 	void swapSushi();
 	void markRemove(SushiSprite *sushi);
 	bool checkActualRoundEnd();
-	int m_round;
+	bool hasSushi(int row, int col);
 	
 };
 

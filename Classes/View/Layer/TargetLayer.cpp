@@ -7,12 +7,12 @@
 namespace {
 const int kLabelTitleTag = 0;
 const int kLabelTargetTag = 1;
-const int kBackgroundX = 470;
-const int kBackgroundY = 320;
-const int kLabelTitleX = 380;
-const int kLabelTitleY = 320;
-const int kLabelTargetX = 470;
-const int kLabelTargetY = 320;
+const int kBackgroundX = 320;
+const int kBackgroundY = 420;
+const int kLabelTitleX = 235;
+const int kLabelTitleY = 420;
+const int kLabelTargetX = 335;
+const int kLabelTargetY = 420;
 }
 
 

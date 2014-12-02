@@ -7,12 +7,12 @@
 namespace {
 const int kLabelTitleTag = 0;
 const int kLabelMovesTag = 1;
-const int kBackgroundX = 470;
-const int kBackgroundY = 420;
-const int kLabelTitleX = 380;
-const int kLabelTitleY = 420;
-const int kLabelMovesX = 470;
-const int kLabelMovesY = 420;
+const int kBackgroundX = 320;
+const int kBackgroundY = 460;
+const int kLabelTitleX = 235;
+const int kLabelTitleY = 460;
+const int kLabelMovesX = 335;
+const int kLabelMovesY = 460;
 }
 
 MovesLayer::MovesLayer()

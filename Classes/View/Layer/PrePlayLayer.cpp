@@ -16,10 +16,10 @@ namespace{
 	const int kLabelTargetTag = 1;
 	const int kLabelRoundTag = 5;
 
-	const int kLabelTargetX = 20;
+	const int kLabelTargetX = 0;
 	const int kLabelTargetY = 80;
 
-	const int kLabelRoundX = 20;
+	const int kLabelRoundX = 0;
 	const int kLabelRoundY = 120;
 
 	const int kStar1X = 20;
@@ -40,16 +40,12 @@ PrePlayLayer::PrePlayLayer()
 
 PrePlayLayer::~PrePlayLayer()
 {
-	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool PrePlayLayer::init()
 {
 	if (!Layer::init())
 		return false;
-
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PrePlayLayer::onRoundReady),
-		MSG_ROUND_READY, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -85,11 +81,17 @@ bool PrePlayLayer::init()
 	resumeBtn->setPosition(Vec2(kResumePlayX, kResumePlayY));
 	addChild(resumeBtn);
 
-	auto labelTarget = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
+
+	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	auto labelTarget = LabelAtlas::create("Target score:" + StringUtils::toString(roundInfo.m_targetScroe),
+		"fonts/tuffy_bold_italic-charmap.plist");
+	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 	labelTarget->setPosition(Vec2(kLabelTargetX, kLabelTargetY));
 	addChild(labelTarget, 0, kLabelTargetTag);
 
-	auto labelRound = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
+	auto labelRound = LabelAtlas::create("round:" + StringUtils::toString(roundInfo.m_round),
+		"fonts/tuffy_bold_italic-charmap.plist");
+	labelRound->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 	labelRound->setPosition(Vec2(kLabelRoundX, kLabelRoundY));
 	addChild(labelRound, 0, kLabelRoundTag);
 	return true;
@@ -107,27 +109,4 @@ void PrePlayLayer::start(Ref* object, ui::TouchEventType type)
 	default:
 		break;
 	}
-}
-
-void PrePlayLayer::onRoundReady(Ref* obj)
-{
-	this->setVisible(true);
-	RoundInfo* roundInfo = (RoundInfo*)obj;
-	if (!roundInfo)
-		return;
-	int target = roundInfo->m_targetScroe;
-	int round = roundInfo->m_round;
-	auto labelTarget = (LabelAtlas*)getChildByTag(kLabelTargetTag);
-	labelTarget->setString("target:" + StringUtils::toString(target));
-	auto labelRound = (LabelAtlas*)getChildByTag(kLabelRoundTag);
-	labelRound->setString("round:" + StringUtils::toString(round));
-
-	auto start1 = (Sprite*)getChildByTag(kStart1Tag);
-	start1->setVisible(true);
-	auto start2 = (Sprite*)getChildByTag(kStart2Tag);
-	start2->setVisible(true);
-	auto start3 = (Sprite*)getChildByTag(kStart3Tag);
-	start3->setVisible(true);
-	int score = roundInfo->m_gotScore;
-
 }

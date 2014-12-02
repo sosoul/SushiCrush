@@ -24,8 +24,8 @@ bool MainLayer::init() {
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
 	auto background = Sprite::create(s_mainBackground);
-	background->setAnchorPoint(Point(0, 1));
-	background->setPosition(Point(0, winSize.height));
+	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	background->setPosition(Point(winSize.width / 2, winSize.height / 2));
 	addChild(background);
 
 	// buttons

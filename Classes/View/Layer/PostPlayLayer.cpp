@@ -36,16 +36,12 @@ PostPlayLayer::PostPlayLayer()
 
 PostPlayLayer::~PostPlayLayer()
 {
-	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool PostPlayLayer::init()
 {
 	if (!Layer::init())
 		return false;
-
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PostPlayLayer::onRoundEnd),
-		MSG_ROUND_END, nullptr);
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
@@ -88,9 +84,21 @@ bool PostPlayLayer::init()
 	nextBtn->setPosition(Vec2(kNextPlayX, kNextPlayY));
 	addChild(nextBtn);
 
-	auto labelTarget = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
+	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	auto labelTarget = LabelAtlas::create("round:" + StringUtils::toString(roundInfo.m_round),
+		"fonts/tuffy_bold_italic-charmap.plist");
 	labelTarget->setPosition(Vec2(kLabelTargetX, kLabelTargetY));
 	addChild(labelTarget, 0, kLabelTargetTag);
+
+	int target = roundInfo.m_targetScroe;
+	int score = roundInfo.m_gotScore;
+
+	if (score >= target)
+		sprite1->setVisible(true);
+	if (score >= target * 2)
+		sprite2->setVisible(true);
+	if (score >= target * 3)
+		sprite3->setVisible(true);
 	return true;
 }
 
@@ -119,38 +127,5 @@ void PostPlayLayer::nextRound(Ref* object, ui::TouchEventType type)
 			break;
 		default:
 			break;
-	}
-}
-
-
-void PostPlayLayer::onRoundEnd(Ref* obj)
-{
-	bool isRoundSuccess = (bool)obj;
-	if (isRoundSuccess)
-	{
-		const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-		int round = roundInfo.m_round;
-		auto labelTarget = (LabelAtlas*)getChildByTag(kLabelTargetTag);
-		labelTarget->setString("round:" + StringUtils::toString(round));
-
-		auto start1 = (Sprite*)getChildByTag(kStart1Tag);
-		start1->setVisible(false);
-		auto start2 = (Sprite*)getChildByTag(kStart2Tag);
-		start2->setVisible(false);
-		auto start3 = (Sprite*)getChildByTag(kStart3Tag);
-		start3->setVisible(false);
-		int target = roundInfo.m_targetScroe;
-		int score = roundInfo.m_gotScore;
-
-		if (score >= target)
-			start1->setVisible(true);
-		if (score >= target * 2)
-			start2->setVisible(true);
-		if (score >= target * 3)
-			start3->setVisible(true);
-	}
-	else
-	{
-
 	}
 }

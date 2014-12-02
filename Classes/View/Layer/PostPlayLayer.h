@@ -18,8 +18,6 @@ public:
 	void resume(Ref* object, ui::TouchEventType type);
 	void nextRound(Ref* object, ui::TouchEventType type);
 
-	void onRoundEnd(Ref* obj);
-
 private:
 };
 

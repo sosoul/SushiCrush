@@ -7,12 +7,12 @@
 namespace {
 const int kLabelTitleTag = 0;
 const int kLabelScoreTag = 1;
-const int kBackgroundX = 470;
-const int kBackgroundY = 370;
+const int kBackgroundX = 465;
+const int kBackgroundY = 460;
 const int kLabelTitleX = 380;
-const int kLabelTitleY = 370;
-const int kLabelScoreX = 470;
-const int kLabelScoreY = 370;
+const int kLabelTitleY = 460;
+const int kLabelScoreX = 480;
+const int kLabelScoreY = 460;
 }
 
 ScoreLayer::ScoreLayer()

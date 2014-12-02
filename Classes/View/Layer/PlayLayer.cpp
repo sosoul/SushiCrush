@@ -10,7 +10,112 @@
 
 #define SUSHI_GAP (1)
 
-PlayLayer::PlayLayer() : m_spriteSheet(NULL),
+namespace {
+// TODO: The matrix data need to be read from config file.
+
+const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 0, 1, 1, 1, 1, 1, 0 },
+										 { 0, 1, 1, 1, 1, 1, 0 },
+										 { 0, 0, 1, 1, 1, 0, 0 },
+										 { 0, 0, 1, 1, 1, 0, 0 },
+										 { 0, 0, 0, 1, 0, 0, 0 },
+										 { 0, 0, 0, 0, 0, 0, 0 } },  // 1
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 2
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 3
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 4
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 5
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 6
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 7
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 8
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 9
+
+									  { { 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 0, 0, 0, 0, 0 },
+										{ 0, 0, 1, 1, 1, 0, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 0, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 } },  // 10
+};
+}
+
+PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_matrix(NULL),
 						 m_width(0),
 						 m_height(0),
@@ -22,7 +127,7 @@ PlayLayer::PlayLayer() : m_spriteSheet(NULL),
 						 m_srcSushi(NULL),
 						 m_destSushi(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
-						 m_round(1)
+						 m_round(round)
 {
 }
 
@@ -34,12 +139,17 @@ PlayLayer::~PlayLayer()
 	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
-Scene *PlayLayer::createScene()
-{
-	auto scene = Scene::create();
-	auto layer = PlayLayer::create();
-	scene->addChild(layer);
-	return scene;
+// static 
+PlayLayer* PlayLayer::create(int round) {
+	PlayLayer* layer = new PlayLayer(round);
+	if (layer && layer->init()) {
+		layer->autorelease();
+		return layer;
+	} else {
+		delete layer;
+		layer = nullptr;
+		return layer;
+	}
 }
 
 bool PlayLayer::init()
@@ -56,10 +166,6 @@ bool PlayLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create(s_playBackground);
-	background->setAnchorPoint(Point(0, 1));
-	background->setPosition(Point(0, winSize.height));
-	this->addChild(background);
 
 	// init m_spriteSheet
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sushi.plist");
@@ -71,7 +177,7 @@ bool PlayLayer::init()
 	m_height = MATRIX_HEIGHT;
 
 	// init position value
-	m_matrixLeftBottomX = 0;// (winSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
+	m_matrixLeftBottomX = (winSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
 	m_matrixLeftBottomY = (winSize.height - SushiSprite::getContentWidth() * m_height - (m_height - 1) * SUSHI_GAP) / 2;
 
 	// init point array
@@ -94,7 +200,8 @@ void PlayLayer::initMatrix()
 {
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
-			createAndDropSushi(row, col);
+			if (hasSushi(row, col))
+				createAndDropSushi(row, col);
 		}
 	}
 }
@@ -710,6 +817,8 @@ void PlayLayer::fillVacancies()
 			}
 			else {
 				if (removedSushiOfCol > 0) {
+					if (!hasSushi(row, col))
+						continue;
 					// evey item have its own drop distance
 					int newRow = row - removedSushiOfCol;
 					// switch in matrix
@@ -734,7 +843,8 @@ void PlayLayer::fillVacancies()
 	// 2. create new item and drop down.
 	for (int col = 0; col < m_width; col++) {
 		for (int row = m_height - colEmptyInfo[col]; row < m_height; row++) {
-			createAndDropSushi(row, col);
+			if (hasSushi(row, col))
+				createAndDropSushi(row, col);
 		}
 	}
 
@@ -797,6 +907,7 @@ void PlayLayer::onRoundEnd(Ref* obj) {
 }
 
 void PlayLayer::onRoundStart(Ref* obj) {
+	return;
 	SushiSprite *sushi;
 	// 1. reset ingnore flag
 	for (int i = 0; i < m_height * m_width; i++) {
@@ -807,4 +918,14 @@ void PlayLayer::onRoundStart(Ref* obj) {
 		sushi->setIsNeedRemove(true);
 		markRemove(sushi);
 	}
+}
+
+bool PlayLayer::hasSushi(int row, int col) {
+	if (m_round <= 0 || m_round > TOTAL_ROUND ||
+		row < 0 || row >= m_height ||
+		col < 0 || col >= m_width)
+		return false;
+	if (kRoundMatrixes[m_round-1][row][col])
+		return true;
+	return false;
 }
