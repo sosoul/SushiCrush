@@ -83,13 +83,13 @@ bool PrePlayLayer::init()
 
 
 	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	auto labelTarget = LabelAtlas::create("Target score:" + StringUtils::toString(roundInfo.m_targetScroe),
+	auto labelTarget = LabelAtlas::create("Target:" + StringUtils::toString(roundInfo.m_targetScroe),
 		"fonts/tuffy_bold_italic-charmap.plist");
 	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 	labelTarget->setPosition(Vec2(kLabelTargetX, kLabelTargetY));
 	addChild(labelTarget, 0, kLabelTargetTag);
 
-	auto labelRound = LabelAtlas::create("round:" + StringUtils::toString(roundInfo.m_round),
+	auto labelRound = LabelAtlas::create("Round:" + StringUtils::toString(roundInfo.m_round),
 		"fonts/tuffy_bold_italic-charmap.plist");
 	labelRound->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 	labelRound->setPosition(Vec2(kLabelRoundX, kLabelRoundY));

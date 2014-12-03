@@ -6,55 +6,50 @@
 #include "View/Sprite/SushiSprite.h"
 
 #define MATRIX_WIDTH (7)
-#define MATRIX_HEIGHT (9)
+#define MATRIX_HEIGHT (8)
 
 #define SUSHI_GAP (1)
 
 namespace {
 // TODO: The matrix data need to be read from config file.
 
-const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
+const int kRoundMatrixes[10][8][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
 										 { 0, 1, 1, 1, 1, 1, 0 },
 										 { 0, 1, 1, 1, 1, 1, 0 },
 										 { 0, 0, 1, 1, 1, 0, 0 },
 										 { 0, 0, 1, 1, 1, 0, 0 },
 										 { 0, 0, 0, 1, 0, 0, 0 },
-										 { 0, 0, 0, 0, 0, 0, 0 } },  // 1
+										 { 0, 0, 0, 0, 0, 0, 0 } }, // 1
+
+									   { { 0, 0, 0, 0, 0, 0, 0 },
+										 { 0, 0, 1, 1, 1, 0, 0 },
+										 { 0, 1, 1, 1, 1, 1, 0 },
+										 { 0, 1, 1, 1, 1, 1, 0 },
+										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 1, 1, 1, 1, 1 } },  // 2
+
+									  { { 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 0 },
+										{ 1, 1, 1, 1, 1, 0, 0 },
+										{ 1, 1, 1, 1, 0, 0, 0 },
+										{ 1, 1, 1, 0, 0, 0, 0 } },  // 3
+
+									  { { 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 0, 1, 1, 1, 0, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 0, 1, 1, 1 },
+										{ 1, 1, 0, 0, 0, 1, 1 },
+										{ 1, 1, 0, 0, 0, 0, 1 },
+										{ 1, 0, 0, 0, 0, 0, 1 } },  // 4
 
 									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 2
-
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 3
-
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 4
-
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
 										{ 0, 0, 1, 1, 1, 0, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
@@ -64,7 +59,6 @@ const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 5
 
 									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
 										{ 0, 0, 1, 1, 1, 0, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
@@ -74,7 +68,6 @@ const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 6
 
 									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
 										{ 0, 0, 1, 1, 1, 0, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
@@ -84,7 +77,6 @@ const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 7
 
 									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
 										{ 0, 0, 1, 1, 1, 0, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
@@ -94,7 +86,6 @@ const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 8
 
 									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
 										{ 0, 0, 1, 1, 1, 0, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
@@ -104,7 +95,6 @@ const int kRoundMatrixes[10][9][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 9
 
 									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 0, 0, 0, 0, 0 },
 										{ 0, 0, 1, 1, 1, 0, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
 										{ 0, 1, 1, 1, 1, 1, 0 },
@@ -178,7 +168,7 @@ bool PlayLayer::init()
 
 	// init position value
 	m_matrixLeftBottomX = (winSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
-	m_matrixLeftBottomY = (winSize.height - SushiSprite::getContentWidth() * m_height - (m_height - 1) * SUSHI_GAP) / 2;
+	m_matrixLeftBottomY = 5;// (winSize.height - SushiSprite::getContentWidth() * m_height - (m_height - 1) * SUSHI_GAP) / 2;
 
 	// init point array
 	int arraySize = sizeof(SushiSprite *) * m_width * m_height;
@@ -812,15 +802,15 @@ void PlayLayer::fillVacancies()
 		// from buttom to top
 		for (int row = 0; row < m_height; row++) {
 			sushi = m_matrix[row * m_width + col];
-			if (NULL == sushi) {
-				removedSushiOfCol++;
-			}
-			else {
+			if (NULL == sushi && hasSushi(row, col)) {
+				++removedSushiOfCol;
+			} else {
+				if (!sushi)
+					continue;
 				if (removedSushiOfCol > 0) {
-					if (!hasSushi(row, col))
-						continue;
-					// evey item have its own drop distance
 					int newRow = row - removedSushiOfCol;
+					if (!hasSushi(newRow, col) && m_matrix[newRow*m_width + col])
+						continue;
 					// switch in matrix
 					m_matrix[newRow * m_width + col] = sushi;
 					m_matrix[row * m_width + col] = NULL;
@@ -842,7 +832,8 @@ void PlayLayer::fillVacancies()
 
 	// 2. create new item and drop down.
 	for (int col = 0; col < m_width; col++) {
-		for (int row = m_height - colEmptyInfo[col]; row < m_height; row++) {
+		int firstValidRows = getFirstValidRows(col);
+		for (int row = m_height - colEmptyInfo[col] - firstValidRows; row < m_height; row++) {
 			if (hasSushi(row, col))
 				createAndDropSushi(row, col);
 		}
@@ -928,4 +919,18 @@ bool PlayLayer::hasSushi(int row, int col) {
 	if (kRoundMatrixes[m_round-1][row][col])
 		return true;
 	return false;
+}
+
+int PlayLayer::getFirstValidRows(int col) {
+	int result = 0;
+	if (m_round <= 0 || m_round > TOTAL_ROUND ||
+		col < 0 || col >= m_width)
+		return result;
+	for (int i = m_height - 1; i >= 0; --i) {
+		if (!kRoundMatrixes[m_round - 1][i][col])
+			++result;
+		else
+			break;
+	}
+	return result;
 }

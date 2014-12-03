@@ -58,6 +58,7 @@ private:
 	void markRemove(SushiSprite *sushi);
 	bool checkActualRoundEnd();
 	bool hasSushi(int row, int col);
+	int getFirstValidRows(int col);
 	
 };
 
