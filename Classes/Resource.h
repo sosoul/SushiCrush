@@ -57,6 +57,7 @@ const char s_postPlayNext[] = "postplay/next.png";
 const char s_prePlayBackground[] = "preplay/back.png";
 const char s_prePlayStar[] = "preplay/star.png";
 const char s_prePlayResume[] = "preplay/resume.png";
+const char s_targetTipsBackground[] = "tips/target.png";
 
 
 #endif

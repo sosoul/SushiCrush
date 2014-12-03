@@ -4,25 +4,18 @@
 #include "Messages.h"
 #include "Resource.h"
 #include "View/Layer/MainLayer.h"
-#include "View/Layer/MovesLayer.h"
-#include "View/Layer/PlayLayer.h"
 #include "View/Layer/PostPlayLayer.h"
 #include "View/Layer/PrePlayLayer.h"
-#include "View/Layer/ScoreLayer.h"
-#include "View/Layer/TargetLayer.h"
+#include "View/Layer/TargetTipsLayer.h"
 
-PlayScene::PlayScene() : m_playLayer(nullptr),
-						 m_prePlayLayer(nullptr),
-						 m_postPlayLayer(nullptr)
+PlayScene::PlayScene() : m_prePlayLayer(nullptr),
+						 m_postPlayLayer(nullptr),
+						 m_mainLayer(nullptr)
 {
 }
 
 PlayScene::~PlayScene()
 {
-	if (m_playLayer) {
-		m_playLayer->release();
-		m_playLayer = nullptr;
-	}
 	if (m_prePlayLayer) {
 		m_prePlayLayer->release();
 		m_prePlayLayer = nullptr;
@@ -31,20 +24,30 @@ PlayScene::~PlayScene()
 		m_postPlayLayer->release();
 		m_postPlayLayer = nullptr;
 	}
+	if (m_mainLayer){
+		m_mainLayer->release();
+		m_mainLayer = nullptr;
+	}
+
 	NotificationCenter::getInstance()->removeAllObservers(this);
 }
+
+bool PlayScene::init()
+{
+	if (!Scene::init()) {
+		return false;
+	}
+	m_mainLayer = MainLayer::create();
+	m_mainLayer->retain();
+
+	addChild(m_mainLayer);
+	return true;
+}
+
 
 void PlayScene::onEnter()
 {
 	Scene::onEnter();
-	auto mainLayer = MainLayer::create();
-	auto targetLayer = TargetLayer::create();
-	auto movesLayer = MovesLayer::create();
-	auto scoreLayer = ScoreLayer::create();
-	addChild(mainLayer);
-	addChild(targetLayer);
-	addChild(movesLayer);
-	addChild(scoreLayer);
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundEnd),
 		MSG_ROUND_END, nullptr);
@@ -103,17 +106,6 @@ void PlayScene::onRoundStart(Ref* obj) {
 		CallFunc::create(CC_CALLBACK_0(PlayScene::onPrePlayLayerActionEnded, this)),
 		nullptr);
 	m_prePlayLayer->runAction(sequence);
-
-	// play layer - create and run a show action.
-	if (!m_playLayer) {
-		m_playLayer = PlayLayer::create(roundInfo->m_round);
-		m_playLayer->retain();
-		addChild(m_playLayer);
-	}
-	m_playLayer->setPosition(0, 500);
-	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
-	m_playLayer->runAction(Repeat::create(actMoveDown, 1));
-	
 }
 
 void PlayScene::onRoundEnd(Ref* obj) {
@@ -129,20 +121,6 @@ void PlayScene::onRoundEnd(Ref* obj) {
 	MoveBy* movebyAction = MoveBy::create(0.5, Point(200, 0));
 	m_postPlayLayer->runAction(Repeat::create(movebyAction, 1));
 
-	// play layer - run a hide action.
-	if (m_playLayer) {
-		MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
-		auto hideAction1 = Hide::create();
-		m_playLayer->setPosition(0, 0);
-		m_playLayer->runAction(Sequence::create(actMoveUp, hideAction1,
-			CallFunc::create(CC_CALLBACK_0(PlayScene::onPlayLayerActionEnded, this)), nullptr));
-	}
-}
-
-void PlayScene::onPlayLayerActionEnded() {
-	m_playLayer->removeFromParentAndCleanup(true);
-	m_playLayer->release();
-	m_playLayer = nullptr;
 }
 
 void PlayScene::onPostPlayLayerActionEnded() {

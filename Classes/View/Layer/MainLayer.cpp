@@ -4,29 +4,77 @@
 #include "Resource.h"
 #include "View/Scene/GuideMapScene.h"
 #include "ui/UIButton.h"
+#include "View/Layer/MovesLayer.h"
+#include "View/Layer/PlayLayer.h"
+#include "View/Layer/ScoreLayer.h"
+#include "View/Layer/TargetLayer.h"
+#include "View/Layer/TargetTipsLayer.h"
+#include "Controller/GameController.h"
 
-MainLayer::MainLayer()
+MainLayer::MainLayer():m_playLayer(nullptr),
+					   m_targetLayer(nullptr),
+					   m_movesLayer(nullptr),
+					   m_scoreLayer(nullptr),
+					   m_targetTipsLayer(nullptr)
 {
 }
 
 MainLayer::~MainLayer()
 {
+	if (m_playLayer) {
+		m_playLayer->release();
+		m_playLayer = nullptr;
+	}
+	if (m_targetLayer){
+		m_targetLayer->release();
+		m_targetLayer = nullptr;
+	}
+	if (m_movesLayer){
+		m_movesLayer->release();
+		m_movesLayer = nullptr;
+	}
+	if (m_scoreLayer){
+		m_scoreLayer->release();
+		m_scoreLayer = nullptr;
+	}
 	NotificationCenter::getInstance()->removeAllObservers(this);
+}
+
+void MainLayer::onEnter(){
+	Layer::onEnter();
 }
 
 bool MainLayer::init() {
 	if (!Layer::init())
 		return false;
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundReady),
-		MSG_ROUND_READY, nullptr);
-
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
 	auto background = Sprite::create(s_mainBackground);
 	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	background->setPosition(Point(winSize.width / 2, winSize.height / 2));
+	background->setPosition(Point(winSize.width/2, winSize.height/2));
 	addChild(background);
+
+	m_targetLayer = TargetLayer::create();
+	m_targetLayer->retain();
+	addChild(m_targetLayer);
+
+	m_movesLayer = MovesLayer::create();
+	m_movesLayer->retain();
+	addChild(m_movesLayer);
+
+	m_scoreLayer = ScoreLayer::create();
+	m_scoreLayer->retain();
+	addChild(m_scoreLayer);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundReady),
+		MSG_ROUND_READY, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundEnd),
+		MSG_ROUND_END, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundStart),
+		MSG_ROUND_START, nullptr);
 
 	// buttons
 	auto backButton = ui::Button::create();
@@ -39,6 +87,108 @@ bool MainLayer::init() {
 }
 
 void MainLayer::onRoundReady(Ref* obj) {
+}
+
+void MainLayer::onRoundEnd(Ref* obj) {
+	// play layer - run a hide action.
+	if (m_playLayer) {
+		MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
+		auto hideAction1 = Hide::create();
+		m_playLayer->setPosition(0, 0);
+		m_playLayer->runAction(Sequence::create(actMoveUp, hideAction1,
+			CallFunc::create(CC_CALLBACK_0(MainLayer::onPlayLayerActionEnded, this)), nullptr));
+	}
+}
+
+void MainLayer::onPlayLayerActionEnded() {
+	m_playLayer->removeFromParentAndCleanup(true);
+	m_playLayer->release();
+	m_playLayer = nullptr;
+}
+
+void MainLayer::onRoundStart(Ref* obj) {
+	this->setCascadeColorEnabled(true);
+	this->setColor(Color3B(100, 100, 100));
+
+	if (m_playLayer)
+	{
+		m_playLayer->setCascadeColorEnabled(true);
+		m_playLayer->setColor(Color3B(100, 100, 100));
+	}
+	if (m_targetLayer)
+	{
+		m_targetLayer->setCascadeColorEnabled(true);
+		m_targetLayer->setColor(Color3B(100, 100, 100));
+	}
+	if (m_movesLayer)
+	{
+		m_movesLayer->setCascadeColorEnabled(true);
+		m_movesLayer->setColor(Color3B(100, 100, 100));
+	}
+	if (m_scoreLayer)
+	{
+		m_scoreLayer->setCascadeColorEnabled(true);
+		m_scoreLayer->setColor(Color3B(100, 100, 100));
+	}
+
+	if (!m_targetTipsLayer){
+		m_targetTipsLayer = TargetTipsLayer::create();
+		m_targetTipsLayer->retain();
+		addChild(m_targetTipsLayer);
+	}
+	Size winSize = Director::getInstance()->getWinSize();
+	m_targetTipsLayer->setPosition(winSize.width / 2 - 300, winSize.height / 2);
+	auto hideTipsAction = Hide::create();
+	auto showTipsAction = Show::create();
+	MoveBy* movebyDownAction = MoveBy::create(1, Point(0, -500));
+	MoveBy* movebyUpAction = MoveBy::create(1, Point(0, 500));
+
+	m_targetTipsLayer->onRoundStart(nullptr);
+	m_targetTipsLayer->runAction(Sequence::create(showTipsAction, movebyDownAction, DelayTime::create(2.0), movebyUpAction, hideTipsAction, CallFunc::create(CC_CALLBACK_0(MainLayer::onRoundStartActionEnd, this)), nullptr));
+
+}
+
+void MainLayer::onRoundStartActionEnd() {
+	this->setCascadeColorEnabled(true);
+	this->setColor(Color3B(255, 255, 255));
+
+	if (m_playLayer)
+	{
+		m_playLayer->setCascadeColorEnabled(true);
+		m_playLayer->setColor(Color3B(255, 255, 255));
+	}
+	if (m_targetLayer)
+	{
+		m_targetLayer->setCascadeColorEnabled(true);
+		m_targetLayer->setColor(Color3B(255, 255, 255));
+	}
+	if (m_movesLayer)
+	{
+		m_movesLayer->setCascadeColorEnabled(true);
+		m_movesLayer->setColor(Color3B(255, 255, 255));
+	}
+	if (m_scoreLayer)
+	{
+		m_scoreLayer->setCascadeColorEnabled(true);
+		m_scoreLayer->setColor(Color3B(255, 255, 255));
+	}
+
+	// play layer - create and run a show action.
+	if (!m_playLayer) {
+		const RoundInfo& roundInfo =  GameController::getInstance()->get_cur_round_info();
+		m_playLayer = PlayLayer::create(roundInfo.m_round);
+		m_playLayer->retain();
+		addChild(m_playLayer);
+	}
+	m_playLayer->setPosition(0, 500);
+	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
+	m_playLayer->runAction(Sequence::create(actMoveDown, nullptr));
+
+	if (m_targetTipsLayer){
+		m_targetTipsLayer->removeFromParentAndCleanup(true);
+		m_targetTipsLayer->release();
+		m_targetTipsLayer = nullptr;
+	}
 }
 
 void MainLayer::onBackButtonTouched(Ref *pSender, ui::TouchEventType type) {

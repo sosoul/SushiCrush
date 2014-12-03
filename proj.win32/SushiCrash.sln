@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SushiCrash", "SushiCrash.vcxproj", "{76A39BB2-9B84-4C65-98A5-654D86B86F2A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,7 +14,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbox2d", "..\cocos2d\exte
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libSpine", "..\cocos2d\cocos\editor-support\spine\proj.win32\libSpine.vcxproj", "{B7C2A162-DEC9-4418-972E-240AB3CBFCAE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp-tests", "..\..\..\Download Codes\cocos2d-x-3.3rc0\tests\cpp-tests\proj.win32\cpp-tests.vcxproj", "{D0466D77-644C-4750-B786-015BDFB2F0DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp-tests", "..\..\..\gamedevelop\cocos2d-x-3.3rc0\tests\cpp-tests\proj.win32\cpp-tests.vcxproj", "{03266565-855E-4892-B4A8-145F2616A160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +38,10 @@ Global
 		{B7C2A162-DEC9-4418-972E-240AB3CBFCAE}.Debug|Win32.Build.0 = Debug|Win32
 		{B7C2A162-DEC9-4418-972E-240AB3CBFCAE}.Release|Win32.ActiveCfg = Release|Win32
 		{B7C2A162-DEC9-4418-972E-240AB3CBFCAE}.Release|Win32.Build.0 = Release|Win32
-		{D0466D77-644C-4750-B786-015BDFB2F0DF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D0466D77-644C-4750-B786-015BDFB2F0DF}.Debug|Win32.Build.0 = Debug|Win32
-		{D0466D77-644C-4750-B786-015BDFB2F0DF}.Release|Win32.ActiveCfg = Release|Win32
-		{D0466D77-644C-4750-B786-015BDFB2F0DF}.Release|Win32.Build.0 = Release|Win32
+		{03266565-855E-4892-B4A8-145F2616A160}.Debug|Win32.ActiveCfg = Debug|Win32
+		{03266565-855E-4892-B4A8-145F2616A160}.Debug|Win32.Build.0 = Debug|Win32
+		{03266565-855E-4892-B4A8-145F2616A160}.Release|Win32.ActiveCfg = Release|Win32
+		{03266565-855E-4892-B4A8-145F2616A160}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

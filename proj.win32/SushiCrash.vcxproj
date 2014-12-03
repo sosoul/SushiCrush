@@ -149,6 +149,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\View\Layer\ScoreLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\StartLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\TargetLayer.cpp" />
+    <ClCompile Include="..\Classes\View\Layer\TargetTipsLayer.cpp" />
     <ClCompile Include="..\Classes\View\Scene\GuideMapScene.cpp" />
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp" />
     <ClCompile Include="..\Classes\View\Scene\StartScene.cpp" />
@@ -171,6 +172,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\View\Layer\ScoreLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\StartLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\TargetLayer.h" />
+    <ClInclude Include="..\Classes\View\Layer\TargetTipsLayer.h" />
     <ClInclude Include="..\Classes\View\Scene\GuideMapScene.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h" />
     <ClInclude Include="..\Classes\View\Scene\StartScene.h" />
