@@ -57,14 +57,17 @@ bool MainLayer::init() {
 
 	m_targetLayer = TargetLayer::create();
 	m_targetLayer->retain();
+	m_targetLayer->setCascadeColorEnabled(true);
 	addChild(m_targetLayer);
 
 	m_movesLayer = MovesLayer::create();
 	m_movesLayer->retain();
+	m_movesLayer->setCascadeColorEnabled(true);
 	addChild(m_movesLayer);
 
 	m_scoreLayer = ScoreLayer::create();
 	m_scoreLayer->retain();
+	m_scoreLayer->setCascadeColorEnabled(true);
 	addChild(m_scoreLayer);
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(MainLayer::onRoundReady),
@@ -107,29 +110,8 @@ void MainLayer::onPlayLayerActionEnded() {
 }
 
 void MainLayer::onRoundStart(Ref* obj) {
-	this->setCascadeColorEnabled(true);
-	this->setColor(Color3B(100, 100, 100));
-
-	if (m_playLayer)
-	{
-		m_playLayer->setCascadeColorEnabled(true);
-		m_playLayer->setColor(Color3B(100, 100, 100));
-	}
-	if (m_targetLayer)
-	{
-		m_targetLayer->setCascadeColorEnabled(true);
-		m_targetLayer->setColor(Color3B(100, 100, 100));
-	}
-	if (m_movesLayer)
-	{
-		m_movesLayer->setCascadeColorEnabled(true);
-		m_movesLayer->setColor(Color3B(100, 100, 100));
-	}
-	if (m_scoreLayer)
-	{
-		m_scoreLayer->setCascadeColorEnabled(true);
-		m_scoreLayer->setColor(Color3B(100, 100, 100));
-	}
+	setCascadeColorEnabled(true);
+	setColor(Color3B(100, 100, 100));
 
 	if (!m_targetTipsLayer){
 		m_targetTipsLayer = TargetTipsLayer::create();
@@ -142,49 +124,27 @@ void MainLayer::onRoundStart(Ref* obj) {
 	auto showTipsAction = Show::create();
 	MoveBy* movebyDownAction = MoveBy::create(1, Point(0, -500));
 	MoveBy* movebyUpAction = MoveBy::create(1, Point(0, 500));
-
-	m_targetTipsLayer->onRoundStart(nullptr);
 	m_targetTipsLayer->runAction(Sequence::create(showTipsAction, movebyDownAction, DelayTime::create(2.0), movebyUpAction, hideTipsAction, CallFunc::create(CC_CALLBACK_0(MainLayer::onRoundStartActionEnd, this)), nullptr));
 
 }
 
 void MainLayer::onRoundStartActionEnd() {
-	this->setCascadeColorEnabled(true);
-	this->setColor(Color3B(255, 255, 255));
-
-	if (m_playLayer)
-	{
-		m_playLayer->setCascadeColorEnabled(true);
-		m_playLayer->setColor(Color3B(255, 255, 255));
-	}
-	if (m_targetLayer)
-	{
-		m_targetLayer->setCascadeColorEnabled(true);
-		m_targetLayer->setColor(Color3B(255, 255, 255));
-	}
-	if (m_movesLayer)
-	{
-		m_movesLayer->setCascadeColorEnabled(true);
-		m_movesLayer->setColor(Color3B(255, 255, 255));
-	}
-	if (m_scoreLayer)
-	{
-		m_scoreLayer->setCascadeColorEnabled(true);
-		m_scoreLayer->setColor(Color3B(255, 255, 255));
-	}
+	setCascadeColorEnabled(true);
+	setColor(Color3B(255, 255, 255));
 
 	// play layer - create and run a show action.
 	if (!m_playLayer) {
 		const RoundInfo& roundInfo =  GameController::getInstance()->get_cur_round_info();
 		m_playLayer = PlayLayer::create(roundInfo.m_round);
 		m_playLayer->retain();
+		m_playLayer->setCascadeColorEnabled(true);
 		addChild(m_playLayer);
 	}
 	m_playLayer->setPosition(0, 500);
 	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
 	m_playLayer->runAction(Sequence::create(actMoveDown, nullptr));
 
-	if (m_targetTipsLayer){
+	if (m_targetTipsLayer) {
 		m_targetTipsLayer->removeFromParentAndCleanup(true);
 		m_targetTipsLayer->release();
 		m_targetTipsLayer = nullptr;

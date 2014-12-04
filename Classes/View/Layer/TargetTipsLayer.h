@@ -14,8 +14,6 @@ public:
 
 	virtual bool init() override;
 
-	// notifications
-	void onRoundStart(Ref* obj);
 private:
 
 };

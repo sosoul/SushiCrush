@@ -75,14 +75,8 @@ void PlayScene::onRoundReady(Ref* obj) {
 	m_prePlayLayer->runAction(Repeat::create(movebyAction, 1));
 
 	// post-play layer  - run a hide action.
-	RoundInfo* roundInfo = static_cast<RoundInfo*>(obj);
-	if (1 == roundInfo->m_round)
+	if (!m_postPlayLayer)
 		return;
-	if (!m_postPlayLayer) {
-		m_postPlayLayer = PostPlayLayer::create();
-		m_postPlayLayer->retain();
-		addChild(m_postPlayLayer);
-	}
 	auto hideAction = Hide::create();
 	movebyAction = MoveBy::create(0.5, Point(400, 0));
 	auto sequence = Sequence::create(

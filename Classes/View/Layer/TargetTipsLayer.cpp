@@ -20,7 +20,6 @@ TargetTipsLayer::TargetTipsLayer()
 
 TargetTipsLayer::~TargetTipsLayer()
 {
-	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
 bool TargetTipsLayer::init() {
@@ -42,14 +41,10 @@ bool TargetTipsLayer::init() {
 	labelTarget->setPosition(Vec2(kLabelScoreX, kLabelScoreY));
 	addChild(labelTarget, 0, kLabelTargetTag);
 
-	return true;
-}
-
-void TargetTipsLayer::onRoundStart(Ref* obj)
-{
 	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	int score = roundInfo.m_targetScroe;
 	int moves = roundInfo.m_totalMoves;
-	auto labelTarget = (LabelBMFont*)getChildByTag(kLabelTargetTag);
 	labelTarget->setString("get at least " + StringUtils::toString(score) + " in " + StringUtils::toString(moves) + " moves");
+
+	return true;
 }
