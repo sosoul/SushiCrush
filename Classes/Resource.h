@@ -1,6 +1,11 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+#define MATRIX_WIDTH (7)
+#define MATRIX_HEIGHT (8)
+#define SUSHI_GAP (1)
+#define TOTAL_SUSHI (6)
+
 // Start scene
 const char s_startBackground[] = "startBackground.png";
 const char s_startNormal[] = "startNormal.png";

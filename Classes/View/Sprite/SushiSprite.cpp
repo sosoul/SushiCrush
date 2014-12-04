@@ -2,9 +2,9 @@
 
 #include<stdlib.h>
 
-USING_NS_CC;
+#include "Resource.h"
 
-#define TOTAL_SUSHI (6)
+USING_NS_CC;
 
 static const char *sushiNormal[TOTAL_SUSHI] = {
 	"sushi_1n.png",
@@ -45,12 +45,18 @@ SushiSprite::SushiSprite() : m_col(0),
 SushiSprite::~SushiSprite() {
 }
 
-SushiSprite *SushiSprite::create(int row, int col)
+SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgIndex)
 {
 	SushiSprite *sushi = new SushiSprite();
 	sushi->m_row = row;
 	sushi->m_col = col;
-	sushi->m_imgIndex = rand() % TOTAL_SUSHI;
+	int index = 0;
+	do 
+	{
+		index = rand() % TOTAL_SUSHI;
+	} while (index == topImgIndex || index == leftImgIndex);
+	
+	sushi->m_imgIndex = index;
 	sushi->initWithSpriteFrameName(sushiNormal[sushi->m_imgIndex]);
 	sushi->autorelease();
 	return sushi;

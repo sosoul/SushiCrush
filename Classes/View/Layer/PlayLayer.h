@@ -40,7 +40,7 @@ private:
 	int m_round;
 
 	void initMatrix();
-	void createAndDropSushi(int row, int col);
+	void createAndDropSushi(int row, int col, bool isInit);
 	Point positionOfItem(int row, int col);
 	void checkAndRemoveChain();
 	void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
@@ -59,6 +59,8 @@ private:
 	bool checkActualRoundEnd();
 	bool hasSushi(int row, int col);
 	int getFirstValidRows(int col);
+	static bool isValidRow(int row);
+	static bool isValidCol(int col);
 	
 };
 

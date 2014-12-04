@@ -5,11 +5,6 @@
 #include "Resource.h"
 #include "View/Sprite/SushiSprite.h"
 
-#define MATRIX_WIDTH (7)
-#define MATRIX_HEIGHT (8)
-
-#define SUSHI_GAP (1)
-
 namespace {
 // TODO: The matrix data need to be read from config file.
 
@@ -191,7 +186,7 @@ void PlayLayer::initMatrix()
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
 			if (hasSushi(row, col))
-				createAndDropSushi(row, col);
+				createAndDropSushi(row, col, true);
 		}
 	}
 }
@@ -370,11 +365,48 @@ void PlayLayer::swapSushi()
 		NULL));
 }
 
-void PlayLayer::createAndDropSushi(int row, int col)
+// static
+bool PlayLayer::isValidRow(int row) {
+	return row >= 0 && row < MATRIX_HEIGHT;
+}
+
+// static
+bool PlayLayer::isValidCol(int col) {
+	return col >= 0 && col < MATRIX_WIDTH;
+}
+
+void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 {
 	Size size = Director::getInstance()->getWinSize();
 
-	SushiSprite *sushi = SushiSprite::create(row, col);
+	int topImgIndex = -1;
+	int leftImgIndex = -1;
+
+	if (isInit) {
+		// scan the sushis on the top
+		int topRow1 = row - 1;
+		int topRow2 = row - 2;
+		int topCol = col;
+		if (isValidRow(topRow1) && isValidRow(topRow2)) {
+			SushiSprite* topSushi1 = m_matrix[topRow1*m_width + col];
+			SushiSprite* topSushi2 = m_matrix[topRow1*m_width + col];
+			if (topSushi1 && topSushi2 && topSushi1->getImgIndex() == topSushi2->getImgIndex())
+				topImgIndex = topSushi1->getImgIndex();
+		}
+
+		// scan the sushis on the left
+		int leftCol1 = col - 1;
+		int leftCol2 = col - 2;
+		int leftRow = row;
+		if (isValidCol(leftCol1) && isValidCol(leftCol2)) {
+			SushiSprite* leftSushi1 = m_matrix[leftRow*m_width + leftCol1];
+			SushiSprite* leftSushi2 = m_matrix[leftRow*m_width + leftCol2];
+			if (leftSushi1 && leftSushi2 && leftSushi1->getImgIndex() == leftSushi2->getImgIndex())
+				leftImgIndex = leftSushi1->getImgIndex();
+		}
+	}
+
+	SushiSprite *sushi = SushiSprite::create(row, col, topImgIndex, leftImgIndex);
 
 	// create animation
 	Point endPosition = positionOfItem(row, col);
@@ -835,7 +867,7 @@ void PlayLayer::fillVacancies()
 		int firstValidRows = getFirstValidRows(col);
 		for (int row = m_height - colEmptyInfo[col] - firstValidRows; row < m_height; row++) {
 			if (hasSushi(row, col))
-				createAndDropSushi(row, col);
+				createAndDropSushi(row, col, false);
 		}
 	}
 

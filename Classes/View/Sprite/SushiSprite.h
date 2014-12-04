@@ -16,7 +16,7 @@ class SushiSprite : public Sprite
 public:
 	SushiSprite();
 	~SushiSprite();
-	static SushiSprite *create(int row, int col);
+	static SushiSprite *create(int row, int col, int topImgIndex, int leftImgIndex);
 	static float getContentWidth();
 
 	CC_SYNTHESIZE(int, m_row, Row);
@@ -26,6 +26,9 @@ public:
 	CC_SYNTHESIZE(bool, m_ignoreCheck, IgnoreCheck);//新产生的4消寿司，本轮不被消除
 	CC_SYNTHESIZE_READONLY(DisplayMode, m_displayMode, DisplayMode);
 	void setDisplayMode(DisplayMode mode);
+
+private:
+	
 };
 
 #endif // __SushiSprite_SCENE_H__
