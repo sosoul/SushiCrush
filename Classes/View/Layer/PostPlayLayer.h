@@ -17,7 +17,7 @@ public:
 
 	void resume(Ref* object, ui::TouchEventType type);
 	void nextRound(Ref* object, ui::TouchEventType type);
-
+	void backToStartMap(Ref* object, ui::TouchEventType type);
 private:
 };
 

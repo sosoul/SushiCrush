@@ -122,9 +122,9 @@ void MainLayer::onRoundStart(Ref* obj) {
 	m_targetTipsLayer->setPosition(winSize.width / 2 - 300, winSize.height / 2);
 	auto hideTipsAction = Hide::create();
 	auto showTipsAction = Show::create();
-	MoveBy* movebyDownAction = MoveBy::create(1, Point(0, -500));
-	MoveBy* movebyUpAction = MoveBy::create(1, Point(0, 500));
-	m_targetTipsLayer->runAction(Sequence::create(showTipsAction, movebyDownAction, DelayTime::create(2.0), movebyUpAction, hideTipsAction, CallFunc::create(CC_CALLBACK_0(MainLayer::onRoundStartActionEnd, this)), nullptr));
+	MoveBy* movebyDownAction = MoveBy::create(0.5, Point(0, -500));
+	MoveBy* movebyUpAction = MoveBy::create(0.5, Point(0, 500));
+	m_targetTipsLayer->runAction(Sequence::create(showTipsAction, movebyDownAction, DelayTime::create(1.0), movebyUpAction, hideTipsAction, CallFunc::create(CC_CALLBACK_0(MainLayer::onRoundStartActionEnd, this)), nullptr));
 
 }
 

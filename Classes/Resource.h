@@ -56,12 +56,21 @@ const char s_colorVUp[] = "colorVUp.png";
 const char s_circle[] = "circle.png";
 const char s_stars[] = "stars.plist";
 const char s_postPlayBackground[] = "postplay/back.png";
-const char s_postPlaySatr[] = "postplay/star.png";
-const char s_postPlayResume[] = "postplay/resume.png";
-const char s_postPlayNext[] = "postplay/next.png";
-const char s_prePlayBackground[] = "preplay/back.png";
-const char s_prePlayStar[] = "preplay/star.png";
-const char s_prePlayResume[] = "preplay/resume.png";
+const char s_postPlayResumeNormal[] = "btnNormal/resume.png";
+const char s_postPlayResumeSelected[] = "btnSelected/resume.png";
+const char s_postPlayNextNormal[] = "btnNormal/next.png";
+const char s_postPlayNextSelected[] = "btnSelected/next.png";
+const char s_postPlayListNormal[] = "btnNormal/list.png";
+const char s_postPlayListSelected[] = "btnSelected/list.png";
+const char s_prePlayBackground[] = "postplay/back.png";
+const char s_starLeftDone[] = "starLeftDone.png";
+const char s_starMidDone[] = "starMidDone.png";
+const char s_starRightDone[] = "starRightDone.png";
+const char s_starLeftUndone[] = "starLeftUndone.png";
+const char s_starMidUndone[] = "starMidUndone.png";
+const char s_starRightUndone[] = "starRightUndone.png";
+const char s_preLayerStartNormal[] = "btnNormal/start.png";
+const char s_preLayerStartSelected[] = "btnSelected/start.png";
 const char s_targetTipsBackground[] = "tips/target.png";
 
 
