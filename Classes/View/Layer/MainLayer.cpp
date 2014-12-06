@@ -86,6 +86,13 @@ bool MainLayer::init() {
 	backButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
 	addChild(backButton);
 	backButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackButtonTouched));
+
+	auto refreshButton = ui::Button::create();
+	refreshButton->setTouchEnabled(true);
+	refreshButton->loadTextures(s_postPlayResumeNormal, s_postPlayResumeSelected, "");
+	refreshButton->setPosition(Point(winSize.width, winSize.height) + Point(-100, -50));
+	addChild(refreshButton);
+	refreshButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onRefreshButtonTouched));
 	return true;
 }
 
@@ -157,5 +164,12 @@ void MainLayer::onBackButtonTouched(Ref *pSender, ui::TouchEventType type) {
 		float time = 1.0f;
 		CCTransitionScene * transScene = CCTransitionCrossFade::create(time, scene);
 		CCDirector::sharedDirector()->replaceScene(transScene);
+	}
+}
+
+void MainLayer::onRefreshButtonTouched(Ref *pSender, ui::TouchEventType type) {
+	if (ui::TOUCH_EVENT_ENDED == type) {
+		if (m_playLayer)
+			m_playLayer->refresh();
 	}
 }

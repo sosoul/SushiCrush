@@ -8,14 +8,14 @@
 namespace {
 // TODO: The matrix data need to be read from config file.
 
-const int kRoundMatrixes[10][8][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 0, 1, 1, 1, 1, 1, 0 },
-										 { 0, 1, 1, 1, 1, 1, 0 },
-										 { 0, 0, 1, 1, 1, 0, 0 },
-										 { 0, 0, 1, 1, 1, 0, 0 },
+const int kRoundMatrixes[10][8][7] = { { { 0, 0, 0, 1, 0, 0, 0 },
 										 { 0, 0, 0, 1, 0, 0, 0 },
-										 { 0, 0, 0, 0, 0, 0, 0 } }, // 1
+										 { 0, 0, 0, 1, 0, 0, 0 },
+										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 0, 0, 0, 1, 0, 0, 0 },
+										 { 0, 0, 0, 1, 0, 0, 0 },
+										 { 0, 0, 0, 1, 0, 0, 0 },
+										 { 0, 0, 0, 1, 0, 0, 0 } }, // 1
 
 									   { { 0, 0, 0, 0, 0, 0, 0 },
 										 { 0, 0, 1, 1, 1, 0, 0 },
@@ -382,14 +382,13 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 	int topImgIndex = -1;
 	int leftImgIndex = -1;
 
-	if (isInit) {
+	if (isInit) {  // if it is an initial round, make the sushis stay un-eliminated status.
 		// scan the sushis on the top
 		int topRow1 = row - 1;
 		int topRow2 = row - 2;
-		int topCol = col;
 		if (isValidRow(topRow1) && isValidRow(topRow2)) {
 			SushiSprite* topSushi1 = m_matrix[topRow1*m_width + col];
-			SushiSprite* topSushi2 = m_matrix[topRow1*m_width + col];
+			SushiSprite* topSushi2 = m_matrix[topRow2*m_width + col];
 			if (topSushi1 && topSushi2 && topSushi1->getImgIndex() == topSushi2->getImgIndex())
 				topImgIndex = topSushi1->getImgIndex();
 		}
@@ -397,10 +396,9 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 		// scan the sushis on the left
 		int leftCol1 = col - 1;
 		int leftCol2 = col - 2;
-		int leftRow = row;
 		if (isValidCol(leftCol1) && isValidCol(leftCol2)) {
-			SushiSprite* leftSushi1 = m_matrix[leftRow*m_width + leftCol1];
-			SushiSprite* leftSushi2 = m_matrix[leftRow*m_width + leftCol2];
+			SushiSprite* leftSushi1 = m_matrix[row*m_width + leftCol1];
+			SushiSprite* leftSushi2 = m_matrix[row*m_width + leftCol2];
 			if (leftSushi1 && leftSushi2 && leftSushi1->getImgIndex() == leftSushi2->getImgIndex())
 				leftImgIndex = leftSushi1->getImgIndex();
 		}
@@ -614,7 +612,6 @@ bool PlayLayer::checkActualRoundEnd()
 	{
 		return false;
 	}
-
 	return true;
 }
 
@@ -721,6 +718,10 @@ void PlayLayer::removeSushi()
 	if (0 != removeCount)
 	{
 		GameController::getInstance()->onRemoveSushiCompleted(removeCount);
+	}
+	else {
+		if (isLock())
+			refresh();
 	}
 }
 
@@ -864,8 +865,8 @@ void PlayLayer::fillVacancies()
 
 	// 2. create new item and drop down.
 	for (int col = 0; col < m_width; col++) {
-		int firstValidRows = getFirstValidRows(col);
-		for (int row = m_height - colEmptyInfo[col] - firstValidRows; row < m_height; row++) {
+		int topInValidRowsCount = getTopInValidRowsCount(col);
+		for (int row = m_height - colEmptyInfo[col] - topInValidRowsCount; row < m_height; row++) {
 			if (hasSushi(row, col))
 				createAndDropSushi(row, col, false);
 		}
@@ -953,7 +954,7 @@ bool PlayLayer::hasSushi(int row, int col) {
 	return false;
 }
 
-int PlayLayer::getFirstValidRows(int col) {
+int PlayLayer::getTopInValidRowsCount(int col) {
 	int result = 0;
 	if (m_round <= 0 || m_round > TOTAL_ROUND ||
 		col < 0 || col >= m_width)
@@ -965,4 +966,161 @@ int PlayLayer::getFirstValidRows(int col) {
 			break;
 	}
 	return result;
+}
+
+void PlayLayer::refresh() {
+	for (int row = 0; row < m_height; row++) {
+		for (int col = 0; col < m_width; col++) {
+			if (SushiSprite* sushi = m_matrix[row*m_width + col])
+				sushi->setIsNeedRemove(true);
+		}
+	}
+	removeSushi();
+}
+
+bool PlayLayer::isLock() {
+	for (int row = 0; row < m_height; row++) {
+		for (int col = 0; col < m_width; col++) {
+			if (!isLock(row, col))
+				return false;
+		}
+	}
+	return true;
+}
+
+bool PlayLayer::canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex) {
+	if (!sushi1 || !sushi2)
+		return false;
+	return (sushi1->getImgIndex() == sushi2->getImgIndex() && sushi1->getImgIndex() == imgIndex);
+}
+
+bool PlayLayer::isLock(int row, int col) {
+	if (!hasSushi(row, col))
+		return true;
+	if (!isValidRow(row) || !isValidCol(col))
+		return false;
+	SushiSprite* sushi = m_matrix[row*m_width+col];
+	if (!sushi)
+		return false;
+	int index = sushi->getImgIndex();
+	SushiSprite* sushi1 = NULL;
+	SushiSprite* sushi2 = NULL;
+
+	// scan the sushis on the top
+	int topRow1 = row - 1;
+	int topRow2 = row - 2;
+	int topRow3 = row - 3;
+	int topLeftCol1 = col - 1;
+	int topLeftCol2 = col - 2;
+	int topRightCol1 = col + 1;
+	int topRightCol2 = col + 2;
+	if (hasSushi(topRow1, col)) {
+		if (isValidRow(topRow2) && isValidRow(topRow3)) {
+			sushi1 = m_matrix[topRow2*m_width + col];
+			sushi2 = m_matrix[topRow3*m_width + col];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidCol(topLeftCol1) && isValidCol(topLeftCol2) && isValidRow(topRow1)) {
+			sushi1 = m_matrix[topRow1*m_width + topLeftCol1];
+			sushi2 = m_matrix[topRow1*m_width + topLeftCol2];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidCol(topRightCol1) && isValidCol(topRightCol2) && isValidRow(topRow1)) {
+			sushi1 = m_matrix[topRow1*m_width + topRightCol1];
+			sushi2 = m_matrix[topRow1*m_width + topRightCol2];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+	}
+
+	// scan the sushis on the right
+	int rightCol1 = col + 1;
+	int rightCol2 = col + 2;
+	int rightCol3 = col + 3;
+	int rightTopRow1 = row - 1;
+	int rightTopRow2 = row - 2;
+	int rightBottomRow1 = row + 1;
+	int rightBottomRow2 = row + 2;
+	if (hasSushi(row, rightCol1)) {
+		if (isValidCol(rightCol2) && isValidCol(rightCol3)) {
+			sushi1 = m_matrix[row*m_width + rightCol2];
+			sushi2 = m_matrix[row*m_width + rightCol3];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidRow(rightTopRow1) && isValidRow(rightTopRow2) && isValidCol(rightCol1)) {
+			sushi1 = m_matrix[rightTopRow1*m_width + rightCol1];
+			sushi2 = m_matrix[rightTopRow2*m_width + rightCol1];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidRow(rightBottomRow1) && isValidRow(rightBottomRow2) && isValidCol(rightCol1)) {
+			sushi1 = m_matrix[rightBottomRow1*m_width + rightCol1];
+			sushi2 = m_matrix[rightBottomRow2*m_width + rightCol1];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+	}
+
+	// scan the sushis on the bottom
+	int bottomRow1 = row + 1;
+	int bottomRow2 = row + 2;
+	int bottomRow3 = row + 3;
+	int bottomLeftCol1 = col - 1;
+	int bottomLeftCol2 = col - 2;
+	int bottomRightCol1 = col + 1;
+	int bottomRightCol2 = col + 2;
+	if (hasSushi(bottomRow1, col)) {
+		if (isValidRow(bottomRow2) && isValidRow(bottomRow3)) {
+			sushi1 = m_matrix[bottomRow2*m_width + col];
+			sushi2 = m_matrix[bottomRow3*m_width + col];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidCol(bottomLeftCol1) && isValidCol(bottomLeftCol2) && isValidRow(bottomRow1)) {
+			sushi1 = m_matrix[bottomRow1*m_width + bottomLeftCol1];
+			sushi2 = m_matrix[bottomRow1*m_width + bottomLeftCol2];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidCol(bottomRightCol1) && isValidCol(bottomRightCol2) && isValidRow(bottomRow1)) {
+			sushi1 = m_matrix[bottomRow1*m_width + bottomRightCol1];
+			sushi2 = m_matrix[bottomRow1*m_width + bottomRightCol2];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+	}
+
+	// scan the sushis on the left
+	int leftCol1 = col - 1;
+	int leftCol2 = col - 2;
+	int leftCol3 = col - 3;
+	int leftTopRow1 = row - 1;
+	int leftTopRow2 = row - 2;
+	int leftBottomRow1 = row + 1;
+	int leftBottomRow2 = row + 2;
+	if (hasSushi(row, leftCol1)) {
+		if (isValidCol(leftCol2) && isValidCol(leftCol3)) {
+			sushi1 = m_matrix[row*m_width + leftCol2];
+			sushi2 = m_matrix[row*m_width + leftCol3];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidRow(leftTopRow1) && isValidRow(leftTopRow2) && isValidCol(leftCol1)) {
+			sushi1 = m_matrix[leftTopRow1*m_width + leftCol1];
+			sushi2 = m_matrix[leftTopRow2*m_width + leftCol1];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+		if (isValidRow(leftBottomRow1) && isValidRow(leftBottomRow2) && isValidCol(leftCol1)) {
+			sushi1 = m_matrix[leftBottomRow1*m_width + leftCol1];
+			sushi2 = m_matrix[leftBottomRow2*m_width + leftCol1];
+			if (canbeRemovedSushis(sushi1, sushi2, index))
+				return false;
+		}
+	}
+
+	return true;
 }

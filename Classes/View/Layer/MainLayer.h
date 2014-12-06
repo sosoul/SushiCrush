@@ -36,6 +36,7 @@ private:
 
 
 	void onBackButtonTouched(Ref *pSender, ui::TouchEventType type);
+	void onRefreshButtonTouched(Ref *pSender, ui::TouchEventType type);
 	void onRoundStartActionEnd();
 };
 

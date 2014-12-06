@@ -23,6 +23,8 @@ public:
 	void onRoundEnd(Ref* obj);
 	void onRoundStart(Ref* obj);
 
+	void refresh();
+
 private:
 	SpriteBatchNode *m_spriteSheet;
 	SushiSprite **m_matrix;// 1D array which store (SushiSprite *).
@@ -58,9 +60,15 @@ private:
 	void markRemove(SushiSprite *sushi);
 	bool checkActualRoundEnd();
 	bool hasSushi(int row, int col);
-	int getFirstValidRows(int col);
+	int getTopInValidRowsCount(int col);
 	static bool isValidRow(int row);
 	static bool isValidCol(int col);
+
+	// is the marix stay lock status.
+	bool isLock();
+	// is the sushi stay lock status.
+	bool isLock(int row, int col);
+	bool canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex);
 	
 };
 
