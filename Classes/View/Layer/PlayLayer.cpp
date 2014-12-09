@@ -153,8 +153,8 @@ bool PlayLayer::init()
 	Size winSize = Director::getInstance()->getWinSize();
 
 	// init m_spriteSheet
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sushi.plist");
-	m_spriteSheet = SpriteBatchNode::create("sushi.pvr.ccz");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_sushiPlist);
+	m_spriteSheet = SpriteBatchNode::create(s_sushiRes);
 	addChild(m_spriteSheet);
 
 	// Yes, you can load this value from other module.

@@ -46,7 +46,8 @@ bool PostPlayLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create(s_postPlayBackground);
+	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("res.plist");
+	auto background = CCSprite::createWithSpriteFrameName(s_postPlayBackground);
 	background->setPosition(Vec2(kBackPrePlayX, kBackYPrePlay));
 	addChild(background);
 

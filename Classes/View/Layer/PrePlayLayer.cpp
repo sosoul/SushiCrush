@@ -49,7 +49,9 @@ bool PrePlayLayer::init()
 
 	// background
 	Size winSize = Director::getInstance()->getWinSize();
-	auto background = Sprite::create(s_prePlayBackground);
+
+	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(s_resPlist);
+	auto background = CCSprite::createWithSpriteFrameName(s_prePlayBackground);
 	background->setPosition(Vec2(kBackPrePlayX, kBackYPrePlay));
 	addChild(background);
 

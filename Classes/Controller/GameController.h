@@ -35,6 +35,7 @@ public:
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
 
+	CCSpriteFrameCache* cache;
 private:
 	void writeToDB(const RoundInfo& m_curRoundInfo);
 
@@ -42,7 +43,6 @@ private:
 	typedef RoundInfMap::iterator RoundInfMapIt;
 	RoundInfMap m_roundInfoMap;
 	RoundInfo m_curRoundInfo;
-
 };
 
 

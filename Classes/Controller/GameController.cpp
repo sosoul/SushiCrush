@@ -41,6 +41,10 @@ void GameController::init() {
 		m_roundInfoMap[i] = item;
 	}
 	m_curRoundInfo = m_roundInfoMap[1];
+
+	cache = CCSpriteFrameCache::sharedSpriteFrameCache();
+	cache->addSpriteFramesWithFile("res.plist");
+	cache->retain();
 }
 
 void GameController::uninit() {
