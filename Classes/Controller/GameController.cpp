@@ -1,6 +1,7 @@
 #include "Controller/GameController.h"
 
 #include "Messages.h"
+#include "Resource.h"
 
 const int kPerSushiScore = 10;
 
@@ -43,7 +44,7 @@ void GameController::init() {
 	m_curRoundInfo = m_roundInfoMap[1];
 
 	cache = CCSpriteFrameCache::sharedSpriteFrameCache();
-	cache->addSpriteFramesWithFile("res.plist");
+	cache->addSpriteFramesWithFile(s_resPlist);
 	cache->retain();
 }
 
