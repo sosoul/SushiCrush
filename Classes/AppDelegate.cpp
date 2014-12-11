@@ -53,9 +53,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	CCFileUtils::getInstance()->setSearchPaths(searchPath);
 
 	initialize();
-
-	initialize();
-
     // turn on display FPS
     director->setDisplayStats(true);
 
