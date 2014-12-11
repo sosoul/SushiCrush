@@ -7,12 +7,12 @@
 namespace {
 const int kLabelTitleTag = 0;
 const int kLabelMovesTag = 1;
-const int kBackgroundX = 320;
-const int kBackgroundY = 460;
-const int kLabelTitleX = 235;
-const int kLabelTitleY = 460;
-const int kLabelMovesX = 335;
-const int kLabelMovesY = 460;
+const int kBackgroundX = 120;
+const int kBackgroundY = -5;
+const int kLabelTitleX = 1;
+const int kLabelTitleY = -20;
+const int kLabelMovesX = 120;
+const int kLabelMovesY = -5;
 }
 
 MovesLayer::MovesLayer()
@@ -36,20 +36,23 @@ bool MovesLayer::init() {
 		MSG_ROUND_READY, nullptr);
 
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	auto background = Sprite::create(s_moves);
-	background->setPosition(Vec2(kBackgroundX, kBackgroundY));
+	background->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + visibleSize.height + kBackgroundY));
 	addChild(background);
 
 	// label "Moves:"
 	auto labelTitle = LabelBMFont::create("Moves:", "fonts/boundsTestFont.fnt");
-	labelTitle->setPosition(Vec2(kLabelTitleX, kLabelTitleY));
+	labelTitle->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	labelTitle->setPosition(Vec2(visibleOrigin.x + kLabelTitleX, visibleOrigin.y + visibleSize.height + kLabelTitleY));
 	addChild(labelTitle, 0, kLabelTitleTag);
 
 	// label of moves' number
 	auto labelMoves = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
-	labelMoves->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	labelMoves->setPosition(Vec2(kLabelMovesX, kLabelMovesY));
+	labelMoves->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	labelMoves->setPosition(Vec2(visibleOrigin.x + kLabelMovesX, visibleOrigin.y + visibleSize.height + kLabelMovesY));
 	addChild(labelMoves, 0, kLabelMovesTag);
 
 	// init moves

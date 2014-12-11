@@ -7,12 +7,12 @@
 namespace {
 const int kLabelTitleTag = 0;
 const int kLabelTargetTag = 1;
-const int kBackgroundX = 320;
-const int kBackgroundY = 420;
-const int kLabelTitleX = 235;
-const int kLabelTitleY = 420;
-const int kLabelTargetX = 335;
-const int kLabelTargetY = 420;
+const int kBackgroundX = 120;
+const int kBackgroundY = -80;
+const int kLabelTitleX = 1;
+const int kLabelTitleY = -100;
+const int kLabelTargetX = 120;
+const int kLabelTargetY = -80;
 }
 
 
@@ -37,20 +37,23 @@ bool TargetLayer::init()
 		MSG_ROUND_READY, nullptr);
 
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	auto background = Sprite::create(s_target);
-	background->setPosition(Vec2(kBackgroundX, kBackgroundY));
+	background->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + visibleSize.height + kBackgroundY));
 	addChild(background);
 
 	// label "Target:"
 	auto labelTitle = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
-	labelTitle->setPosition(Vec2(kLabelTitleX, kLabelTitleY));
+	labelTitle->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	labelTitle->setPosition(Vec2(visibleOrigin.x + kLabelTitleX, visibleOrigin.y + visibleSize.height + kLabelTitleY));
 	addChild(labelTitle, 0, kLabelTitleTag);
 
 	// label of target
 	auto labelTarget = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
-	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	labelTarget->setPosition(Vec2(kLabelTargetX, kLabelTargetY));
+	labelTarget->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelTargetX, visibleOrigin.y + visibleSize.height + kLabelTargetY));
 	addChild(labelTarget, 0, kLabelTargetTag);
 
 	// init target

@@ -6,12 +6,12 @@
 
 namespace {
 const int kLabelTargetTag = 0;
-const int kBackgroundX = 470;
+const int kBackgroundX = 300;
 const int kBackgroundY = 370;
-const int kLabelTitleX = 360;
+const int kLabelTitleX = 0;
 const int kLabelTitleY = 400;
-const int kLabelScoreX = 470;
-const int kLabelScoreY = 370;
+const int kLabelScoreX = 0;
+const int kLabelScoreY = 350;
 }
 
 TargetTipsLayer::TargetTipsLayer()
@@ -26,19 +26,20 @@ bool TargetTipsLayer::init() {
 	if (!Layer::init())
 		return false;
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	auto background = Sprite::create(s_targetTipsBackground);
-	background->setPosition(Vec2(kBackgroundX, kBackgroundY));
+	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + kBackgroundY));
 	addChild(background);
 	// label "Score:"
 	auto labelTitle = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
-	labelTitle->setPosition(Vec2(kLabelTitleX, kLabelTitleY));
+	labelTitle->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+	labelTitle->setPosition(Vec2(visibleOrigin.x + kLabelTitleX, visibleOrigin.y + kLabelTitleY));
 	addChild(labelTitle);
 
 	// label of score
-	auto labelTarget = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
-	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	labelTarget->setPosition(Vec2(kLabelScoreX, kLabelScoreY));
+	auto labelTarget = LabelBMFont::create("", "fonts/boundsTestFont.fnt");
+	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
 	addChild(labelTarget, 0, kLabelTargetTag);
 
 	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();

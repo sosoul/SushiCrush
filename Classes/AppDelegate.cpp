@@ -5,6 +5,11 @@
 
 USING_NS_CC;
 
+const Size kDesignResolutionSize = Size(640.0, 1138.0);
+const Size kResourceResolution = Size(640.0, 1138.0);
+// test frame size
+const Size kFrameSize = Size(640.0, 960.0);
+
 AppDelegate::AppDelegate() {
 
 }
@@ -36,12 +41,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
 	// resolution adaption
-	glview->setDesignResolutionSize(720, 480.0, ResolutionPolicy::SHOW_ALL);
+	director->setContentScaleFactor(kResourceResolution.height / kDesignResolutionSize.height);
+	glview->setFrameSize(kFrameSize.width, kFrameSize.height);
+	glview->setDesignResolutionSize(kDesignResolutionSize.width, kDesignResolutionSize.height,
+		ResolutionPolicy::NO_BORDER);
+	
 	std::vector<std::string> searchPath;
 	searchPath.push_back("w640");
 	searchPath.push_back("fonts");
 	CCFileUtils::getInstance()->setSearchPaths(searchPath);
-	director->setContentScaleFactor(640.0 / 320.0);
 
     // turn on display FPS
     director->setDisplayStats(true);

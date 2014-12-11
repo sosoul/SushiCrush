@@ -49,10 +49,10 @@ bool MainLayer::init() {
 		return false;
 
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 	auto background = Sprite::create(s_mainBackground);
 	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	background->setPosition(Point(winSize.width/2, winSize.height/2));
+	background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	addChild(background);
 
 	m_targetLayer = TargetLayer::create();
@@ -83,14 +83,14 @@ bool MainLayer::init() {
 	auto backButton = ui::Button::create();
 	backButton->setTouchEnabled(true);
 	backButton->loadTextures(s_backToStartButtonNormal, s_backToStartButtonSelected, "");
-	backButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
+	backButton->setPosition(Point(visibleSize.width, visibleSize.height) + Point(-70, -50));
 	addChild(backButton);
 	backButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackButtonTouched));
 
 	auto refreshButton = ui::Button::create();
 	refreshButton->setTouchEnabled(true);
 	refreshButton->loadTextures(s_postPlayResumeNormal, s_postPlayResumeSelected, "");
-	refreshButton->setPosition(Point(winSize.width, winSize.height) + Point(-100, -50));
+	refreshButton->setPosition(Point(visibleSize.width, visibleSize.height) + Point(-200, -50));
 	addChild(refreshButton);
 	refreshButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onRefreshButtonTouched));
 	return true;
@@ -104,7 +104,8 @@ void MainLayer::onRoundEnd(Ref* obj) {
 	if (m_playLayer) {
 		MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
 		auto hideAction1 = Hide::create();
-		m_playLayer->setPosition(0, 0);
+		Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+		m_playLayer->setPosition(visibleOrigin.x, visibleOrigin.y);
 		m_playLayer->runAction(Sequence::create(actMoveUp, hideAction1,
 			CallFunc::create(CC_CALLBACK_0(MainLayer::onPlayLayerActionEnded, this)), nullptr));
 	}
@@ -125,8 +126,8 @@ void MainLayer::onRoundStart(Ref* obj) {
 		m_targetTipsLayer->retain();
 		addChild(m_targetTipsLayer);
 	}
-	Size winSize = Director::getInstance()->getWinSize();
-	m_targetTipsLayer->setPosition(winSize.width / 2 - 300, winSize.height / 2);
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	m_targetTipsLayer->setPosition(visibleSize.width / 2 - 300, visibleSize.height / 2);
 	auto hideTipsAction = Hide::create();
 	auto showTipsAction = Show::create();
 	MoveBy* movebyDownAction = MoveBy::create(0.5, Point(0, -500));
@@ -147,7 +148,8 @@ void MainLayer::onRoundStartActionEnd() {
 		m_playLayer->setCascadeColorEnabled(true);
 		addChild(m_playLayer);
 	}
-	m_playLayer->setPosition(0, 500);
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	m_playLayer->setPosition(visibleOrigin.x, visibleOrigin.y + 500);
 	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
 	m_playLayer->runAction(Sequence::create(actMoveDown, nullptr));
 

@@ -21,11 +21,11 @@ bool GuideMapLayer::init()
 		return false;
 
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	auto background = CCSprite::create(s_guideMap);
 	background->retain();
 	background->setAnchorPoint(Vec2::ZERO);
-	background->setPosition(Vec2::ZERO);
+	background->setPosition(origin);
 	addChild(background);
 
 	// round buttons
@@ -74,8 +74,9 @@ void GuideMapLayer::createRoundButton(int round) {
 	std::string selectedButton = s_roundButtonsSelected[round];
 
 	roundButton->loadTextures(normalButton, selectedButton, "");
-	const int step = 60;
-	roundButton->setPosition(Point(round*step, round*step));
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	const int step = 100;
+	roundButton->setPosition(ccpAdd(visibleOrigin, Point(round*step, round*step)));
 	roundButton->setUserData((void*)round);
 	addChild(roundButton);
 	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&GuideMapLayer::onRoundButtonTouched));
@@ -92,11 +93,11 @@ bool GuideMapOptionsLayer::init() {
 		return false;
 
 	// back button
-	Size winSize = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 	auto backButton = ui::Button::create();
 	backButton->setTouchEnabled(true);
 	backButton->loadTextures("backToStartNormal.png", "backToStartSelected.png", "");
-	backButton->setPosition(Point(winSize.width, winSize.height) + Point(-50, -50));
+	backButton->setPosition(Point(visibleSize.width, visibleSize.height) + Point(-70, 0));
 	addChild(backButton);
 	backButton->addTouchEventListener(this, ui::SEL_TouchEvent(&GuideMapOptionsLayer::onBackButtonTouched));
 	return true;

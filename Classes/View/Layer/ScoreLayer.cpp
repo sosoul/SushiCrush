@@ -7,12 +7,12 @@
 namespace {
 const int kLabelTitleTag = 0;
 const int kLabelScoreTag = 1;
-const int kBackgroundX = 465;
-const int kBackgroundY = 460;
-const int kLabelTitleX = 380;
-const int kLabelTitleY = 460;
-const int kLabelScoreX = 480;
-const int kLabelScoreY = 460;
+const int kBackgroundX = 400;
+const int kBackgroundY = -5;
+const int kLabelTitleX = 290;
+const int kLabelTitleY = -20;
+const int kLabelScoreX = 400;
+const int kLabelScoreY = -5;
 }
 
 ScoreLayer::ScoreLayer()
@@ -35,20 +35,23 @@ bool ScoreLayer::init() {
 		MSG_SCORE_CHANGED, nullptr);
 
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	auto background = Sprite::create(s_moves);
-	background->setPosition(Vec2(kBackgroundX, kBackgroundY));
+	background->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + visibleSize.height + kBackgroundY));
 	addChild(background);
 
 	// label "Score:"
 	auto labelTitle = LabelBMFont::create("Score:", "fonts/boundsTestFont.fnt");
-	labelTitle->setPosition(Vec2(kLabelTitleX, kLabelTitleY));
+	labelTitle->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	labelTitle->setPosition(Vec2(visibleOrigin.x + kLabelTitleX, visibleOrigin.y + visibleSize.height + kLabelTitleY));
 	addChild(labelTitle, 0, kLabelTitleTag);
 
 	// label of score
 	auto labelScore = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
-	labelScore->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	labelScore->setPosition(Vec2(kLabelScoreX, kLabelScoreY));
+	labelScore->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	labelScore->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + visibleSize.height + kLabelScoreY));
 	addChild(labelScore, 0, kLabelScoreTag);
 
 	// init score

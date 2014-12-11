@@ -44,28 +44,28 @@ const int kRoundMatrixes[10][8][7] = { { { 0, 0, 0, 1, 0, 0, 0 },
 										{ 1, 1, 0, 0, 0, 0, 1 },
 										{ 1, 0, 0, 0, 0, 0, 1 } },  // 4
 
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
+									  { { 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 5
 
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
+									  { { 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 } },  // 6
 
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
+									  { { 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
+										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
 										{ 1, 1, 1, 1, 1, 1, 1 },
@@ -217,6 +217,8 @@ bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)
 	m_destSushi = NULL;
 	if (m_isTouchEnable) {
 		auto location = touch->getLocation();
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+		location -= origin;
 		m_srcSushi = sushiOfPoint(&location);
 	}
 	return m_isTouchEnable;
@@ -232,6 +234,8 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 	int col = m_srcSushi->getCol();
 
 	auto location = touch->getLocation();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	location -= origin;
 	auto halfSushiWidth = m_srcSushi->getContentSize().width / 2;
 	auto halfSushiHeight = m_srcSushi->getContentSize().height / 2;
 
@@ -409,7 +413,8 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 	// create animation
 	Point endPosition = positionOfItem(row, col);
 	Point startPosition = Point(endPosition.x, endPosition.y + size.height / 2);
-	sushi->setPosition(startPosition);
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	sushi->setPosition(ccpAdd(visibleOrigin, startPosition));
 	float speed = startPosition.y / (1.5 * size.height);
 	sushi->runAction(MoveTo::create(speed, endPosition));
 	// add to BatchNode
@@ -700,7 +705,7 @@ void PlayLayer::removeSushi()
 		}
 
 		if (sushi->getIsNeedRemove()) {
-			m_isNeedFillVacancies = true;//需要掉落
+			m_isNeedFillVacancies = true;  // 需要掉落
 			// TODO: 检查类型，并播放一行消失的动画
 
 			if (sushi->getDisplayMode() == DISPLAY_MODE_HORIZONTAL)
@@ -737,7 +742,8 @@ void PlayLayer::explodeSpecialH(Point point)
 	auto colorSpriteRight = Sprite::create(s_colorHRight);
 	addChild(colorSpriteRight, 10);
 	Point endPosition1 = Point(point.x - size.width, point.y);
-	colorSpriteRight->setPosition(startPosition);
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	colorSpriteRight->setPosition(ccpAdd(visibleOrigin, startPosition));
 	colorSpriteRight->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
 		MoveTo::create(speed, endPosition1),
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteRight)),
@@ -746,7 +752,7 @@ void PlayLayer::explodeSpecialH(Point point)
 	auto colorSpriteLeft = Sprite::create(s_colorLRight);
 	addChild(colorSpriteLeft, 10);
 	Point endPosition2 = Point(point.x + size.width, point.y);
-	colorSpriteLeft->setPosition(startPosition);
+	colorSpriteLeft->setPosition(ccpAdd(visibleOrigin, startPosition));
 	colorSpriteLeft->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
 		MoveTo::create(speed, endPosition2),
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteLeft)),
@@ -767,7 +773,8 @@ void PlayLayer::explodeSpecialV(Point point)
 	auto colorSpriteDown = Sprite::create(s_colorVDown);
 	addChild(colorSpriteDown, 10);
 	Point endPosition1 = Point(point.x, point.y - size.height);
-	colorSpriteDown->setPosition(startPosition);
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	colorSpriteDown->setPosition(ccpAdd(visibleOrigin, startPosition));
 	colorSpriteDown->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
 		MoveTo::create(speed, endPosition1),
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteDown)),
@@ -776,7 +783,7 @@ void PlayLayer::explodeSpecialV(Point point)
 	auto colorSpriteUp = Sprite::create(s_colorVUp);
 	addChild(colorSpriteUp, 10);
 	Point endPosition2 = Point(point.x, point.y + size.height);
-	colorSpriteUp->setPosition(startPosition);
+	colorSpriteUp->setPosition(ccpAdd(visibleOrigin, startPosition));
 	colorSpriteUp->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
 		MoveTo::create(speed, endPosition2),
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteUp)),
@@ -803,7 +810,8 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 	// 2. action for circle
 	auto circleSprite = Sprite::create(s_circle);
 	addChild(circleSprite, 10);
-	circleSprite->setPosition(sushi->getPosition());
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	circleSprite->setPosition(ccpAdd(visibleOrigin, sushi->getPosition()));
 	circleSprite->setScale(0);// start size
 	circleSprite->runAction(Sequence::create(ScaleTo::create(time, 1.0),
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, circleSprite)),
@@ -813,7 +821,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 	auto particleStars = ParticleSystemQuad::create(s_stars);
 	particleStars->setAutoRemoveOnFinish(true);
 	particleStars->setBlendAdditive(false);
-	particleStars->setPosition(sushi->getPosition());
+	particleStars->setPosition(ccpAdd(visibleOrigin, sushi->getPosition()));
 	particleStars->setScale(0.3);
 	addChild(particleStars, 20);
 }
