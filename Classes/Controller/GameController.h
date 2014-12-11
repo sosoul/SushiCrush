@@ -34,8 +34,6 @@ public:
 
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
-
-	CCSpriteFrameCache* cache;
 private:
 	void writeToDB(const RoundInfo& m_curRoundInfo);
 

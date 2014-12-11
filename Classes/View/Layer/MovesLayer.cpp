@@ -38,7 +38,7 @@ bool MovesLayer::init() {
 	// background
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	auto background = Sprite::create(s_moves);
+	auto background = Sprite::createWithSpriteFrameName(s_moves);
 	background->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + visibleSize.height + kBackgroundY));
 	addChild(background);

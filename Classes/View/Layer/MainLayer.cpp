@@ -50,7 +50,7 @@ bool MainLayer::init() {
 
 	// background
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto background = Sprite::create(s_mainBackground);
+	auto background = Sprite::createWithSpriteFrameName(s_mainBackground);
 	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	addChild(background);
@@ -82,14 +82,14 @@ bool MainLayer::init() {
 	// buttons
 	auto backButton = ui::Button::create();
 	backButton->setTouchEnabled(true);
-	backButton->loadTextures(s_backToStartButtonNormal, s_backToStartButtonSelected, "");
+	backButton->loadTextures(s_backToStartButtonNormal, s_backToStartButtonSelected, "", ui::Button::TextureResType::PLIST);
 	backButton->setPosition(Point(visibleSize.width, visibleSize.height) + Point(-70, -50));
 	addChild(backButton);
 	backButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onBackButtonTouched));
 
 	auto refreshButton = ui::Button::create();
 	refreshButton->setTouchEnabled(true);
-	refreshButton->loadTextures(s_postPlayResumeNormal, s_postPlayResumeSelected, "");
+	refreshButton->loadTextures(s_postPlayResumeNormal, s_postPlayResumeSelected, "", ui::Button::TextureResType::PLIST);
 	refreshButton->setPosition(Point(visibleSize.width, visibleSize.height) + Point(-200, -50));
 	addChild(refreshButton);
 	refreshButton->addTouchEventListener(this, ui::SEL_TouchEvent(&MainLayer::onRefreshButtonTouched));

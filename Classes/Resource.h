@@ -7,19 +7,21 @@
 #define TOTAL_SUSHI (6)
 
 // Start scene
-const char s_startBackground[] = "startBackground.png";
-const char s_startNormal[] = "startNormal.png";
-const char s_startSelected[] = "startSelected.png";
-const char s_musicNormal[] = "musicNormal.png";
-const char s_musicSelected[] = "musicSelected.png";
-const char s_soundNormal[] = "soundNormal.png";
-const char s_soundSelected[] = "soundSelected.png";
-const char s_rateNormal[] = "rateNormal.png";
-const char s_rateSelected[] = "rateSelected.png";
+const char s_startBackground[] = "play_start_start_back_normal.png";
+const char s_startNormal[] = "play_start_start_btn_normal.png";
+const char s_startSelected[] = "play_start_start_btn_selected.png";
+const char s_musicNormal[] = "play_start_music_btn_normal.png";
+const char s_musicSelected[] = "play_start_music_btn_selected.png";
+const char s_soundNormal[] = "play_start_sound_btn_normal.png";
+const char s_soundSelected[] = "play_start_sound_btn_selected.png";
+const char s_rateNormal[] = "play_start_rate_btn_normal.png";
+const char s_rateSelected[] = "play_start_rate_btn_selected.png";
 
 // Guide map scene
 const char s_guideMap[] = "guideMap.jpg";
-const char s_roundButtonsNormal[][24] = { "round1ButtonNormal.png",
+const char s_roundButtonsNormal[][24] = {
+										  "",
+										  "round1ButtonNormal.png",
 										  "round2ButtonNormal.png",
 										  "round3ButtonNormal.png",
 										  "round4ButtonNormal.png",
@@ -29,7 +31,8 @@ const char s_roundButtonsNormal[][24] = { "round1ButtonNormal.png",
 										  "round8ButtonNormal.png",
 										  "round9ButtonNormal.png",
 										  "round10ButtonNormal.png" };
-const char s_roundButtonsSelected[][26] = { "round1ButtonSelected.png",
+const char s_roundButtonsSelected[][26] = { "",
+											"round1ButtonSelected.png",
 											"round2ButtonSelected.png",
 											"round3ButtonSelected.png",
 											"round4ButtonSelected.png",
@@ -41,13 +44,13 @@ const char s_roundButtonsSelected[][26] = { "round1ButtonSelected.png",
 											"round10ButtonSelected.png" };
 
 // Play scene
-const char s_pathLose[] = "lose.png";
-const char s_pathWin[] = "win.png";
-const char s_mainBackground[] = "mainBackground.png";
-const char s_backToStartButtonNormal[] = "backToStartNormal.png";
-const char s_backToStartButtonSelected[] = "backToStartSelected.png";
-const char s_moves[] = "moves.png";
-const char s_target[] = "target.png";
+const char s_pathLose[] = "play_main_lose_img_normal.png";
+const char s_pathWin[] = "play_main_win_img_normal.png";
+const char s_mainBackground[] = "play_main_background_back_normal.png";
+const char s_backToStartButtonNormal[] = "common_backToStart_btn_normal.png";
+const char s_backToStartButtonSelected[] = "common_backToStart_btn_selected.png";
+const char s_moves[] = "play_moves_moves_img_normal.png";
+const char s_target[] = "play_target_target_img_normal.png";
 const char s_playBackground[] = "playBackground.png";
 const char s_colorHRight[] = "colorHRight.png";
 const char s_colorLRight[] = "colorHLeft.png";
@@ -55,23 +58,23 @@ const char s_colorVDown[] = "colorVDown.png";
 const char s_colorVUp[] = "colorVUp.png";
 const char s_circle[] = "circle.png";
 const char s_stars[] = "stars.plist";
-const char s_postPlayBackground[] = "play_prePlay_back_back_normal.png";
-const char s_postPlayResumeNormal[] = "btnNormal/resume.png";
-const char s_postPlayResumeSelected[] = "btnSelected/resume.png";
-const char s_postPlayNextNormal[] = "btnNormal/next.png";
-const char s_postPlayNextSelected[] = "btnSelected/next.png";
-const char s_postPlayListNormal[] = "btnNormal/list.png";
-const char s_postPlayListSelected[] = "btnSelected/list.png";
+const char s_postPlayBackground[] = "play_postPlay_back_back_normal.png";
+const char s_postPlayResumeNormal[] = "common_resume_btn_normal.png";
+const char s_postPlayResumeSelected[] = "common_resume_btn_selected.png";
+const char s_postPlayNextNormal[] = "common_next_btn_normal.png";
+const char s_postPlayNextSelected[] = "common_next_btn_selected.png";
+const char s_postPlayListNormal[] = "common_list_btn_normal.png";
+const char s_postPlayListSelected[] = "common_list_btn_selected.png";
 const char s_prePlayBackground[] = "play_prePlay_back_back_normal.png";
-const char s_starLeftDone[] = "starLeftDone.png";
-const char s_starMidDone[] = "starMidDone.png";
-const char s_starRightDone[] = "starRightDone.png";
-const char s_starLeftUndone[] = "starLeftUndone.png";
-const char s_starMidUndone[] = "starMidUndone.png";
-const char s_starRightUndone[] = "starRightUndone.png";
-const char s_preLayerStartNormal[] = "btnNormal/start.png";
-const char s_preLayerStartSelected[] = "btnSelected/start.png";
-const char s_targetTipsBackground[] = "tips/target.png";
+const char s_starLeftDone[] = "common_starLeft_img_normal.png";
+const char s_starMidDone[] = "common_starMid_img_normal.png";
+const char s_starRightDone[] = "common_starRight_img_normal.png";
+const char s_starLeftUndone[] = "common_starLeft_img_disable.png";
+const char s_starMidUndone[] = "common_starMid_img_disable.png";
+const char s_starRightUndone[] = "common_starRight_img_disable.png";
+const char s_preLayerStartNormal[] = "common_start_btn_normal.png";
+const char s_preLayerStartSelected[] = "common_start_btn_selected.png";
+const char s_targetTipsBackground[] = "play_targetTips_target_img_normal.png";
 const char s_sushiPlist[] = "sushi.plist";
 const char s_sushiRes[] = "sushi.pvr.ccz";
 

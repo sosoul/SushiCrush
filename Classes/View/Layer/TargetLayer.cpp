@@ -39,7 +39,7 @@ bool TargetLayer::init()
 	// background
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	auto background = Sprite::create(s_target);
+	auto background = Sprite::createWithSpriteFrameName(s_target);
 	background->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + visibleSize.height + kBackgroundY));
 	addChild(background);

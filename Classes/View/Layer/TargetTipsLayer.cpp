@@ -27,7 +27,7 @@ bool TargetTipsLayer::init() {
 		return false;
 	// background
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	auto background = Sprite::create(s_targetTipsBackground);
+	auto background = Sprite::createWithSpriteFrameName(s_targetTipsBackground);
 	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + kBackgroundY));
 	addChild(background);
 	// label "Score:"

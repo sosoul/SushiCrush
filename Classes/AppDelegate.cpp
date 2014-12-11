@@ -2,6 +2,7 @@
 
 #include "Controller/GameController.h"
 #include "View/Scene/StartScene.h"
+#include "Resource.h"
 
 USING_NS_CC;
 
@@ -30,7 +31,7 @@ void AppDelegate::initGLContextAttrs()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-	initialize();
+	
 
     // initialize director
     auto director = Director::getInstance();
@@ -50,6 +51,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	searchPath.push_back("w640");
 	searchPath.push_back("fonts");
 	CCFileUtils::getInstance()->setSearchPaths(searchPath);
+
+	initialize();
+
+	initialize();
 
     // turn on display FPS
     director->setDisplayStats(true);
@@ -83,5 +88,6 @@ void AppDelegate::applicationWillEnterForeground() {
 }
 
 void AppDelegate::initialize() {
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_resPlist);
 	GameController::getInstance()->init();
 }

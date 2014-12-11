@@ -50,26 +50,25 @@ bool PrePlayLayer::init()
 	// background
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 
-	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(s_resPlist);
-	auto background = CCSprite::createWithSpriteFrameName(s_prePlayBackground);
+	auto background = Sprite::createWithSpriteFrameName(s_prePlayBackground);
 	background->setPosition(Vec2(visibleOrigin.x + kBackPrePlayX, visibleOrigin.y + kBackYPrePlay));
 	addChild(background);
 
-	auto sprite1 = Sprite::create(s_starLeftDone);
+	auto sprite1 = Sprite::createWithSpriteFrameName(s_starLeftDone);
 	sprite1->setPosition(Vec2(visibleOrigin.x + kStar1X, visibleOrigin.y + kStar1Y));
 	addChild(sprite1, 0, kStart1Tag);
 
-	auto sprite2 = Sprite::create(s_starMidDone);
+	auto sprite2 = Sprite::createWithSpriteFrameName(s_starMidDone);
 	sprite2->setPosition(Vec2(visibleOrigin.x + kStar2X, visibleOrigin.y + kStar2Y));
 	addChild(sprite2, 0, kStart2Tag);
 
-	auto sprite3 = Sprite::create(s_starRightDone);
+	auto sprite3 = Sprite::createWithSpriteFrameName(s_starRightDone);
 	sprite3->setPosition(Vec2(visibleOrigin.x + kStar3X, visibleOrigin.y + kStar3Y));
 	addChild(sprite3, 0, kStart3Tag);
 
 
 	ui::Button* startBtn = nullptr;
-	startBtn = ui::Button::create(s_preLayerStartNormal, s_preLayerStartSelected, s_preLayerStartSelected);
+	startBtn = ui::Button::create(s_preLayerStartNormal, s_preLayerStartSelected, s_preLayerStartSelected, ui::Button::TextureResType::PLIST);
 	startBtn->addTouchEventListener(this, ui::SEL_TouchEvent(&PrePlayLayer::start));
 	startBtn->setPosition(Vec2(visibleOrigin.x + kStartPlayX, visibleOrigin.y + kStartPlayY));
 	addChild(startBtn);

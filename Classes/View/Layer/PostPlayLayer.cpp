@@ -46,26 +46,25 @@ bool PostPlayLayer::init()
 
 	// background
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(s_resPlist);
 	auto background = CCSprite::createWithSpriteFrameName(s_postPlayBackground);
 	background->setPosition(Vec2(visibleOrigin.x + kBackPrePlayX, visibleOrigin.y + kBackYPrePlay));
 	addChild(background);
 
 	ui::Button* resumeBtn = nullptr;
-	resumeBtn = ui::Button::create(s_postPlayResumeNormal, s_postPlayResumeSelected, s_postPlayResumeSelected);
+	resumeBtn = ui::Button::create(s_postPlayResumeNormal, s_postPlayResumeSelected, s_postPlayResumeSelected, ui::Button::TextureResType::PLIST);
 	resumeBtn->addTouchEventListener(this, ui::SEL_TouchEvent(&PostPlayLayer::resume));
 	resumeBtn->setPosition(Vec2(visibleOrigin.x + kResumePlayX, visibleOrigin.y +kResumePlayY));
 	addChild(resumeBtn);
 
 	ui::Button* nextBtn = nullptr;
-	nextBtn = ui::Button::create(s_postPlayNextNormal, s_postPlayNextSelected, s_postPlayNextSelected);
+	nextBtn = ui::Button::create(s_postPlayNextNormal, s_postPlayNextSelected, s_postPlayNextSelected, ui::Button::TextureResType::PLIST);
 	nextBtn->setScale(1);
 	nextBtn->addTouchEventListener(this, ui::SEL_TouchEvent(&PostPlayLayer::nextRound));
 	nextBtn->setPosition(Vec2(visibleOrigin.x + kNextPlayX, visibleOrigin.y +kNextPlayY));
 	addChild(nextBtn);
 
 	ui::Button* listBtn = nullptr;
-	listBtn = ui::Button::create(s_postPlayListNormal, s_postPlayListSelected, s_postPlayListSelected);
+	listBtn = ui::Button::create(s_postPlayListNormal, s_postPlayListSelected, s_postPlayListSelected, ui::Button::TextureResType::PLIST);
 	listBtn->addTouchEventListener(this, ui::SEL_TouchEvent(&PostPlayLayer::backToStartMap));
 	listBtn->setPosition(Vec2(visibleOrigin.x + kListPlayX, visibleOrigin.y + kListPlayY));
 	addChild(listBtn);
@@ -81,37 +80,37 @@ bool PostPlayLayer::init()
 
 	if (score >= target)
 	{
-		auto sprite1 = Sprite::create(s_starLeftDone);
+		auto sprite1 = Sprite::createWithSpriteFrameName(s_starLeftDone);
 		sprite1->setPosition(Vec2(visibleOrigin.x + kStar1X, visibleOrigin.y + kStar1Y));
 		addChild(sprite1);
 	}
 	else
 	{
-		auto sprite1 = Sprite::create(s_starLeftUndone);
+		auto sprite1 = Sprite::createWithSpriteFrameName(s_starLeftUndone);
 		sprite1->setPosition(Vec2(visibleOrigin.x + kStar1X, visibleOrigin.y +  kStar1Y));
 		addChild(sprite1);
 	}
 	if (score >= target * 2)
 	{
-		auto sprite2 = Sprite::create(s_starMidDone);
+		auto sprite2 = Sprite::createWithSpriteFrameName(s_starMidDone);
 		sprite2->setPosition(Vec2(visibleOrigin.x + kStar2X, visibleOrigin.y + kStar2Y));
 		addChild(sprite2);
 	}
 	else
 	{
-		auto sprite2 = Sprite::create(s_starMidUndone);
+		auto sprite2 = Sprite::createWithSpriteFrameName(s_starMidUndone);
 		sprite2->setPosition(Vec2(visibleOrigin.x + kStar2X, visibleOrigin.y + kStar2Y));
 		addChild(sprite2);
 	}
 	if (score >= target * 3)
 	{
-		auto sprite3 = Sprite::create(s_starRightDone);
+		auto sprite3 = Sprite::createWithSpriteFrameName(s_starRightDone);
 		sprite3->setPosition(Vec2(visibleOrigin.x + kStar3X, visibleOrigin.y + kStar3Y));
 		addChild(sprite3);
 	}
 	else
 	{
-		auto sprite3 = Sprite::create(s_starRightUndone);
+		auto sprite3 = Sprite::createWithSpriteFrameName(s_starRightUndone);
 		sprite3->setPosition(Vec2(visibleOrigin.x + kStar3X, visibleOrigin.y + kStar3Y));
 		addChild(sprite3);
 	}
