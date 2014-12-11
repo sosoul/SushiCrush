@@ -739,7 +739,7 @@ void PlayLayer::explodeSpecialH(Point point)
 	Point startPosition = point;
 	float speed = 0.6f;
 
-	auto colorSpriteRight = Sprite::create(s_colorHRight);
+	auto colorSpriteRight = Sprite::createWithSpriteFrameName(s_colorHRight);
 	addChild(colorSpriteRight, 10);
 	Point endPosition1 = Point(point.x - size.width, point.y);
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
@@ -749,7 +749,7 @@ void PlayLayer::explodeSpecialH(Point point)
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteRight)),
 		NULL));
 
-	auto colorSpriteLeft = Sprite::create(s_colorLRight);
+	auto colorSpriteLeft = Sprite::createWithSpriteFrameName(s_colorLRight);
 	addChild(colorSpriteLeft, 10);
 	Point endPosition2 = Point(point.x + size.width, point.y);
 	colorSpriteLeft->setPosition(ccpAdd(visibleOrigin, startPosition));
@@ -770,7 +770,7 @@ void PlayLayer::explodeSpecialV(Point point)
 	Point startPosition = point;
 	float speed = 0.6f;
 
-	auto colorSpriteDown = Sprite::create(s_colorVDown);
+	auto colorSpriteDown = Sprite::createWithSpriteFrameName(s_colorVDown);
 	addChild(colorSpriteDown, 10);
 	Point endPosition1 = Point(point.x, point.y - size.height);
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
@@ -780,7 +780,7 @@ void PlayLayer::explodeSpecialV(Point point)
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteDown)),
 		NULL));
 
-	auto colorSpriteUp = Sprite::create(s_colorVUp);
+	auto colorSpriteUp = Sprite::createWithSpriteFrameName(s_colorVUp);
 	addChild(colorSpriteUp, 10);
 	Point endPosition2 = Point(point.x, point.y + size.height);
 	colorSpriteUp->setPosition(ccpAdd(visibleOrigin, startPosition));
@@ -808,7 +808,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 		NULL));
 
 	// 2. action for circle
-	auto circleSprite = Sprite::create(s_circle);
+	auto circleSprite = Sprite::createWithSpriteFrameName(s_circle);
 	addChild(circleSprite, 10);
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	circleSprite->setPosition(ccpAdd(visibleOrigin, sushi->getPosition()));
