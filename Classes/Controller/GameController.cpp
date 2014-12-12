@@ -1,7 +1,7 @@
 #include "Controller/GameController.h"
 
-#include "Messages.h"
-#include "Resource.h"
+#include "Common/Messages.h"
+#include "Common/Resource.h"
 
 const int kPerSushiScore = 10;
 

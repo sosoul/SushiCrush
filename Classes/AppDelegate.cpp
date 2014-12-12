@@ -1,8 +1,8 @@
 #include "AppDelegate.h"
 
+#include "Common/Resource.h"
 #include "Controller/GameController.h"
 #include "View/Scene/StartScene.h"
-#include "Resource.h"
 
 USING_NS_CC;
 

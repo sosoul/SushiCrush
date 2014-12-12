@@ -25,6 +25,9 @@
     <Filter Include="View\Scene">
       <UniqueIdentifier>{c6ac9f29-ed1e-44f4-8dbd-79e74f6a77aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{75996d4a-d43d-4cf3-a517-4f3709c265b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -105,9 +108,6 @@
     <ClInclude Include="..\Classes\View\Layer\MainLayer.h">
       <Filter>View\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Messages.h" />
-    <ClInclude Include="..\Classes\Types.h" />
-    <ClInclude Include="..\Classes\Resource.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h">
       <Filter>View\Scene</Filter>
     </ClInclude>
@@ -131,6 +131,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\View\Layer\TargetTipsLayer.h">
       <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Messages.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Resource.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\TextMessage.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Types.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

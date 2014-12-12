@@ -1,7 +1,7 @@
 #ifndef __CONTROLLER_GAME_CONTROLLER_H__
 #define __CONTROLLER_GAME_CONTROLLER_H__
 
-#include "Types.h"
+#include "Common/Types.h"
 
 #define TOTAL_ROUND	(10)
 

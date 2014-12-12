@@ -1,8 +1,8 @@
 #include "View/Layer/StartLayer.h"
 
-#include "Resource.h"
-#include "ui/UIButton.h"
+#include "Common/Resource.h"
 #include "View/Scene/GuideMapScene.h"
+#include "ui/UIButton.h"
 
 StartLayer::StartLayer()
 {

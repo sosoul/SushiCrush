@@ -1,8 +1,8 @@
 #include "View/Layer/TargetTipsLayer.h"
 
+#include "Common/Messages.h"
+#include "Common/Resource.h"
 #include "Controller/GameController.h"
-#include "Messages.h"
-#include "Resource.h"
 
 namespace {
 const int kLabelTargetTag = 0;

@@ -1,8 +1,7 @@
 #include "View/Sprite/SushiSprite.h"
 
 #include<stdlib.h>
-
-#include "Resource.h"
+#include "Common/Resource.h"
 
 USING_NS_CC;
 

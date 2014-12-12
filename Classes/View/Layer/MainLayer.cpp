@@ -1,15 +1,15 @@
 #include "View/Layer/MainLayer.h"
 
-#include "Messages.h"
-#include "Resource.h"
-#include "View/Scene/GuideMapScene.h"
-#include "ui/UIButton.h"
+#include "Common/Messages.h"
+#include "Common/Resource.h"
+#include "Controller/GameController.h"
 #include "View/Layer/MovesLayer.h"
 #include "View/Layer/PlayLayer.h"
 #include "View/Layer/ScoreLayer.h"
 #include "View/Layer/TargetLayer.h"
 #include "View/Layer/TargetTipsLayer.h"
-#include "Controller/GameController.h"
+#include "View/Scene/GuideMapScene.h"
+#include "ui/UIButton.h"
 
 MainLayer::MainLayer():m_playLayer(nullptr),
 					   m_targetLayer(nullptr),

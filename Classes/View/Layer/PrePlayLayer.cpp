@@ -1,8 +1,8 @@
 #include "View/Layer/PrePlayLayer.h"
 
+#include "Common/Messages.h"
+#include "Common/Resource.h"
 #include "Controller/GameController.h"
-#include "Messages.h"
-#include "Resource.h"
 #include "ui/UIButton.h"
 
 namespace{

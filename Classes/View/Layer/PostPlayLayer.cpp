@@ -1,8 +1,8 @@
 #include "View/Layer/PostPlayLayer.h"
 
+#include "Common/Messages.h"
+#include "Common/Resource.h"
 #include "Controller/GameController.h"
-#include "Messages.h"
-#include "Resource.h"
 #include "View/Scene/GuideMapScene.h"
 #include "ui/UIButton.h"
 

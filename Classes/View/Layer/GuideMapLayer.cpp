@@ -1,7 +1,7 @@
 #include "View/Layer/GuideMapLayer.h"
 
+#include "Common/Resource.h"
 #include "Controller/GameController.h"
-#include "Resource.h"
 #include "View/Scene/PlayScene.h"
 #include "View/Scene/StartScene.h"
 #include "ui/UIButton.h"
