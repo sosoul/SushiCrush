@@ -23,12 +23,12 @@ namespace{
 	const int kLabelTargetX = 20;
 	const int kLabelTargetY = 80;
 
-	const int kStar1X = 60;
-	const int kStar1Y = 160;
+	const int kStar1X = 20;
+	const int kStar1Y = 150;
 	const int kStar2X = 100;
-	const int kStar2Y = 170;
-	const int kStar3X = 140;
-	const int kStar3Y = 160;
+	const int kStar2Y = 160;
+	const int kStar3X = 180;
+	const int kStar3Y = 150;
 }
 
 PostPlayLayer::PostPlayLayer()

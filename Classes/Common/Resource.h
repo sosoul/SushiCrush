@@ -75,7 +75,7 @@ const char s_preLayerStartNormal[] = "common_start_btn_normal.png";
 const char s_preLayerStartSelected[] = "common_start_btn_selected.png";
 const char s_targetTipsBackground[] = "play_targetTips_target_img_normal.png";
 const char s_sushiPlist[] = "sushi.plist";
-const char s_sushiRes[] = "sushi.pvr.ccz";
+const char s_sushiRes[] = "sushi.png";//"sushi.pvr.ccz";
 
 const char s_resPlist[] = "res.plist";
 

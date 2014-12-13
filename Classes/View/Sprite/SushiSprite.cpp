@@ -4,8 +4,9 @@
 #include "Common/Resource.h"
 
 USING_NS_CC;
+#define DEBUG
 
-static const char *sushiNormal[TOTAL_SUSHI] = {
+const char *sushiNormal[TOTAL_SUSHI] = {
 	"sushi_1n.png",
 	"sushi_2n.png",
 	"sushi_3n.png",
@@ -14,7 +15,7 @@ static const char *sushiNormal[TOTAL_SUSHI] = {
 	"sushi_6n.png"
 };
 
-static const char *sushiVertical[TOTAL_SUSHI] = {
+const char *sushiVertical[TOTAL_SUSHI] = {
 	"sushi_1v.png",
 	"sushi_2v.png",
 	"sushi_3v.png",
@@ -23,7 +24,7 @@ static const char *sushiVertical[TOTAL_SUSHI] = {
 	"sushi_6v.png"
 };
 
-static const char *sushiHorizontal[TOTAL_SUSHI] = {
+const char *sushiHorizontal[TOTAL_SUSHI] = {
 	"sushi_1h.png",
 	"sushi_2h.png",
 	"sushi_3h.png",
@@ -31,6 +32,27 @@ static const char *sushiHorizontal[TOTAL_SUSHI] = {
 	"sushi_5h.png",
 	"sushi_6h.png"
 };
+
+const char *sushi5Cross[TOTAL_SUSHI] = {
+	"sushi_1c.png",
+	"sushi_2c.png",
+	"sushi_3c.png",
+	"sushi_4c.png",
+	"sushi_5c.png",
+	"sushi_6c.png"
+};
+
+const char sushi5Line[] = "sushi_5line.png";
+
+const int kTestMatrixes[8][7] = {
+		{ 0, 3, 1, 5, 0, 0, 1 },
+		{ 1, 1, 0, 1, 3, 4, 5 },
+		{ 0, 4, 1, 2, 0, 4, 0 },
+		{ 0, 0, 1, 4, 5, 0, 0 },
+		{ 2, 3, 4, 5, 0, 0, 1 },
+		{ 3, 4, 5, 0, 0, 1, 2 },
+		{ 4, 5, 0, 0, 1, 2, 3 },
+		{ 5, 0, 0, 1, 2, 3, 4 } };
 
 SushiSprite::SushiSprite() : m_col(0),
 							 m_row(0),
@@ -50,10 +72,14 @@ SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgI
 	sushi->m_row = row;
 	sushi->m_col = col;
 	int index = 0;
+#if defined(DEBUG)
+	index = kTestMatrixes[row][col];
+#else
 	do 
 	{
 		index = rand() % TOTAL_SUSHI;
 	} while (index == topImgIndex || index == leftImgIndex);
+#endif
 	
 	sushi->m_imgIndex = index;
 	sushi->initWithSpriteFrameName(sushiNormal[sushi->m_imgIndex]);
@@ -74,14 +100,22 @@ float SushiSprite::getContentWidth()
 void SushiSprite::setDisplayMode(DisplayMode mode)
 {
 	m_displayMode = mode;
+}
 
+void SushiSprite::applyDisplayMode() {
 	SpriteFrame *frame;
-	switch (mode) {
-	case DISPLAY_MODE_VERTICAL:
+	switch (m_displayMode) {
+	case DISPLAY_MODE_4_VERTICAL_LINE:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushiVertical[m_imgIndex]);
 		break;
-	case DISPLAY_MODE_HORIZONTAL:
+	case DISPLAY_MODE_4_HORIZONTAL_LINE:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushiHorizontal[m_imgIndex]);
+		break;
+	case DISPLAY_MODE_5_LINE:
+		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushi5Line);
+		break;
+	case DISPLAY_MODE_5_CROSS:
+		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushi5Cross[m_imgIndex]);
 		break;
 	default:
 		return;

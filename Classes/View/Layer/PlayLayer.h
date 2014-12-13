@@ -40,6 +40,7 @@ private:
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	int m_round;
+	bool m_isSwapped5LineSushi;
 
 	void initMatrix();
 	void createAndDropSushi(int row, int col, bool isInit);
