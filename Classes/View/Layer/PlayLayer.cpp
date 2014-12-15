@@ -784,9 +784,7 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 		SushiSprite *neighborSushi = m_matrix[sushi->getRow() * m_width + neighborCol];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex()
-			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
-			/*&& !neighborSushi->getIsNeedRemove()
-			&& !neighborSushi->getIgnoreCheck()*/) {
+			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)) {
 			chainList.push_back(neighborSushi);
 			neighborCol--;
 		}
@@ -902,15 +900,16 @@ void PlayLayer::removeSushi()
 		if (sushi->getIsNeedRemove()) {
 			m_isNeedFillVacancies = true;  // 需要掉落
 			// TODO: 检查类型，并播放一行消失的动画
-
 			if (sushi->getDisplayMode() == DISPLAY_MODE_5_LINE) {
+				explode5LineLineSushi(sushi);
 			} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
 			{
-				explodeSpecialH(sushi->getPosition());
+				explode4HorizonytalLineSushi(sushi->getPosition());
 			} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE)
 			{
-				explodeSpecialV(sushi->getPosition());
+				explode4VerticalLineSushi(sushi->getPosition());
 			} else if (sushi->getDisplayMode() == DISPLAY_MODE_5_CROSS) {
+				explode5CrossLineSushi(sushi->getPosition());
 			}
 			explodeSushi(sushi);
 			++removeCount;
@@ -926,8 +925,7 @@ void PlayLayer::removeSushi()
 	}
 }
 
-void PlayLayer::explodeSpecialH(Point point)
-{
+void PlayLayer::explode4HorizonytalLineSushi(Point point) {
 	Size size = Director::getInstance()->getWinSize();
 	float scaleX = 4;
 	float scaleY = 0.7;
@@ -955,8 +953,7 @@ void PlayLayer::explodeSpecialH(Point point)
 		NULL));
 }
 
-void PlayLayer::explodeSpecialV(Point point)
-{
+void PlayLayer::explode4VerticalLineSushi(Point point) {
 	Size size = Director::getInstance()->getWinSize();
 	float scaleY = 4;
 	float scaleX = 0.7;
@@ -982,6 +979,13 @@ void PlayLayer::explodeSpecialV(Point point)
 		MoveTo::create(speed, endPosition2),
 		CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteUp)),
 		NULL));
+
+}
+
+void PlayLayer::explode5LineLineSushi(SushiSprite* sushi) {
+}
+
+void PlayLayer::explode5CrossLineSushi(Point point) {
 }
 
 void PlayLayer::actionEndCallback(Node *node)
@@ -1026,6 +1030,23 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 	particleStars->setPosition(sushi->getPosition());
 	particleStars->setScale(0.3);
 	addChild(particleStars, 20);
+
+	// 4. score animation
+	Point pos = sushi->getPosition();
+	auto label = LabelBMFont::create("+" + StringUtils::toString(sushi->getScore()), "fonts/boundsTestFont.fnt");
+	label->retain();
+	label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	label->setPosition(pos);
+	addChild(label);
+
+	const float duration = 1.0f;
+	Vec2 dstPos = pos + Vec2(0, 10);
+	FadeOut* fadeOut = FadeOut::create(duration);
+	MoveTo* moveTo = MoveTo::create(duration, dstPos);
+	auto spawn = Spawn::create(moveTo, fadeOut, nullptr);
+	auto seq = Sequence::create(spawn,
+		CallFunc::create(CC_CALLBACK_0(PlayLayer::didShowScoreNumber, this, label)), nullptr);
+	label->runAction(seq);
 }
 
 void PlayLayer::fillVacancies()
@@ -1173,7 +1194,6 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				if (!tmp || tmp == sushi) {
 					continue;
 				}
-
 				if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
 					tmp->setIsNeedRemove(true);
 				}
@@ -1382,4 +1402,9 @@ bool PlayLayer::isLock(int row, int col) {
 	}
 
 	return true;
+}
+
+void PlayLayer::didShowScoreNumber(LabelBMFont* label) {
+	label->removeFromParent();
+	label->release();
 }

@@ -54,8 +54,10 @@ private:
 	void actionEndCallback(Node *node);
 	void explodeSushi(SushiSprite *sushi);
 
-	void explodeSpecialH(Point point);
-	void explodeSpecialV(Point point);
+	void explode4HorizonytalLineSushi(Point point);
+	void explode4VerticalLineSushi(Point point);
+	void explode5LineLineSushi(SushiSprite* sushi);
+	void explode5CrossLineSushi(Point point);
 
 	void fillVacancies();
 	SushiSprite *sushiOfPoint(Point *point);
@@ -72,6 +74,7 @@ private:
 	// is the sushi stay lock status.
 	bool isLock(int row, int col);
 	bool canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex);
+	void didShowScoreNumber(LabelBMFont* label);
 	
 };
 

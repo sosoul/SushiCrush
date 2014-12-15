@@ -20,5 +20,15 @@ struct RoundInfo : public Ref {
 	}
 };
 
+typedef enum {
+	DISPLAY_MODE_NORMAL = 0,
+	DISPLAY_MODE_4_HORIZONTAL_LINE,
+	DISPLAY_MODE_4_VERTICAL_LINE,
+	DISPLAY_MODE_5_LINE,
+	DISPLAY_MODE_5_CROSS,
+	DISPLAY_MODE_7_T_SHAPED,
+} DisplayMode;
+
+
 #endif // _TYPES_H_
 

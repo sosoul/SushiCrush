@@ -4,7 +4,7 @@
 #include "Common/Resource.h"
 
 USING_NS_CC;
-#define DEBUG
+//#define DEBUG
 
 const char *sushiNormal[TOTAL_SUSHI] = {
 	"sushi_1n.png",
@@ -60,6 +60,7 @@ SushiSprite::SushiSprite() : m_col(0),
 							 m_isNeedRemove(false),
 							 m_ignoreCheck(false),
 							 m_displayMode(DISPLAY_MODE_NORMAL),
+							 m_score(20),
 							 m_sushiPriorityLevel(PRIORITY_NORMAL)
 {
 }
@@ -101,6 +102,24 @@ float SushiSprite::getContentWidth()
 void SushiSprite::setDisplayMode(DisplayMode mode)
 {
 	m_displayMode = mode;
+	switch (m_displayMode)
+	{
+	case DISPLAY_MODE_NORMAL:
+		m_score = 20;
+		break;
+	case DISPLAY_MODE_4_HORIZONTAL_LINE:
+	case DISPLAY_MODE_4_VERTICAL_LINE:
+		m_score = 30;
+		break;
+	case  DISPLAY_MODE_5_LINE:
+		m_score = 40;
+		break;
+	case DISPLAY_MODE_5_CROSS:
+		m_score = 50;
+		break;
+	default:
+		break;
+	}
 	if (mode == DISPLAY_MODE_5_LINE)
 	{
 		m_imgIndex = 6;
