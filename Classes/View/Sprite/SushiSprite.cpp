@@ -59,14 +59,15 @@ SushiSprite::SushiSprite() : m_col(0),
 							 m_imgIndex(0),
 							 m_isNeedRemove(false),
 							 m_ignoreCheck(false),
-							 m_displayMode(DISPLAY_MODE_NORMAL)
+							 m_displayMode(DISPLAY_MODE_NORMAL),
+							 m_sushiPriorityLevel(PRIORITY_NORMAL)
 {
 }
 
 SushiSprite::~SushiSprite() {
 }
 
-SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgIndex)
+SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgIndex, PriorityLevel priorityLevel)
 {
 	SushiSprite *sushi = new SushiSprite();
 	sushi->m_row = row;
@@ -80,7 +81,7 @@ SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgI
 		index = rand() % TOTAL_SUSHI;
 	} while (index == topImgIndex || index == leftImgIndex);
 #endif
-	
+	sushi->m_sushiPriorityLevel = priorityLevel;
 	sushi->m_imgIndex = index;
 	sushi->initWithSpriteFrameName(sushiNormal[sushi->m_imgIndex]);
 	sushi->autorelease();
@@ -100,6 +101,10 @@ float SushiSprite::getContentWidth()
 void SushiSprite::setDisplayMode(DisplayMode mode)
 {
 	m_displayMode = mode;
+	if (mode == DISPLAY_MODE_5_LINE)
+	{
+		m_imgIndex = 6;
+	}
 }
 
 void SushiSprite::applyDisplayMode() {

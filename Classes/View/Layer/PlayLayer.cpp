@@ -112,8 +112,7 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_srcSushi(NULL),
 						 m_destSushi(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
-						 m_round(round),
-						 m_isSwapped5LineSushi(false)
+						 m_round(round)
 {
 }
 
@@ -347,7 +346,6 @@ void PlayLayer::swapSushi()
 		|| m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE) {
 		if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE
 			|| m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
-			m_isSwapped5LineSushi = true;
 		GameController::getInstance()->onSwapSushiCompleted();
 		// just swap
 		m_srcSushi->runAction(MoveTo::create(time, posOfDest));
@@ -414,7 +412,7 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 		}
 	}
 
-	SushiSprite *sushi = SushiSprite::create(row, col, topImgIndex, leftImgIndex);
+	SushiSprite *sushi = SushiSprite::create(row, col, topImgIndex, leftImgIndex, PRIORITY_NORMAL);
 
 	// create animation
 	Point endPosition = positionOfItem(row, col);
@@ -476,131 +474,276 @@ void PlayLayer::checkAndRemoveChain()
 		if (!sushi) {
 			continue;
 		}
+		sushi->setSushiPriorityLevel(PRIORITY_NORMAL);
 		sushi->setIgnoreCheck(false);
 	}
+	//分两种情况 第一种是有src和dist sushi的时候 标记相关生成和移除然后移除     第二种是没有的时候  先标记各种需要移除的情况  然后设置移除    （其中新生成的要设置ignorecheak 同时该设置needremove的也要设置needremove）
+	if (m_srcSushi && m_destSushi)
+	{
+		//to do 加入各种特殊道具的处理
+		if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_destSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
+		{
+			m_srcSushi->setIsNeedRemove(false);
+			markRemove(m_srcSushi);
 
-	DisplayMode mode;
-	if (sushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
-		mode = (DisplayMode)sushi->getImgIndex();
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
+		{
+			m_destSushi->setIsNeedRemove(false);
+			markRemove(m_destSushi);
 
-	typedef std::map<SushiSprite*, DisplayMode> SushiModeMap;
-	SushiModeMap superSushiModeMap;
-
-	// 2. check chain
-	for (int i = 0; i < m_height * m_width; i++) {
-		sushi = m_matrix[i];
-		if (!sushi) {
-			continue;
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
 		}
 
-		if (sushi->getIgnoreCheck()) {
-			continue;// 新变化的特殊寿司，不消除
-		}
 
-		if (m_isSwapped5LineSushi && sushi->getDisplayMode() == DISPLAY_MODE_5_LINE) {
-			m_isSwapped5LineSushi = false;
-			markRemove(sushi);
-		}
-
-		// start count chain
 		std::list<SushiSprite *> colChainList;
-		getColChain(sushi, colChainList);
+		getColChain(m_srcSushi, colChainList);
 
 		std::list<SushiSprite *> rowChainList;
-		getRowChain(sushi, rowChainList);
+		getRowChain(m_srcSushi, rowChainList);
 
-		std::list<SushiSprite *> &longerList = colChainList.size() > rowChainList.size() ? colChainList : rowChainList;
+		SushiSprite *sushiTemp;
+		std::list<SushiSprite *>::iterator itList;
 
-		if (longerList.size() < 3) {
-			continue;// 小于3个不消除
+		if (colChainList.size() >= 3)
+		{
+			for (itList = colChainList.begin(); itList != colChainList.end(); itList++) {
+				sushiTemp = (SushiSprite *)*itList;
+				
+				markRemove(sushiTemp);
+			}
+		}
+		if (rowChainList.size() >= 3)
+		{
+			for (itList = rowChainList.begin(); itList != rowChainList.end(); itList++) {
+				sushiTemp = (SushiSprite *)*itList;
+				
+				markRemove(sushiTemp);
+			}
 		}
 
-		std::list<SushiSprite *>::iterator itList;
-		bool isSetedIgnoreCheck = false;
-		for (itList = longerList.begin(); itList != longerList.end(); itList++) {
-			sushi = (SushiSprite *)*itList;
+		typedef std::map<SushiSprite*, DisplayMode> SushiModeMap;
+		SushiModeMap superSushiModeMap;
+
+		if (colChainList.size() >= 5 || rowChainList.size() >= 5)
+		{
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+			m_srcSushi->setIsNeedRemove(false);
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_5_LINE));
+		}
+		else if (colChainList.size() >= 3 && rowChainList.size() >= 3)
+		{
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIsNeedRemove(false);
+			m_srcSushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_5_CROSS));
+		}
+		else if (colChainList.size() >= 4)
+		{
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIsNeedRemove(false);
+			m_srcSushi->setDisplayMode(DISPLAY_MODE_4_HORIZONTAL_LINE);
+
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_4_HORIZONTAL_LINE));
+		}
+		else if (rowChainList.size() >= 4)
+		{
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIsNeedRemove(false);
+			m_srcSushi->setDisplayMode(DISPLAY_MODE_4_VERTICAL_LINE);
+
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_4_VERTICAL_LINE));
+		}
+
+		colChainList.clear();
+		rowChainList.clear();
+
+		getColChain(m_destSushi, colChainList);
+		getRowChain(m_destSushi, rowChainList);
+		
+		if (colChainList.size() >= 3)
+		{
+			for (itList = colChainList.begin(); itList != colChainList.end(); itList++) {
+				sushiTemp = (SushiSprite *)*itList;
+				
+				markRemove(sushiTemp);
+			}
+		}
+		if (rowChainList.size() >= 3)
+		{
+			for (itList = rowChainList.begin(); itList != rowChainList.end(); itList++) {
+				sushiTemp = (SushiSprite *)*itList;
+				
+				markRemove(sushiTemp);
+			}
+		}
+
+		if (colChainList.size() >= 5 || rowChainList.size() >= 5)
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+			m_destSushi->setIsNeedRemove(false);
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_5_LINE));
+		}
+		else if (colChainList.size() >= 3 && rowChainList.size() >= 3)
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIsNeedRemove(false);
+			m_destSushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_5_CROSS));
+		}
+		else if (colChainList.size() >= 4)
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIsNeedRemove(false);
+			m_destSushi->setDisplayMode(DISPLAY_MODE_4_HORIZONTAL_LINE);
+
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_4_HORIZONTAL_LINE));
+		}
+		else if (rowChainList.size() >= 4)
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIsNeedRemove(false);
+			m_destSushi->setDisplayMode(DISPLAY_MODE_4_VERTICAL_LINE);
+
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_4_VERTICAL_LINE));
+		}
+
+		removeSushi();
+		for (SushiModeMap::iterator it = superSushiModeMap.begin(); it != superSushiModeMap.end(); ++it) {
+			it->first->applyDisplayMode();
+		}
+
+		m_srcSushi = nullptr;
+		m_destSushi = nullptr;
+
+	}
+	else
+	{
+		typedef std::map<SushiSprite*, DisplayMode> SushiModeMap;
+		SushiModeMap superSushiModeMap;
+
+		for (int i = 0; i < m_height * m_width; i++) {
+			sushi = m_matrix[i];
 			if (!sushi) {
 				continue;
 			}
 
-			if (longerList.size() >= 5) {  // 直线型5消寿司
-				if (sushi == m_srcSushi || sushi == m_destSushi) {
-					isSetedIgnoreCheck = true;
-					sushi->setIgnoreCheck(true);
-					sushi->setIsNeedRemove(false);
-					sushi->setDisplayMode(DISPLAY_MODE_5_LINE);
-					superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_LINE));
-					continue;
-				}
-			} else if (longerList.size() == 4) {  // 4消寿司
-				if (sushi == m_srcSushi || sushi == m_destSushi) {
-					isSetedIgnoreCheck = true;
-					sushi->setIgnoreCheck(true);
-					sushi->setIsNeedRemove(false);
-					sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-					superSushiModeMap.insert(SushiModeMap::value_type(sushi,
-						m_movingVertical ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE));
-					continue;
-				}
-			} else if (colChainList.size() >= 3 && rowChainList.size() >= 3) {  // T型或L型5消寿司
-				if (sushi == m_srcSushi || sushi == m_destSushi) {
-					isSetedIgnoreCheck = true;
-					sushi->setIgnoreCheck(true);
-					sushi->setIsNeedRemove(false);
-					sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
-					superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_CROSS));
-					continue;
+			if (sushi->getIsNeedRemove()) {
+				markRemove(sushi);
+			}
+		}
+
+		for (int i = 0; i < m_height * m_width; i++) {
+			sushi = m_matrix[i];
+			if (!sushi) {
+				continue;
+			}
+
+
+			std::list<SushiSprite *> colChainList;
+			getColChain(sushi, colChainList);
+
+			std::list<SushiSprite *> rowChainList;
+			getRowChain(sushi, rowChainList);
+
+			if (colChainList.size() < 3 && rowChainList.size() < 3)
+			{
+				continue;
+			}
+
+			SushiSprite *sushiTemp;
+			std::list<SushiSprite *>::iterator itList;
+			if (colChainList.size() >= 3)
+			{
+				for (itList = colChainList.begin(); itList != colChainList.end(); itList++) {
+					sushiTemp = (SushiSprite *)*itList;
+					markRemove(sushiTemp);
 				}
 			}
 
-			markRemove(sushi);
-		}
+			if (rowChainList.size() >= 3)
+			{
+				for (itList = rowChainList.begin(); itList != rowChainList.end(); itList++) {
+					sushiTemp = (SushiSprite *)*itList;
+					markRemove(sushiTemp);
+				}
+			}
 
-		// 如果是自由掉落产生的特殊寿司, 取最后一个变化为特殊寿司
-		if (!isSetedIgnoreCheck) {
-			if (longerList.size() >= 5) {  // 直线型5消寿司
+			PriorityLevel pRow = getChainMaxPriority(rowChainList);
+			PriorityLevel pCol = getChainMaxPriority(colChainList);
+
+			if (colChainList.size() >= 5)
+			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
 				sushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+				sushi->setSushiPriorityLevel(PRIORITY_5_LINE);
+				setChainMaxPriority(colChainList, PRIORITY_5_LINE);
+
 				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_LINE));
 			}
-			else if (longerList.size() == 4) {  // 4消寿司
+			else if (rowChainList.size() >= 5)
+			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-				superSushiModeMap.insert(SushiModeMap::value_type(sushi,
-					m_movingVertical ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE));
+				sushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+				sushi->setSushiPriorityLevel(PRIORITY_5_LINE);
+				setChainMaxPriority(rowChainList, PRIORITY_5_LINE);
+
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_LINE));
 			}
-			else if (colChainList.size() >= 3 && rowChainList.size() >= 3) {  // T型或L型5消寿司，这里应该取中间一个为特殊寿司
+			else if (colChainList.size() >= 3 && rowChainList.size() >= 3 && (int)pRow < (int)PRIORITY_5_CROSS && (int)pCol < (int)PRIORITY_5_CROSS)
+			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
 				sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+				sushi->setSushiPriorityLevel(PRIORITY_5_CROSS);
+
+				setChainMaxPriority(rowChainList, PRIORITY_5_CROSS);
+				setChainMaxPriority(colChainList, PRIORITY_5_CROSS);
+
 				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_CROSS));
 			}
+			else if (colChainList.size() >= 4 && (int)pCol < (int)PRIORITY_4_LINE)
+			{
+				sushi->setIgnoreCheck(true);
+				sushi->setIsNeedRemove(false);
+				sushi->setDisplayMode(DISPLAY_MODE_4_HORIZONTAL_LINE);
+				sushi->setSushiPriorityLevel(PRIORITY_4_LINE);
+				setChainMaxPriority(colChainList, PRIORITY_4_LINE);
+
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_4_HORIZONTAL_LINE));
+			}
+			else if (rowChainList.size() >= 4 && (int)pRow < (int)PRIORITY_4_LINE)
+			{
+				sushi->setIgnoreCheck(true);
+				sushi->setIsNeedRemove(false);
+				sushi->setDisplayMode(DISPLAY_MODE_4_VERTICAL_LINE);
+				sushi->setSushiPriorityLevel(PRIORITY_4_LINE);
+				setChainMaxPriority(rowChainList, PRIORITY_4_LINE);
+
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_4_VERTICAL_LINE));
+			}
 		}
-	}
-
-	// 3.消除标记了的寿司
-	removeSushi();
-
-	for (SushiModeMap::iterator it = superSushiModeMap.begin(); it != superSushiModeMap.end(); ++it) {
-		it->first->applyDisplayMode();
+		removeSushi();
+		for (SushiModeMap::iterator it = superSushiModeMap.begin(); it != superSushiModeMap.end(); ++it) {
+			it->first->applyDisplayMode();
+		}
 	}
 }
 
 bool PlayLayer::checkActualRoundEnd()
 {
 	SushiSprite *sushi;
-	// 1. reset ingnore flag
-	for (int i = 0; i < m_height * m_width; i++) {
-		sushi = m_matrix[i];
-		if (!sushi) {
-			continue;
-		}
-		sushi->setIgnoreCheck(false);
-	}
-
-	// 2. check chain
 	for (int i = 0; i < m_height * m_width; i++) {
 		sushi = m_matrix[i];
 		if (!sushi) {
@@ -608,10 +751,10 @@ bool PlayLayer::checkActualRoundEnd()
 		}
 
 		if (sushi->getIsNeedRemove()) {
-			continue;// 已标记过的跳过检查
+			return false;
 		}
 		if (sushi->getIgnoreCheck()) {
-			continue;// 新变化的特殊寿司，不消除
+			return false;
 		}
 
 		// start count chain
@@ -622,59 +765,12 @@ bool PlayLayer::checkActualRoundEnd()
 		getRowChain(sushi, rowChainList);
 
 		std::list<SushiSprite *> &longerList = colChainList.size() > rowChainList.size() ? colChainList : rowChainList;
-		if (longerList.size() < 3) {
-			continue;// 小于3个不消除
+		if (longerList.size() >= 3) {
+			return false;
 		}
-
-		std::list<SushiSprite *>::iterator itList;
-		bool isSetedIgnoreCheck = false;
-		for (itList = longerList.begin(); itList != longerList.end(); itList++) {
-			sushi = (SushiSprite *)*itList;
-			if (!sushi) {
-				continue;
-			}
-
-			if (longerList.size() > 3) {
-				// 4消产生特殊寿司
-				if (sushi == m_srcSushi || sushi == m_destSushi) {
-					isSetedIgnoreCheck = true;
-					sushi->setIgnoreCheck(true);
-					sushi->setIsNeedRemove(false);
-					sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-					continue;
-				}
-			}
-
-			markRemove(sushi);
-		}
-
-		// 如何是自由掉落产生的4消, 取最后一个变化为特殊寿司
-		if (!isSetedIgnoreCheck && longerList.size() > 3) {
-			sushi->setIgnoreCheck(true);
-			sushi->setIsNeedRemove(false);
-			sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-		}
-	}
-
-	int removeCount = 0;
-
-	for (int i = 0; i < m_height * m_width; i++) {
-		SushiSprite *sushi = m_matrix[i];
-		if (!sushi) {
-			continue;
-		}
-
-		if (sushi->getIsNeedRemove()) {
-			++removeCount;
-		}
-	}
-	if (0 != removeCount)
-	{
-		return false;
 	}
 	return true;
 }
-
 
 void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList)
 {
@@ -712,6 +808,41 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 			break;
 		}
 	}
+}
+
+void PlayLayer::setChainMaxPriority(std::list<SushiSprite *> &chainList, PriorityLevel p)
+{
+	SushiSprite *sushiTemp;
+	std::list<SushiSprite *>::iterator itList;
+
+	for (itList = chainList.begin(); itList != chainList.end(); itList++) {
+		sushiTemp = (SushiSprite *)*itList;
+
+		if (sushiTemp->getIgnoreCheck() && !sushiTemp->getIsNeedRemove() && (int)sushiTemp->getSushiPriorityLevel() < int(p))
+		{
+			sushiTemp->setIgnoreCheck(false);
+			sushiTemp->setIsNeedRemove(true);
+			sushiTemp->setDisplayMode(DISPLAY_MODE_NORMAL);
+		}
+		sushiTemp->setSushiPriorityLevel(p);
+	}
+}
+
+PriorityLevel PlayLayer::getChainMaxPriority(std::list<SushiSprite *> &chainList)
+{
+	SushiSprite *sushiTemp;
+	std::list<SushiSprite *>::iterator itList;
+
+	PriorityLevel p = PRIORITY_NORMAL;
+
+	for (itList = chainList.begin(); itList != chainList.end(); itList++) {
+		sushiTemp = (SushiSprite *)*itList;
+		if ((int)sushiTemp->getSushiPriorityLevel() > (int)p)
+		{
+			p = sushiTemp->getSushiPriorityLevel();
+		}
+	}
+	return p;
 }
 
 void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList)
@@ -760,6 +891,11 @@ void PlayLayer::removeSushi()
 	for (int i = 0; i < m_height * m_width; i++) {
 		SushiSprite *sushi = m_matrix[i];
 		if (!sushi) {
+			continue;
+		}
+
+		if (sushi->getIgnoreCheck())
+		{
 			continue;
 		}
 
@@ -948,11 +1084,12 @@ void PlayLayer::fillVacancies()
 
 	free(colEmptyInfo);
 
-	bool isActualEnd = checkActualRoundEnd();
+	/*bool isActualEnd = checkActualRoundEnd();
 	if (isActualEnd)
 	{
-		GameController::getInstance()->onExplosionStopped();
-	}
+	GameController::getInstance()->onExplosionStopped();
+	}*/
+	GameController::getInstance()->onExplosionStopped();
 }
 
 void PlayLayer::markRemove(SushiSprite *sushi)

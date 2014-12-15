@@ -2,10 +2,9 @@
 #define __PLAY_LAYER_H__
 
 #include "cocos2d.h"
+#include "View/Sprite/SushiSprite.h"
 
 USING_NS_CC;
-
-class SushiSprite;
 
 class PlayLayer : public Layer
 {
@@ -40,14 +39,17 @@ private:
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	int m_round;
-	bool m_isSwapped5LineSushi;
 
 	void initMatrix();
 	void createAndDropSushi(int row, int col, bool isInit);
 	Point positionOfItem(int row, int col);
 	void checkAndRemoveChain();
+	PriorityLevel getChainMaxPriority(std::list<SushiSprite *> &chainList);
+	void setChainMaxPriority(std::list<SushiSprite *> &chainList, PriorityLevel p);
+
 	void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
 	void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
+
 	void removeSushi();
 	void actionEndCallback(Node *node);
 	void explodeSushi(SushiSprite *sushi);
