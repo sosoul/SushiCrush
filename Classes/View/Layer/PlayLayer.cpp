@@ -343,9 +343,11 @@ void PlayLayer::swapSushi()
 		|| colChainListOfSecond.size() >= 3
 		|| rowChainListOfSecond.size() >= 3
 		|| m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE
-		|| m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE) {
-		if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE
-			|| m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
+		|| m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE
+		|| ((m_destSushi->getDisplayMode() != DISPLAY_MODE_NORMAL && m_srcSushi->getDisplayMode() != DISPLAY_MODE_NORMAL)
+		&& !(m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE)
+		&& !(m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+		)) {
 		GameController::getInstance()->onSwapSushiCompleted();
 		// just swap
 		m_srcSushi->runAction(MoveTo::create(time, posOfDest));
@@ -495,6 +497,190 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi->setIsNeedRemove(false);
 			markRemove(m_destSushi);
 
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIsNeedRemove(true);
+
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIsNeedRemove(true);
+
+			//两个5消产生的互换 消除全部sushi
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				sushi->setIsNeedRemove(false);
+				markRemove(sushi);
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+		{
+			markRemove(m_destSushi);
+			markRemove(m_srcSushi);
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE && m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+		{
+			markRemove(m_destSushi);
+			markRemove(m_srcSushi);
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && (m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE))
+		{
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIsNeedRemove(true);
+
+			//5消和四消交换 把同种类型sushi全部变为四消类型并消除
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
+				{
+					sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
+					sushi->applyDisplayMode();
+					markRemove(sushi);
+				}
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && (m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE))
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIsNeedRemove(true);
+
+			//5消和四消交换 把同种类型sushi全部变为四消类型并消除
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
+				{
+					sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
+					sushi->applyDisplayMode();
+					markRemove(sushi);
+				}
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+
+		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_destSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS)
+		{
+			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIsNeedRemove(true);
+
+			//5消和T形交换 把同种类型sushi全部变为T型并消除
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
+				{
+					sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+					sushi->applyDisplayMode();
+					markRemove(sushi);
+				}
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS)
+		{
+			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIsNeedRemove(true);
+
+			//5消和T形交换 把同种类型sushi全部变为T型并消除
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
+				{
+					sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+					sushi->applyDisplayMode();
+					markRemove(sushi);
+				}
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS)
+		{
+			//两个T形和T形交换 消除周围 5*5区域
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if( (sushi->getCol() <= (m_destSushi->getCol() + 2) && sushi->getCol() >= (m_destSushi->getCol() - 2))
+					&& (sushi->getRow() <= (m_destSushi->getRow() + 2) && sushi->getRow() >= (m_destSushi->getRow() - 2)))
+				{
+					markRemove(sushi);
+				}
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS && (m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE) )
+		{
+			//T形和4消交换 消除周围 三行三列
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if ((sushi->getCol() <= (m_destSushi->getCol() + 1) && sushi->getCol() >= (m_destSushi->getCol() - 1))
+					|| (sushi->getRow() <= (m_destSushi->getRow() + 1) && sushi->getRow() >= (m_destSushi->getRow() - 1)))
+				{
+					markRemove(sushi);
+				}
+			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS && (m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE))
+		{
+			//T形和4消交换 消除周围 三行三列
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_matrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if ((sushi->getCol() <= (m_srcSushi->getCol() + 1) && sushi->getCol() >= (m_srcSushi->getCol() - 1))
+					|| (sushi->getRow() <= (m_srcSushi->getRow() + 1) && sushi->getRow() >= (m_srcSushi->getRow() - 1)))
+				{
+					markRemove(sushi);
+				}
+			}
 			m_srcSushi = nullptr;
 			m_destSushi = nullptr;
 			return;
@@ -1139,11 +1325,14 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				if (!tmp || tmp == sushi) {
 					continue;
 				}
-				if (tmp->getImgIndex() == index && tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
-					tmp->setIsNeedRemove(true);
-				}
-				else if (tmp->getDisplayMode() != DISPLAY_MODE_NORMAL) {
-					markRemove(tmp);
+				if (tmp->getImgIndex() == index)
+				{
+					if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+						tmp->setIsNeedRemove(true);
+					}
+					else if (tmp->getDisplayMode() != DISPLAY_MODE_NORMAL) {
+						markRemove(tmp);
+					}
 				}
 			}
 		}
