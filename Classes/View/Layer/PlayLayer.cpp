@@ -551,8 +551,11 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
 				{
-					sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-					sushi->applyDisplayMode();
+					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					{
+						sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
+						sushi->applyDisplayMode();
+					}
 					markRemove(sushi);
 				}
 			}
@@ -574,8 +577,11 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
 				{
-					sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-					sushi->applyDisplayMode();
+					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					{
+						sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
+						sushi->applyDisplayMode();
+					}
 					markRemove(sushi);
 				}
 			}
@@ -597,8 +603,11 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
 				{
-					sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
-					sushi->applyDisplayMode();
+					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					{
+						sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+						sushi->applyDisplayMode();
+					}
 					markRemove(sushi);
 				}
 			}
@@ -620,8 +629,11 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
 				{
-					sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
-					sushi->applyDisplayMode();
+					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					{
+						sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+						sushi->applyDisplayMode();
+					}
 					markRemove(sushi);
 				}
 			}
