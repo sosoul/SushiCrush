@@ -1331,25 +1331,27 @@ void PlayLayer::fillVacancies()
 	m_isAnimationing = true;
 
 	Size size = CCDirector::getInstance()->getWinSize();
-	int *colEmptyInfo = (int *)malloc(sizeof(int) * m_width);
-	memset((void *)colEmptyInfo, 0, sizeof(int) * m_width);
 
 	// 1. drop exist sushi
 	SushiSprite *sushi = NULL;
 	for (int col = 0; col < m_width; col++) {
-		int removedSushiOfCol = 0;
+
+		std::queue<int> queueNeedFill;
+
 		// from buttom to top
 		for (int row = 0; row < m_height; row++) {
 			sushi = m_sushiMatrix[row * m_width + col];
-			if (NULL == sushi && isValidGrid(row, col)) {
-				++removedSushiOfCol;
+			if (!isValidGrid(row, col)){
+				continue;
+			}
+
+			if (NULL == sushi) {
+				queueNeedFill.push(row);
 			} else {
-				if (!sushi)
-					continue;
-				if (removedSushiOfCol > 0) {
-					int newRow = row - removedSushiOfCol;
-					if (!isValidGrid(newRow, col) && m_sushiMatrix[newRow*m_width + col])
-						continue;
+				if (queueNeedFill.size() > 0) {
+					queueNeedFill.push(row);
+					int newRow = queueNeedFill.front();
+					queueNeedFill.pop();
 					// switch in matrix
 					m_sushiMatrix[newRow * m_width + col] = sushi;
 					m_sushiMatrix[row * m_width + col] = NULL;
@@ -1365,20 +1367,14 @@ void PlayLayer::fillVacancies()
 			}
 		}
 
-		// record empty info
-		colEmptyInfo[col] = removedSushiOfCol;
-	}
-
-	// 2. create new item and drop down.
-	for (int col = 0; col < m_width; col++) {
-		int topInValidRowsCount = getTopInValidRowsCount(col);
-		for (int row = m_height - colEmptyInfo[col] - topInValidRowsCount; row < m_height; row++) {
-			if (isValidGrid(row, col))
-				createAndDropSushi(row, col, false);
+		while (queueNeedFill.size() > 0)
+		{
+			int cRow = queueNeedFill.front();
+			queueNeedFill.pop();
+			createAndDropSushi(cRow, col, false);
 		}
-	}
 
-	free(colEmptyInfo);
+	}
 
 	/*bool isActualEnd = checkActualRoundEnd();
 	if (isActualEnd)
@@ -1510,19 +1506,6 @@ GridType PlayLayer::getGridType(int row, int col) {
 	if (!isValidRow(row) || !isValidCol(col) || !m_gridMatrix[row*m_width + col])
 		return GIRD_TYPE_NONE;
 	return m_gridMatrix[row*m_width + col]->getGridType();
-}
-
-int PlayLayer::getTopInValidRowsCount(int col) {
-	int result = 0;
-	if (!isValidCol(col))
-		return result;
-	for (int i = m_height - 1; i >= 0; --i) {
-		if (!kRoundMatrixes[m_round - 1][i][col])
-			++result;
-		else
-			break;
-	}
-	return result;
 }
 
 void PlayLayer::refresh() {

@@ -69,7 +69,6 @@ private:
 	bool checkActualRoundEnd();
 	bool isValidGrid(int row, int col);
 	GridType getGridType(int row, int col);
-	int getTopInValidRowsCount(int col);
 	static bool isValidRow(int row);
 	static bool isValidCol(int col);
 
