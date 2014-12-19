@@ -2,6 +2,7 @@
 #define __PLAY_LAYER_H__
 
 #include "cocos2d.h"
+#include "View/Sprite/GridSprite.h"
 #include "View/Sprite/SushiSprite.h"
 
 USING_NS_CC;
@@ -26,7 +27,8 @@ public:
 
 private:
 	SpriteBatchNode *m_spriteSheet;
-	SushiSprite **m_matrix;// 1D array which store (SushiSprite *).
+	SushiSprite **m_sushiMatrix;// 1D array which store (SushiSprite *).
+	GridSprite **m_gridMatrix;
 	int m_width;
 	int m_height;
 	// for rapid count position
@@ -41,6 +43,7 @@ private:
 	int m_round;
 
 	void initMatrix();
+	void createGrid(int row, int col);
 	void createAndDropSushi(int row, int col, bool isInit);
 	Point positionOfItem(int row, int col);
 	void checkAndRemoveChain();
@@ -64,7 +67,8 @@ private:
 	void swapSushi();
 	void markRemove(SushiSprite *sushi);
 	bool checkActualRoundEnd();
-	bool hasSushi(int row, int col);
+	bool isValidGrid(int row, int col);
+	GridType getGridType(int row, int col);
 	int getTopInValidRowsCount(int col);
 	static bool isValidRow(int row);
 	static bool isValidCol(int col);
@@ -75,6 +79,7 @@ private:
 	bool isLock(int row, int col);
 	bool canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex);
 	void didShowScoreNumber(LabelBMFont* label);
+	void changeGridType(GridSprite* grid, GridType type, bool isNeighbor);
 	
 };
 

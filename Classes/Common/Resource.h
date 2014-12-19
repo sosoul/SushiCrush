@@ -4,7 +4,8 @@
 #define MATRIX_WIDTH (7)
 #define MATRIX_HEIGHT (8)
 #define SUSHI_GAP (1)
-#define TOTAL_SUSHI (6)
+#define SUSHI_COUNT (6)
+#define GRID_COUNT (3)
 
 // Start scene
 const char s_startBackground[] = "play_start_start_back_normal.png";
@@ -74,6 +75,11 @@ const char s_starRightUndone[] = "common_starRight_img_disable.png";
 const char s_preLayerStartNormal[] = "common_start_btn_normal.png";
 const char s_preLayerStartSelected[] = "common_start_btn_selected.png";
 const char s_targetTipsBackground[] = "play_targetTips_target_img_normal.png";
+const char s_gridNormal[] = "play_play_grid_normal.png";
+const char s_gridJelly[] = "play_play_grid_jelly.png";
+const char s_gridDoubleJelly[] = "play_play_grid_double_jelly.png";
+const char s_gridCream[] = "play_play_grid_cream.png";
+const char s_gridDoubleCream[] = "play_play_grid_double_cream.png";
 const char s_sushiPlist[] = "sushi.plist";
 const char s_sushiRes[] = "sushi.png";//"sushi.pvr.ccz";
 

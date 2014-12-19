@@ -153,6 +153,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\View\Scene\GuideMapScene.cpp" />
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp" />
     <ClCompile Include="..\Classes\View\Scene\StartScene.cpp" />
+    <ClCompile Include="..\Classes\View\Sprite\GridSprite.cpp" />
     <ClCompile Include="..\Classes\View\Sprite\SushiSprite.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -177,6 +178,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\View\Scene\GuideMapScene.h" />
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h" />
     <ClInclude Include="..\Classes\View\Scene\StartScene.h" />
+    <ClInclude Include="..\Classes\View\Sprite\GridSprite.h" />
     <ClInclude Include="..\Classes\View\Sprite\SushiSprite.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

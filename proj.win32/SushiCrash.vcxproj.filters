@@ -80,6 +80,9 @@
     <ClCompile Include="..\Classes\View\Layer\TargetTipsLayer.cpp">
       <Filter>View\Layer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\View\Sprite\GridSprite.cpp">
+      <Filter>View\Sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -143,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Types.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Sprite\GridSprite.h">
+      <Filter>View\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -30,5 +30,14 @@ typedef enum {
 } DisplayMode;
 
 
+enum GridType {
+	GIRD_TYPE_NONE = 0,
+	GIRD_TYPE_NORMAL,  // 1
+	GRID_TYPE_JELLY,  // 2
+	GRID_TYPE_DOUBLE_JELLY,  // 3
+	GRID_TYPE_CREAM,  // 4
+	GRID_TYPE_DOUBLE_CREAM,  // 5
+};
+
 #endif // _TYPES_H_
 

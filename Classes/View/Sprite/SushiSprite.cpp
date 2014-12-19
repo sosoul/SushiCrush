@@ -6,7 +6,7 @@
 USING_NS_CC;
 //#define DEBUG
 
-const char *sushiNormal[TOTAL_SUSHI] = {
+const char *sushiNormal[SUSHI_COUNT] = {
 	"sushi_1n.png",
 	"sushi_2n.png",
 	"sushi_3n.png",
@@ -15,7 +15,7 @@ const char *sushiNormal[TOTAL_SUSHI] = {
 	"sushi_6n.png"
 };
 
-const char *sushiVertical[TOTAL_SUSHI] = {
+const char *sushiVertical[SUSHI_COUNT] = {
 	"sushi_1v.png",
 	"sushi_2v.png",
 	"sushi_3v.png",
@@ -24,7 +24,7 @@ const char *sushiVertical[TOTAL_SUSHI] = {
 	"sushi_6v.png"
 };
 
-const char *sushiHorizontal[TOTAL_SUSHI] = {
+const char *sushiHorizontal[SUSHI_COUNT] = {
 	"sushi_1h.png",
 	"sushi_2h.png",
 	"sushi_3h.png",
@@ -33,7 +33,7 @@ const char *sushiHorizontal[TOTAL_SUSHI] = {
 	"sushi_6h.png"
 };
 
-const char *sushi5Cross[TOTAL_SUSHI] = {
+const char *sushi5Cross[SUSHI_COUNT] = {
 	"sushi_1c.png",
 	"sushi_2c.png",
 	"sushi_3c.png",
@@ -79,7 +79,7 @@ SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgI
 #else
 	do 
 	{
-		index = rand() % TOTAL_SUSHI;
+		index = rand() % SUSHI_COUNT;
 	} while (index == topImgIndex || index == leftImgIndex);
 #endif
 	sushi->m_sushiPriorityLevel = priorityLevel;
@@ -144,5 +144,5 @@ void SushiSprite::applyDisplayMode() {
 	default:
 		return;
 	}
-	setDisplayFrame(frame);
+	setSpriteFrame(frame);
 }

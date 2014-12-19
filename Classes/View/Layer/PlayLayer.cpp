@@ -8,12 +8,12 @@
 namespace {
 // TODO: The matrix data need to be read from config file.
 
-const int kRoundMatrixes[10][8][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
+const int kRoundMatrixes[10][8][7] = { { { 1, 3, 3, 3, 3, 3, 1 },
+										 { 1, 1, 4, 1, 4, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 2, 2, 2, 1, 1 },
+										 { 1, 1, 2, 5, 2, 1, 1 },
+										 { 1, 1, 2, 2, 2, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 } }, // 1
 
@@ -22,7 +22,7 @@ const int kRoundMatrixes[10][8][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
+										 { 1, 1, 3, 3, 3, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 },
 										 { 1, 1, 1, 1, 1, 1, 1 } },  // 2
 
@@ -101,7 +101,7 @@ const int kRoundMatrixes[10][8][7] = { { { 1, 1, 1, 1, 1, 1, 1 },
 }
 
 PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
-						 m_matrix(NULL),
+						 m_sushiMatrix(NULL),
 						 m_width(0),
 						 m_height(0),
 						 m_matrixLeftBottomX(0),
@@ -114,12 +114,16 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
 						 m_round(round)
 {
+	CCASSERT(m_round > 0 && m_round <= TOTAL_ROUND, "");
 }
 
 PlayLayer::~PlayLayer()
 {
-	if (m_matrix) {
-		free(m_matrix);
+	if (m_sushiMatrix) {
+		free(m_sushiMatrix);
+	}
+	if (m_gridMatrix) {
+		free(m_gridMatrix);
 	}
 	NotificationCenter::getInstance()->removeAllObservers(this);
 }
@@ -167,8 +171,11 @@ bool PlayLayer::init()
 
 	// init point array
 	int arraySize = sizeof(SushiSprite *) * m_width * m_height;
-	m_matrix = (SushiSprite **)malloc(arraySize);
-	memset((void*)m_matrix, 0, arraySize);
+	m_sushiMatrix = (SushiSprite **)malloc(arraySize);
+	memset((void*)m_sushiMatrix, 0, arraySize);
+	arraySize = sizeof(GridSprite *) * m_width * m_height;
+	m_gridMatrix = (GridSprite **)malloc(arraySize);
+	memset((void*)m_gridMatrix, 0, arraySize);
 
 	initMatrix();
 	scheduleUpdate();
@@ -183,12 +190,27 @@ bool PlayLayer::init()
 
 void PlayLayer::initMatrix()
 {
+	// init sushi and grid matrix
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
-			if (hasSushi(row, col))
+			createGrid(row, col);
+			if (isValidGrid(row, col))
 				createAndDropSushi(row, col, true);
 		}
 	}
+}
+
+void PlayLayer::createGrid(int row, int col) {
+	if (!isValidRow(row) || !isValidCol(col))
+		return;
+	GridType type = (GridType)(kRoundMatrixes[m_round-1][row][col]);
+	GridSprite* grid = NULL;
+	if (GIRD_TYPE_NONE != type) {
+		grid = GridSprite::create(row, col, type);
+		grid->setPosition(positionOfItem(row, col));
+		addChild(grid);
+	}
+	m_gridMatrix[row * m_width + col] = grid;
 }
 
 SushiSprite *PlayLayer::sushiOfPoint(Point *point)
@@ -197,7 +219,7 @@ SushiSprite *PlayLayer::sushiOfPoint(Point *point)
 	Rect rect = Rect(0, 0, 0, 0);
 
 	for (int i = 0; i < m_height * m_width; i++) {
-		sushi = m_matrix[i];
+		sushi = m_sushiMatrix[i];
 		if (sushi) {
 			rect.origin.x = sushi->getPositionX() - (sushi->getContentSize().width / 2);
 			rect.origin.y = sushi->getPositionY() - (sushi->getContentSize().height / 2);
@@ -247,7 +269,7 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 	if (upRect.containsPoint(location)) {
 		row++;
 		if (row < m_height) {
-			m_destSushi = m_matrix[row * m_width + col];
+			m_destSushi = m_sushiMatrix[row * m_width + col];
 		}
 		m_movingVertical = true;
 		swapSushi();
@@ -262,7 +284,7 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 	if (downRect.containsPoint(location)) {
 		row--;
 		if (row >= 0) {
-			m_destSushi = m_matrix[row * m_width + col];
+			m_destSushi = m_sushiMatrix[row * m_width + col];
 		}
 		m_movingVertical = true;
 		swapSushi();
@@ -277,7 +299,7 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 	if (leftRect.containsPoint(location)) {
 		col--;
 		if (col >= 0) {
-			m_destSushi = m_matrix[row * m_width + col];
+			m_destSushi = m_sushiMatrix[row * m_width + col];
 		}
 		m_movingVertical = false;
 		swapSushi();
@@ -292,7 +314,7 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 	if (rightRect.containsPoint(location)) {
 		col++;
 		if (col < m_width) {
-			m_destSushi = m_matrix[row * m_width + col];
+			m_destSushi = m_sushiMatrix[row * m_width + col];
 		}
 		m_movingVertical = false;
 		swapSushi();
@@ -316,8 +338,8 @@ void PlayLayer::swapSushi()
 	float time = 0.2;
 
 	// 1.swap in matrix
-	m_matrix[m_srcSushi->getRow() * m_width + m_srcSushi->getCol()] = m_destSushi;
-	m_matrix[m_destSushi->getRow() * m_width + m_destSushi->getCol()] = m_srcSushi;
+	m_sushiMatrix[m_srcSushi->getRow() * m_width + m_srcSushi->getCol()] = m_destSushi;
+	m_sushiMatrix[m_destSushi->getRow() * m_width + m_destSushi->getCol()] = m_srcSushi;
 	int tmpRow = m_srcSushi->getRow();
 	int tmpCol = m_srcSushi->getCol();
 	m_srcSushi->setRow(m_destSushi->getRow());
@@ -356,8 +378,8 @@ void PlayLayer::swapSushi()
 	}
 
 	// 3.no chain, swap back
-	m_matrix[m_srcSushi->getRow() * m_width + m_srcSushi->getCol()] = m_destSushi;
-	m_matrix[m_destSushi->getRow() * m_width + m_destSushi->getCol()] = m_srcSushi;
+	m_sushiMatrix[m_srcSushi->getRow() * m_width + m_srcSushi->getCol()] = m_destSushi;
+	m_sushiMatrix[m_destSushi->getRow() * m_width + m_destSushi->getCol()] = m_srcSushi;
 	tmpRow = m_srcSushi->getRow();
 	tmpCol = m_srcSushi->getCol();
 	m_srcSushi->setRow(m_destSushi->getRow());
@@ -397,8 +419,8 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 		int topRow1 = row - 1;
 		int topRow2 = row - 2;
 		if (isValidRow(topRow1) && isValidRow(topRow2)) {
-			SushiSprite* topSushi1 = m_matrix[topRow1*m_width + col];
-			SushiSprite* topSushi2 = m_matrix[topRow2*m_width + col];
+			SushiSprite* topSushi1 = m_sushiMatrix[topRow1*m_width + col];
+			SushiSprite* topSushi2 = m_sushiMatrix[topRow2*m_width + col];
 			if (topSushi1 && topSushi2 && topSushi1->getImgIndex() == topSushi2->getImgIndex())
 				topImgIndex = topSushi1->getImgIndex();
 		}
@@ -407,8 +429,8 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 		int leftCol1 = col - 1;
 		int leftCol2 = col - 2;
 		if (isValidCol(leftCol1) && isValidCol(leftCol2)) {
-			SushiSprite* leftSushi1 = m_matrix[row*m_width + leftCol1];
-			SushiSprite* leftSushi2 = m_matrix[row*m_width + leftCol2];
+			SushiSprite* leftSushi1 = m_sushiMatrix[row*m_width + leftCol1];
+			SushiSprite* leftSushi2 = m_sushiMatrix[row*m_width + leftCol2];
 			if (leftSushi1 && leftSushi2 && leftSushi1->getImgIndex() == leftSushi2->getImgIndex())
 				leftImgIndex = leftSushi1->getImgIndex();
 		}
@@ -426,7 +448,7 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 	// add to BatchNode
 	m_spriteSheet->addChild(sushi);
 
-	m_matrix[row * m_width + col] = sushi;
+	m_sushiMatrix[row * m_width + col] = sushi;
 }
 
 Point PlayLayer::positionOfItem(int row, int col)
@@ -444,7 +466,7 @@ void PlayLayer::update(float dt)
 		// init with false
 		m_isAnimationing = false;
 		for (int i = 0; i < m_height * m_width; i++) {
-			SushiSprite *sushi = m_matrix[i];
+			SushiSprite *sushi = m_sushiMatrix[i];
 			if (sushi && sushi->getNumberOfRunningActions() > 0) {
 				m_isAnimationing = true;
 				break;
@@ -472,7 +494,7 @@ void PlayLayer::checkAndRemoveChain()
 	SushiSprite *sushi;
 	// 1. reset ingnore flag
 	for (int i = 0; i < m_height * m_width; i++) {
-		sushi = m_matrix[i];
+		sushi = m_sushiMatrix[i];
 		if (!sushi) {
 			continue;
 		}
@@ -511,7 +533,7 @@ void PlayLayer::checkAndRemoveChain()
 
 			//两个5消产生的互换 消除全部sushi
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -545,7 +567,7 @@ void PlayLayer::checkAndRemoveChain()
 
 			//5消和四消交换 把同种类型sushi全部变为四消类型并消除
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -571,7 +593,7 @@ void PlayLayer::checkAndRemoveChain()
 
 			//5消和四消交换 把同种类型sushi全部变为四消类型并消除
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -597,7 +619,7 @@ void PlayLayer::checkAndRemoveChain()
 
 			//5消和T形交换 把同种类型sushi全部变为T型并消除
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -623,7 +645,7 @@ void PlayLayer::checkAndRemoveChain()
 
 			//5消和T形交换 把同种类型sushi全部变为T型并消除
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -646,7 +668,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			//两个T形和T形交换 消除周围 5*5区域
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -665,7 +687,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			//T形和4消交换 消除周围 三行三列
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -683,7 +705,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			//T形和4消交换 消除周围 三行三列
 			for (int i = 0; i < m_height * m_width; i++) {
-				sushi = m_matrix[i];
+				sushi = m_sushiMatrix[i];
 				if (!sushi) {
 					continue;
 				}
@@ -830,7 +852,7 @@ void PlayLayer::checkAndRemoveChain()
 		SushiModeMap superSushiModeMap;
 
 		for (int i = 0; i < m_height * m_width; i++) {
-			sushi = m_matrix[i];
+			sushi = m_sushiMatrix[i];
 			if (!sushi) {
 				continue;
 			}
@@ -841,7 +863,7 @@ void PlayLayer::checkAndRemoveChain()
 		}
 
 		for (int i = 0; i < m_height * m_width; i++) {
-			sushi = m_matrix[i];
+			sushi = m_sushiMatrix[i];
 			if (!sushi) {
 				continue;
 			}
@@ -943,7 +965,7 @@ bool PlayLayer::checkActualRoundEnd()
 {
 	SushiSprite *sushi;
 	for (int i = 0; i < m_height * m_width; i++) {
-		sushi = m_matrix[i];
+		sushi = m_sushiMatrix[i];
 		if (!sushi) {
 			continue;
 		}
@@ -979,7 +1001,7 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 
 	int neighborCol = sushi->getCol() - 1;
 	while (neighborCol >= 0) {
-		SushiSprite *neighborSushi = m_matrix[sushi->getRow() * m_width + neighborCol];
+		SushiSprite *neighborSushi = m_sushiMatrix[sushi->getRow() * m_width + neighborCol];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex()
 			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)) {
@@ -993,7 +1015,7 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 
 	neighborCol = sushi->getCol() + 1;
 	while (neighborCol < m_width) {
-		SushiSprite *neighborSushi = m_matrix[sushi->getRow() * m_width + neighborCol];
+		SushiSprite *neighborSushi = m_sushiMatrix[sushi->getRow() * m_width + neighborCol];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex())
 			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE) {
@@ -1050,7 +1072,7 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 
 	int neighborRow = sushi->getRow() - 1;
 	while (neighborRow >= 0) {
-		SushiSprite *neighborSushi = m_matrix[neighborRow * m_width + sushi->getCol()];
+		SushiSprite *neighborSushi = m_sushiMatrix[neighborRow * m_width + sushi->getCol()];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex())
 			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE) {
@@ -1064,7 +1086,7 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 
 	neighborRow = sushi->getRow() + 1;
 	while (neighborRow < m_height) {
-		SushiSprite *neighborSushi = m_matrix[neighborRow * m_width + sushi->getCol()];
+		SushiSprite *neighborSushi = m_sushiMatrix[neighborRow * m_width + sushi->getCol()];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex())
 			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE) {
@@ -1085,7 +1107,7 @@ void PlayLayer::removeSushi()
 	int removeCount = 0;
 
 	for (int i = 0; i < m_height * m_width; i++) {
-		SushiSprite *sushi = m_matrix[i];
+		SushiSprite *sushi = m_sushiMatrix[i];
 		if (!sushi) {
 			continue;
 		}
@@ -1189,7 +1211,7 @@ void PlayLayer::explode5CrossLineSushi(Point point) {
 void PlayLayer::actionEndCallback(Node *node)
 {
 	SushiSprite *sushi = (SushiSprite *)node;
-	m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
+	m_sushiMatrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
 	if (m_srcSushi == sushi) {
 		m_isTouchEnable = false;
 		m_srcSushi = NULL;
@@ -1204,6 +1226,9 @@ void PlayLayer::actionEndCallback(Node *node)
 
 void PlayLayer::explodeSushi(SushiSprite *sushi)
 {
+	if (!sushi)
+		return;
+
 	float time = 0.3;
 
 	// 1. action for sushi
@@ -1245,6 +1270,58 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 	auto seq = Sequence::create(spawn,
 		CallFunc::create(CC_CALLBACK_0(PlayLayer::didShowScoreNumber, this, label)), nullptr);
 	label->runAction(seq);
+
+
+	// deal with grids
+	int row = sushi->getRow();
+	int col = sushi->getCol();
+	GridSprite* grid = m_gridMatrix[row*m_width + col];
+	changeGridType(grid, getGridType(row, col), false);
+	
+	if (isValidRow(row - 1)) {
+		changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true);
+	}
+	if (isValidCol(col + 1)) {
+		changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true);
+	}
+	if (isValidRow(row + 1)) {
+		changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true);
+	}
+	if (isValidCol(col - 1)) {
+		changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true);
+	}
+	
+}
+
+void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor) {
+	if (!grid)
+		return;
+	if (isNeighbor) {
+		switch (type)
+		{
+		case GRID_TYPE_CREAM:
+			grid->setGridType(GRID_TYPE_DOUBLE_JELLY);
+			break;
+		case GRID_TYPE_DOUBLE_CREAM:
+			grid->setGridType(GRID_TYPE_CREAM);
+			break;
+		default:
+			break;
+		}
+	} else {
+		switch (type)
+		{
+		case GRID_TYPE_JELLY:
+			grid->setGridType(GIRD_TYPE_NORMAL);
+			break;
+		case GRID_TYPE_DOUBLE_JELLY:
+			grid->setGridType(GRID_TYPE_JELLY);
+			break;
+		default:
+			break;
+		}
+	}
+	
 }
 
 void PlayLayer::fillVacancies()
@@ -1263,19 +1340,19 @@ void PlayLayer::fillVacancies()
 		int removedSushiOfCol = 0;
 		// from buttom to top
 		for (int row = 0; row < m_height; row++) {
-			sushi = m_matrix[row * m_width + col];
-			if (NULL == sushi && hasSushi(row, col)) {
+			sushi = m_sushiMatrix[row * m_width + col];
+			if (NULL == sushi && isValidGrid(row, col)) {
 				++removedSushiOfCol;
 			} else {
 				if (!sushi)
 					continue;
 				if (removedSushiOfCol > 0) {
 					int newRow = row - removedSushiOfCol;
-					if (!hasSushi(newRow, col) && m_matrix[newRow*m_width + col])
+					if (!isValidGrid(newRow, col) && m_sushiMatrix[newRow*m_width + col])
 						continue;
 					// switch in matrix
-					m_matrix[newRow * m_width + col] = sushi;
-					m_matrix[row * m_width + col] = NULL;
+					m_sushiMatrix[newRow * m_width + col] = sushi;
+					m_sushiMatrix[row * m_width + col] = NULL;
 					// move to new position
 					Point startPosition = sushi->getPosition();
 					Point endPosition = positionOfItem(newRow, col);
@@ -1296,7 +1373,7 @@ void PlayLayer::fillVacancies()
 	for (int col = 0; col < m_width; col++) {
 		int topInValidRowsCount = getTopInValidRowsCount(col);
 		for (int row = m_height - colEmptyInfo[col] - topInValidRowsCount; row < m_height; row++) {
-			if (hasSushi(row, col))
+			if (isValidGrid(row, col))
 				createAndDropSushi(row, col, false);
 		}
 	}
@@ -1333,7 +1410,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 			return;
 		for (int row = 0; row < m_height; row++) {
 			for (int col = 0; col < m_width; col++) {
-				SushiSprite* tmp = m_matrix[row*m_width + col];
+				SushiSprite* tmp = m_sushiMatrix[row*m_width + col];
 				if (!tmp || tmp == sushi) {
 					continue;
 				}
@@ -1351,7 +1428,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 	} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE) {
 		// check for type and mark for certical neighbour
 		for (int row = 0; row < m_height; row++) {
-			SushiSprite *tmp = m_matrix[row * m_width + sushi->getCol()];
+			SushiSprite *tmp = m_sushiMatrix[row * m_width + sushi->getCol()];
 			if (!tmp || tmp == sushi) {
 				continue;
 			}
@@ -1367,7 +1444,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 	} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE) {
 		// check for type and mark for horizontal neighbour
 		for (int col = 0; col < m_width; col++) {
-			SushiSprite *tmp = m_matrix[sushi->getRow() * m_width + col];
+			SushiSprite *tmp = m_sushiMatrix[sushi->getRow() * m_width + col];
 			if (!tmp || tmp == sushi) {
 				continue;
 			}
@@ -1391,7 +1468,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 		if (endY >= m_height) endY = m_height - 1;
 		for (int row = startX; row <= endX; row++) {
 			for (int col = startY; col <= endY; col++) {
-				SushiSprite* tmp = m_matrix[row*m_width + col];
+				SushiSprite* tmp = m_sushiMatrix[row*m_width + col];
 				if (!tmp || tmp == sushi) {
 					continue;
 				}
@@ -1415,7 +1492,7 @@ void PlayLayer::onRoundStart(Ref* obj) {
 	SushiSprite *sushi;
 	// 1. reset ingnore flag
 	for (int i = 0; i < m_height * m_width; i++) {
-		sushi = m_matrix[i];
+		sushi = m_sushiMatrix[i];
 		if (!sushi) {
 			continue;
 		}
@@ -1424,20 +1501,20 @@ void PlayLayer::onRoundStart(Ref* obj) {
 	}
 }
 
-bool PlayLayer::hasSushi(int row, int col) {
-	if (m_round <= 0 || m_round > TOTAL_ROUND ||
-		row < 0 || row >= m_height ||
-		col < 0 || col >= m_width)
-		return false;
-	if (kRoundMatrixes[m_round-1][row][col])
-		return true;
-	return false;
+bool PlayLayer::isValidGrid(int row, int col) {
+	GridType type = getGridType(row, col);
+	return (GIRD_TYPE_NORMAL == type || GRID_TYPE_JELLY == type || GRID_TYPE_DOUBLE_JELLY == type);
+}
+
+GridType PlayLayer::getGridType(int row, int col) {
+	if (!isValidRow(row) || !isValidCol(col) || !m_gridMatrix[row*m_width + col])
+		return GIRD_TYPE_NONE;
+	return m_gridMatrix[row*m_width + col]->getGridType();
 }
 
 int PlayLayer::getTopInValidRowsCount(int col) {
 	int result = 0;
-	if (m_round <= 0 || m_round > TOTAL_ROUND ||
-		col < 0 || col >= m_width)
+	if (!isValidCol(col))
 		return result;
 	for (int i = m_height - 1; i >= 0; --i) {
 		if (!kRoundMatrixes[m_round - 1][i][col])
@@ -1451,7 +1528,7 @@ int PlayLayer::getTopInValidRowsCount(int col) {
 void PlayLayer::refresh() {
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
-			if (SushiSprite* sushi = m_matrix[row*m_width + col])
+			if (SushiSprite* sushi = m_sushiMatrix[row*m_width + col])
 				sushi->setIsNeedRemove(true);
 		}
 	}
@@ -1475,11 +1552,11 @@ bool PlayLayer::canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int
 }
 
 bool PlayLayer::isLock(int row, int col) {
-	if (!hasSushi(row, col))
+	if (!isValidGrid(row, col))
 		return true;
 	if (!isValidRow(row) || !isValidCol(col))
 		return false;
-	SushiSprite* sushi = m_matrix[row*m_width+col];
+	SushiSprite* sushi = m_sushiMatrix[row*m_width+col];
 	if (!sushi)
 		return false;
 	int index = sushi->getImgIndex();
@@ -1494,22 +1571,22 @@ bool PlayLayer::isLock(int row, int col) {
 	int topLeftCol2 = col - 2;
 	int topRightCol1 = col + 1;
 	int topRightCol2 = col + 2;
-	if (hasSushi(topRow1, col)) {
+	if (isValidGrid(topRow1, col)) {
 		if (isValidRow(topRow2) && isValidRow(topRow3)) {
-			sushi1 = m_matrix[topRow2*m_width + col];
-			sushi2 = m_matrix[topRow3*m_width + col];
+			sushi1 = m_sushiMatrix[topRow2*m_width + col];
+			sushi2 = m_sushiMatrix[topRow3*m_width + col];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidCol(topLeftCol1) && isValidCol(topLeftCol2) && isValidRow(topRow1)) {
-			sushi1 = m_matrix[topRow1*m_width + topLeftCol1];
-			sushi2 = m_matrix[topRow1*m_width + topLeftCol2];
+			sushi1 = m_sushiMatrix[topRow1*m_width + topLeftCol1];
+			sushi2 = m_sushiMatrix[topRow1*m_width + topLeftCol2];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidCol(topRightCol1) && isValidCol(topRightCol2) && isValidRow(topRow1)) {
-			sushi1 = m_matrix[topRow1*m_width + topRightCol1];
-			sushi2 = m_matrix[topRow1*m_width + topRightCol2];
+			sushi1 = m_sushiMatrix[topRow1*m_width + topRightCol1];
+			sushi2 = m_sushiMatrix[topRow1*m_width + topRightCol2];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
@@ -1523,22 +1600,22 @@ bool PlayLayer::isLock(int row, int col) {
 	int rightTopRow2 = row - 2;
 	int rightBottomRow1 = row + 1;
 	int rightBottomRow2 = row + 2;
-	if (hasSushi(row, rightCol1)) {
+	if (isValidGrid(row, rightCol1)) {
 		if (isValidCol(rightCol2) && isValidCol(rightCol3)) {
-			sushi1 = m_matrix[row*m_width + rightCol2];
-			sushi2 = m_matrix[row*m_width + rightCol3];
+			sushi1 = m_sushiMatrix[row*m_width + rightCol2];
+			sushi2 = m_sushiMatrix[row*m_width + rightCol3];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidRow(rightTopRow1) && isValidRow(rightTopRow2) && isValidCol(rightCol1)) {
-			sushi1 = m_matrix[rightTopRow1*m_width + rightCol1];
-			sushi2 = m_matrix[rightTopRow2*m_width + rightCol1];
+			sushi1 = m_sushiMatrix[rightTopRow1*m_width + rightCol1];
+			sushi2 = m_sushiMatrix[rightTopRow2*m_width + rightCol1];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidRow(rightBottomRow1) && isValidRow(rightBottomRow2) && isValidCol(rightCol1)) {
-			sushi1 = m_matrix[rightBottomRow1*m_width + rightCol1];
-			sushi2 = m_matrix[rightBottomRow2*m_width + rightCol1];
+			sushi1 = m_sushiMatrix[rightBottomRow1*m_width + rightCol1];
+			sushi2 = m_sushiMatrix[rightBottomRow2*m_width + rightCol1];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
@@ -1552,22 +1629,22 @@ bool PlayLayer::isLock(int row, int col) {
 	int bottomLeftCol2 = col - 2;
 	int bottomRightCol1 = col + 1;
 	int bottomRightCol2 = col + 2;
-	if (hasSushi(bottomRow1, col)) {
+	if (isValidGrid(bottomRow1, col)) {
 		if (isValidRow(bottomRow2) && isValidRow(bottomRow3)) {
-			sushi1 = m_matrix[bottomRow2*m_width + col];
-			sushi2 = m_matrix[bottomRow3*m_width + col];
+			sushi1 = m_sushiMatrix[bottomRow2*m_width + col];
+			sushi2 = m_sushiMatrix[bottomRow3*m_width + col];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidCol(bottomLeftCol1) && isValidCol(bottomLeftCol2) && isValidRow(bottomRow1)) {
-			sushi1 = m_matrix[bottomRow1*m_width + bottomLeftCol1];
-			sushi2 = m_matrix[bottomRow1*m_width + bottomLeftCol2];
+			sushi1 = m_sushiMatrix[bottomRow1*m_width + bottomLeftCol1];
+			sushi2 = m_sushiMatrix[bottomRow1*m_width + bottomLeftCol2];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidCol(bottomRightCol1) && isValidCol(bottomRightCol2) && isValidRow(bottomRow1)) {
-			sushi1 = m_matrix[bottomRow1*m_width + bottomRightCol1];
-			sushi2 = m_matrix[bottomRow1*m_width + bottomRightCol2];
+			sushi1 = m_sushiMatrix[bottomRow1*m_width + bottomRightCol1];
+			sushi2 = m_sushiMatrix[bottomRow1*m_width + bottomRightCol2];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
@@ -1581,22 +1658,22 @@ bool PlayLayer::isLock(int row, int col) {
 	int leftTopRow2 = row - 2;
 	int leftBottomRow1 = row + 1;
 	int leftBottomRow2 = row + 2;
-	if (hasSushi(row, leftCol1)) {
+	if (isValidGrid(row, leftCol1)) {
 		if (isValidCol(leftCol2) && isValidCol(leftCol3)) {
-			sushi1 = m_matrix[row*m_width + leftCol2];
-			sushi2 = m_matrix[row*m_width + leftCol3];
+			sushi1 = m_sushiMatrix[row*m_width + leftCol2];
+			sushi2 = m_sushiMatrix[row*m_width + leftCol3];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidRow(leftTopRow1) && isValidRow(leftTopRow2) && isValidCol(leftCol1)) {
-			sushi1 = m_matrix[leftTopRow1*m_width + leftCol1];
-			sushi2 = m_matrix[leftTopRow2*m_width + leftCol1];
+			sushi1 = m_sushiMatrix[leftTopRow1*m_width + leftCol1];
+			sushi2 = m_sushiMatrix[leftTopRow2*m_width + leftCol1];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
 		if (isValidRow(leftBottomRow1) && isValidRow(leftBottomRow2) && isValidCol(leftCol1)) {
-			sushi1 = m_matrix[leftBottomRow1*m_width + leftCol1];
-			sushi2 = m_matrix[leftBottomRow2*m_width + leftCol1];
+			sushi1 = m_sushiMatrix[leftBottomRow1*m_width + leftCol1];
+			sushi2 = m_sushiMatrix[leftBottomRow2*m_width + leftCol1];
 			if (canbeRemovedSushis(sushi1, sushi2, index))
 				return false;
 		}
