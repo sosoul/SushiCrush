@@ -33,6 +33,7 @@ private:
 	GridSprite **m_gridMatrix;
 	int * m_moveNumMatrix;
 	int * m_minEndMoveMatrix;
+	int * m_sushiModeMatrix;
 	int m_width;
 	int m_height;
 	// for rapid count position
@@ -45,6 +46,7 @@ private:
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	int m_round;
+	bool m_needRefresh;
 
 	void initMatrix();
 	void createGrid(int row, int col);

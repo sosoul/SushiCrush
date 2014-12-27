@@ -112,7 +112,8 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_srcSushi(NULL),
 						 m_destSushi(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
-						 m_round(round)
+						 m_round(round),
+						 m_needRefresh(false)
 {
 	CCASSERT(m_round > 0 && m_round <= TOTAL_ROUND, "");
 }
@@ -134,6 +135,11 @@ PlayLayer::~PlayLayer()
 	{
 		delete m_minEndMoveMatrix;
 		m_minEndMoveMatrix = nullptr;
+	}
+	if (m_sushiModeMatrix)
+	{
+		delete m_sushiModeMatrix;
+		m_sushiModeMatrix = nullptr;
 	}
 
 
@@ -194,6 +200,9 @@ bool PlayLayer::init()
 
 	m_minEndMoveMatrix = new int[m_width * m_height];
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
+
+	m_sushiModeMatrix = new int[m_width * m_height];
+	memset(m_sushiModeMatrix, 0, m_width * m_height * sizeof(int));
 
 	initMatrix();
 	scheduleUpdate();
@@ -1178,7 +1187,10 @@ void PlayLayer::removeSushi()
 	}
 	else {
 		if (isLock())
+		{
+			m_needRefresh = true;
 			refresh();
+		}
 	}
 }
 
@@ -1668,6 +1680,9 @@ void PlayLayer::fillVacancies()
 			fillVacancies(row, m_width / 2, sushi);
 		}
 	}
+
+	m_needRefresh = false;
+
 	/*bool isActualEnd = checkActualRoundEnd();
 	if (isActualEnd)
 	{
@@ -1725,6 +1740,11 @@ void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<int>*
 		int leftImgIndex = -1;
 
 		SushiSprite *sushi = SushiSprite::create(rowDist, colDist, topImgIndex, leftImgIndex, PRIORITY_NORMAL);
+		if (m_needRefresh)
+		{
+			sushi->setDisplayMode((DisplayMode)m_sushiModeMatrix[rowDist * m_width + colDist]);
+			sushi->applyDisplayMode();
+		}
 
 		// create animation
 		Point endPosition = positionOfItem(rowDist, colDist);
@@ -1891,7 +1911,10 @@ void PlayLayer::refresh() {
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
 			if (SushiSprite* sushi = m_sushiMatrix[row*m_width + col])
+			{
 				sushi->setIsNeedRemove(true);
+				m_sushiModeMatrix[row*m_width + col] = (int)sushi->getDisplayMode();
+			}
 		}
 	}
 	removeSushi();
