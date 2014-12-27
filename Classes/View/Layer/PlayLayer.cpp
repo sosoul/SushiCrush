@@ -1940,10 +1940,10 @@ bool PlayLayer::isLock(int row, int col) {
 	if (!isValidGrid(row, col))
 		return true;
 	if (!isValidRow(row) || !isValidCol(col))
-		return false;
+		return true;
 	SushiSprite* sushi = m_sushiMatrix[row*m_width+col];
 	if (!sushi)
-		return false;
+		return true;
 	int index = sushi->getImgIndex();
 	SushiSprite* sushi1 = NULL;
 	SushiSprite* sushi2 = NULL;
