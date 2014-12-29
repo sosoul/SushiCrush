@@ -479,7 +479,6 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 	}
 	else
 	{
-		//TO DO 目前设置为先掉落到最上层
 		Vector<FiniteTimeAction *> moveVector;
 		auto actionMoveTo = MoveTo::create(DROP_SPEED, positionOfItem(MATRIX_HEIGHT - 1, col));
 
@@ -556,15 +555,6 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			m_srcSushi->setIsNeedRemove(false);
 			markRemove(m_srcSushi);
-
-			m_srcSushi = nullptr;
-			m_destSushi = nullptr;
-			return;
-		}
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
-		{
-			m_destSushi->setIsNeedRemove(false);
-			markRemove(m_destSushi);
 
 			m_srcSushi = nullptr;
 			m_destSushi = nullptr;
@@ -762,6 +752,15 @@ void PlayLayer::checkAndRemoveChain()
 					markRemove(sushi);
 				}
 			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
+		{
+			m_destSushi->setIsNeedRemove(false);
+			markRemove(m_destSushi);
+
 			m_srcSushi = nullptr;
 			m_destSushi = nullptr;
 			return;
