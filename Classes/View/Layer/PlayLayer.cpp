@@ -550,17 +550,7 @@ void PlayLayer::checkAndRemoveChain()
 	//分两种情况 第一种是有src和dist sushi的时候 标记相关生成和移除然后移除     第二种是没有的时候  先标记各种需要移除的情况  然后设置移除    （其中新生成的要设置ignorecheak 同时该设置needremove的也要设置needremove）
 	if (m_srcSushi && m_destSushi)
 	{
-		//to do 加入各种特殊道具的处理
-		if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_destSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
-		{
-			m_srcSushi->setIsNeedRemove(false);
-			markRemove(m_srcSushi);
-
-			m_srcSushi = nullptr;
-			m_destSushi = nullptr;
-			return;
-		}
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
+		if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(true);
@@ -752,6 +742,15 @@ void PlayLayer::checkAndRemoveChain()
 					markRemove(sushi);
 				}
 			}
+			m_srcSushi = nullptr;
+			m_destSushi = nullptr;
+			return;
+		}
+		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_destSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
+		{
+			m_srcSushi->setIsNeedRemove(false);
+			markRemove(m_srcSushi);
+
 			m_srcSushi = nullptr;
 			m_destSushi = nullptr;
 			return;
