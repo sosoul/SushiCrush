@@ -6,15 +6,15 @@
 USING_NS_CC;
 
 namespace {
-const int kNormalZOrder = -20;
-const int kJellyZOrder = 0;
-const int kDoubleJellyZOrder = 0;
-const int kCreamZOrder = 0;
-const int kDoubleCreamZOrder = 0;
+	const int kNormalZOrder = -20;
+	const int kJellyZOrder = 0;
+	const int kDoubleJellyZOrder = 0;
+	const int kCreamZOrder = 0;
+	const int kDoubleCreamZOrder = 0;
 }
 
 GridSprite::GridSprite() : m_col(0),
-						   m_row(0)
+m_row(0)
 {
 }
 

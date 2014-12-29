@@ -69,7 +69,7 @@ bool PostPlayLayer::init()
 	listBtn->setPosition(Vec2(visibleOrigin.x + kListPlayX, visibleOrigin.y + kListPlayY));
 	addChild(listBtn);
 
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	auto labelTarget = LabelAtlas::create("round:" + StringUtils::toString(roundInfo.m_round),
 		"fonts/tuffy_bold_italic-charmap.plist");
 	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelTargetX, visibleOrigin.y + kLabelTargetY));

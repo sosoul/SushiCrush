@@ -1,5 +1,5 @@
-#ifndef __GridSprite_SCENE_H__
-#define __GridSprite_SCENE_H__
+#ifndef __SPRITE_GRID_SPRITE_H__
+#define __SPRITE_GRID_SPRITE_H__
 
 #include "cocos2d.h"
 #include "Common/Types.h"
@@ -22,4 +22,4 @@ private:
 	
 };
 
-#endif // __GridSprite_SCENE_H__
+#endif // __SPRITE_GRID_SPRITE_H__

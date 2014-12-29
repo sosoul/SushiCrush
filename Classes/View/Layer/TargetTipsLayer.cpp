@@ -42,7 +42,7 @@ bool TargetTipsLayer::init() {
 	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
 	addChild(labelTarget, 0, kLabelTargetTag);
 
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	int score = roundInfo.m_targetScroe;
 	int moves = roundInfo.m_totalMoves;
 	labelTarget->setString("get at least " + StringUtils::toString(score) + " in " + StringUtils::toString(moves) + " moves");

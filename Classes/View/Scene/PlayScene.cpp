@@ -90,7 +90,6 @@ void PlayScene::onRoundReady(Ref* obj) {
 void PlayScene::onRoundStart(Ref* obj) {
 	if (!obj)
 		return;
-	RoundInfo* roundInfo = static_cast<RoundInfo*>(obj);
 	// pre-play layer - run a hide action.
 	auto hideAction = Hide::create();
 	MoveBy* movebyAction = MoveBy::create(0.5, Point(400, 0));

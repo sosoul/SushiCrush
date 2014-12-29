@@ -1,6 +1,7 @@
 #include "View/Sprite/SushiSprite.h"
 
 #include<stdlib.h>
+#include "Common/ConfigService.h"
 #include "Common/Resource.h"
 
 USING_NS_CC;
@@ -59,7 +60,7 @@ SushiSprite::SushiSprite() : m_col(0),
 							 m_imgIndex(0),
 							 m_isNeedRemove(false),
 							 m_ignoreCheck(false),
-							 m_displayMode(DISPLAY_MODE_NORMAL),
+							 m_sushiType(SUSHI_TYPE_NORMAL),
 							 m_score(20),
 							 m_sushiPriorityLevel(PRIORITY_NORMAL)
 {
@@ -73,6 +74,7 @@ SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgI
 	SushiSprite *sushi = new SushiSprite();
 	sushi->m_row = row;
 	sushi->m_col = col;
+	sushi->setSushiType(SUSHI_TYPE_NORMAL);
 	int index = 0;
 #if defined(DEBUG)
 	index = kTestMatrixes[row][col];
@@ -99,46 +101,32 @@ float SushiSprite::getContentWidth()
 	return itemWidth;
 }
 
-void SushiSprite::setDisplayMode(DisplayMode mode)
+void SushiSprite::setSushiType(SushiType mode)
 {
-	m_displayMode = mode;
-	switch (m_displayMode)
-	{
-	case DISPLAY_MODE_NORMAL:
-		m_score = 20;
-		break;
-	case DISPLAY_MODE_4_HORIZONTAL_LINE:
-	case DISPLAY_MODE_4_VERTICAL_LINE:
-		m_score = 30;
-		break;
-	case  DISPLAY_MODE_5_LINE:
-		m_score = 40;
-		break;
-	case DISPLAY_MODE_5_CROSS:
-		m_score = 50;
-		break;
-	default:
-		break;
-	}
-	if (mode == DISPLAY_MODE_5_LINE)
+	m_sushiType = mode;
+	const SushiInfo* sushiInfo = ConfigService::getInstance()->getSushiInfo(m_sushiType);
+	if (!sushiInfo)
+		return;
+	m_score = sushiInfo->_score;
+	if (mode == SUSHI_TYPE_5_LINE)
 	{
 		m_imgIndex = 6;
 	}
 }
 
-void SushiSprite::applyDisplayMode() {
+void SushiSprite::applySushiType() {
 	SpriteFrame *frame;
-	switch (m_displayMode) {
-	case DISPLAY_MODE_4_VERTICAL_LINE:
+	switch (m_sushiType) {
+	case SUSHI_TYPE_4_VERTICAL_LINE:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushiVertical[m_imgIndex]);
 		break;
-	case DISPLAY_MODE_4_HORIZONTAL_LINE:
+	case SUSHI_TYPE_4_HORIZONTAL_LINE:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushiHorizontal[m_imgIndex]);
 		break;
-	case DISPLAY_MODE_5_LINE:
+	case SUSHI_TYPE_5_LINE:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushi5Line);
 		break;
-	case DISPLAY_MODE_5_CROSS:
+	case SUSHI_TYPE_5_CROSS:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(sushi5Cross[m_imgIndex]);
 		break;
 	default:

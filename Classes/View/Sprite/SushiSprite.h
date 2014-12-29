@@ -1,5 +1,5 @@
-#ifndef __SushiSprite_SCENE_H__
-#define __SushiSprite_SCENE_H__
+#ifndef __SPRITE_SUSHI_SPRITE_H__
+#define __SPRITE_SUSHI_SPRITE_H__
 
 #include "cocos2d.h"
 #include "Common/Types.h"
@@ -26,14 +26,14 @@ public:
 	CC_SYNTHESIZE(int, m_imgIndex, ImgIndex);
 	CC_SYNTHESIZE(bool, m_isNeedRemove, IsNeedRemove);
 	CC_SYNTHESIZE(bool, m_ignoreCheck, IgnoreCheck);//新产生的4消寿司，本轮不被消除
-	CC_SYNTHESIZE_READONLY(DisplayMode, m_displayMode, DisplayMode);
+	CC_SYNTHESIZE_READONLY(SushiType, m_sushiType, SushiType);
 	CC_SYNTHESIZE(int, m_score, Score);
 	CC_SYNTHESIZE(PriorityLevel, m_sushiPriorityLevel, SushiPriorityLevel);
-	void setDisplayMode(DisplayMode mode);
-	void applyDisplayMode();
+	void setSushiType(SushiType mode);
+	void applySushiType();
 
 private:
 	
 };
 
-#endif // __SushiSprite_SCENE_H__
+#endif // __SPRITE_SUSHI_SPRITE_H__

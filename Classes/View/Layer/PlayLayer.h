@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "View/Sprite/GridSprite.h"
 #include "View/Sprite/SushiSprite.h"
+#include "Common/ConfigService.h"
 
 USING_NS_CC;
 
@@ -46,6 +47,7 @@ private:
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	int m_round;
+	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
 
 	void initMatrix();
@@ -64,7 +66,7 @@ private:
 
 	void removeSushi();
 	void actionEndCallback(Node *node);
-	void explodeSushi(SushiSprite *sushi);
+	void explodeSushi(SushiSprite *sushi, int* score);
 
 	void explode4HorizonytalLineSushi(Point point);
 	void explode4VerticalLineSushi(Point point);

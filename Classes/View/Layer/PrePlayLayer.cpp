@@ -74,7 +74,7 @@ bool PrePlayLayer::init()
 	addChild(startBtn);
 
 
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	auto labelTarget = LabelAtlas::create("Target:" + StringUtils::toString(roundInfo.m_targetScroe),
 		"fonts/tuffy_bold_italic-charmap.plist");
 	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE);

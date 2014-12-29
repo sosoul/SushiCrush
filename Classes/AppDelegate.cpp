@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
 
+#include "Common/ConfigService.h"
 #include "Common/Resource.h"
 #include "Controller/GameController.h"
 #include "View/Scene/StartScene.h"
@@ -50,6 +51,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	std::vector<std::string> searchPath;
 	searchPath.push_back("w640");
 	searchPath.push_back("fonts");
+	searchPath.push_back("config");
+	searchPath.push_back("tiledMap");
 	CCFileUtils::getInstance()->setSearchPaths(searchPath);
 
 	initialize();
@@ -86,5 +89,6 @@ void AppDelegate::applicationWillEnterForeground() {
 
 void AppDelegate::initialize() {
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_resPlist);
+	ConfigService::getInstance()->init();
 	GameController::getInstance()->init();
 }

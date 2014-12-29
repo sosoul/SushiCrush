@@ -5,101 +5,6 @@
 #include "Controller/GameController.h"
 #include "View/Sprite/SushiSprite.h"
 
-namespace {
-// TODO: The matrix data need to be read from config file.
-
-const int kRoundMatrixes[10][8][7] = { { { 1, 3, 3, 3, 3, 3, 1 },
-										 { 1, 1, 4, 1, 4, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 2, 2, 2, 1, 1 },
-										 { 1, 1, 2, 5, 2, 1, 1 },
-										 { 1, 1, 2, 2, 2, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 } }, // 1
-
-									   { { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 3, 3, 3, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 },
-										 { 1, 1, 1, 1, 1, 1, 1 } },  // 2
-
-									  { { 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 3
-
-									  { { 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 4
-
-									  { { 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 5
-
-									  { { 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 6
-
-									  { { 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 7
-
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 8
-
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 9
-
-									  { { 0, 0, 0, 0, 0, 0, 0 },
-										{ 0, 0, 1, 1, 1, 0, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 0, 1, 1, 1, 1, 1, 0 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 },
-										{ 1, 1, 1, 1, 1, 1, 1 } },  // 10
-};
-}
-
 PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_sushiMatrix(NULL),
 						 m_width(0),
@@ -113,9 +18,10 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_destSushi(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
 						 m_round(round),
+						 m_roundInfo(NULL),
 						 m_needRefresh(false)
 {
-	CCASSERT(m_round > 0 && m_round <= TOTAL_ROUND, "");
+	CCASSERT(m_round >= 0 && m_round < TOTAL_ROUND, "");
 }
 
 PlayLayer::~PlayLayer()
@@ -172,7 +78,7 @@ bool PlayLayer::init()
 		MSG_ROUND_START, nullptr);
 
 	// background
-	Size winSize = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	// init m_spriteSheet
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_sushiPlist);
@@ -184,8 +90,8 @@ bool PlayLayer::init()
 	m_height = MATRIX_HEIGHT;
 
 	// init position value
-	m_matrixLeftBottomX = (winSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
-	m_matrixLeftBottomY = 5;// (winSize.height - SushiSprite::getContentWidth() * m_height - (m_height - 1) * SUSHI_GAP) / 2;
+	m_matrixLeftBottomX = (visibleSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
+	m_matrixLeftBottomY = Director::getInstance()->getVisibleOrigin().y + 5;
 
 	// init point array
 	int arraySize = sizeof(SushiSprite *) * m_width * m_height;
@@ -194,6 +100,8 @@ bool PlayLayer::init()
 	arraySize = sizeof(GridSprite *) * m_width * m_height;
 	m_gridMatrix = (GridSprite **)malloc(arraySize);
 	memset((void*)m_gridMatrix, 0, arraySize);
+
+	m_roundInfo = const_cast<RoundInfo*>(ConfigService::getInstance()->getRoundInfo(m_round));
 
 	m_moveNumMatrix = new int[m_width * m_height];
 	memset(m_moveNumMatrix, 0, m_width * m_height * sizeof(int));
@@ -212,6 +120,7 @@ bool PlayLayer::init()
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayLayer::onTouchBegan, this);
 	touchListener->onTouchMoved = CC_CALLBACK_2(PlayLayer::onTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
 	return true;
 }
 
@@ -228,9 +137,10 @@ void PlayLayer::initMatrix()
 }
 
 void PlayLayer::createGrid(int row, int col) {
-	if (!isValidRow(row) || !isValidCol(col))
+	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
 		return;
-	GridType type = (GridType)(kRoundMatrixes[m_round-1][row][col]);
+
+	GridType type = m_roundInfo->_layoutInfo[m_width*row + col];
 	GridSprite* grid = NULL;
 	if (GIRD_TYPE_NONE != type) {
 		grid = GridSprite::create(row, col, type);
@@ -266,8 +176,6 @@ bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)
 	m_destSushi = NULL;
 	if (m_isTouchEnable) {
 		auto location = touch->getLocation();
-		Vec2 origin = Director::getInstance()->getVisibleOrigin();
-		location -= origin;
 		m_srcSushi = sushiOfPoint(&location);
 	}
 	return m_isTouchEnable;
@@ -283,8 +191,6 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 	int col = m_srcSushi->getCol();
 
 	auto location = touch->getLocation();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	location -= origin;
 	auto halfSushiWidth = m_srcSushi->getContentSize().width / 2;
 	auto halfSushiHeight = m_srcSushi->getContentSize().height / 2;
 
@@ -391,11 +297,11 @@ void PlayLayer::swapSushi()
 		|| rowChainListOfFirst.size() >= 3
 		|| colChainListOfSecond.size() >= 3
 		|| rowChainListOfSecond.size() >= 3
-		|| m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE
-		|| m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE
-		|| ((m_destSushi->getDisplayMode() != DISPLAY_MODE_NORMAL && m_srcSushi->getDisplayMode() != DISPLAY_MODE_NORMAL)
-		&& !(m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE)
-		&& !(m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+		|| m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE
+		|| m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE
+		|| ((m_destSushi->getSushiType() != SUSHI_TYPE_NORMAL && m_srcSushi->getSushiType() != SUSHI_TYPE_NORMAL)
+		&& !(m_destSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE)
+		&& !(m_destSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
 		)) {
 		GameController::getInstance()->onSwapSushiCompleted();
 		// just swap
@@ -436,7 +342,7 @@ bool PlayLayer::isValidCol(int col) {
 
 void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 {
-	Size size = Director::getInstance()->getWinSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	int topImgIndex = -1;
 	int leftImgIndex = -1;
@@ -467,14 +373,13 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 
 	// create animation
 	Point endPosition = positionOfItem(row, col);
-	Point startPosition = Point(endPosition.x, endPosition.y + size.height / 2);
-	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	sushi->setPosition(ccpAdd(visibleOrigin, startPosition));
+	Point startPosition = Point(endPosition.x, endPosition.y + visibleSize.height / 2);
+	sushi->setPosition(startPosition);
 
 
 	if (isInit) 
 	{
-		float speed = startPosition.y / (1.5 * size.height);
+		float speed = startPosition.y / (1.5 * visibleSize.height);
 		sushi->runAction(MoveTo::create(speed, endPosition));
 	}
 	else
@@ -550,7 +455,7 @@ void PlayLayer::checkAndRemoveChain()
 	//分两种情况 第一种是有src和dist sushi的时候 标记相关生成和移除然后移除     第二种是没有的时候  先标记各种需要移除的情况  然后设置移除    （其中新生成的要设置ignorecheak 同时该设置needremove的也要设置needremove）
 	if (m_srcSushi && m_destSushi)
 	{
-		if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
+		if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(true);
@@ -571,7 +476,7 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi = nullptr;
 			return;
 		}
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+		else if (m_destSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
 		{
 			markRemove(m_destSushi);
 			markRemove(m_srcSushi);
@@ -579,7 +484,7 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi = nullptr;
 			return;
 		}
-		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE && m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE && m_destSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
 		{
 			markRemove(m_destSushi);
 			markRemove(m_srcSushi);
@@ -587,7 +492,7 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi = nullptr;
 			return;
 		}
-		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && (m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE))
+		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE && (m_destSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE || m_destSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE))
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(true);
@@ -600,10 +505,10 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
 				{
-					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
 					{
-						sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-						sushi->applyDisplayMode();
+						sushi->setSushiType((rand() % 2 == 0) ? SUSHI_TYPE_4_VERTICAL_LINE : SUSHI_TYPE_4_HORIZONTAL_LINE);
+						sushi->applySushiType();
 					}
 					markRemove(sushi);
 				}
@@ -613,7 +518,7 @@ void PlayLayer::checkAndRemoveChain()
 			return;
 		}
 
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && (m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE))
+		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && (m_srcSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE || m_srcSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE))
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(true);
@@ -626,10 +531,10 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
 				{
-					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
 					{
-						sushi->setDisplayMode((rand() % 2 == 0) ? DISPLAY_MODE_4_VERTICAL_LINE : DISPLAY_MODE_4_HORIZONTAL_LINE);
-						sushi->applyDisplayMode();
+						sushi->setSushiType((rand() % 2 == 0) ? SUSHI_TYPE_4_VERTICAL_LINE : SUSHI_TYPE_4_HORIZONTAL_LINE);
+						sushi->applySushiType();
 					}
 					markRemove(sushi);
 				}
@@ -639,7 +544,7 @@ void PlayLayer::checkAndRemoveChain()
 			return;
 		}
 
-		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_destSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS)
+		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_destSushi->getSushiType() == SUSHI_TYPE_5_CROSS)
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(true);
@@ -652,10 +557,10 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
 				{
-					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
 					{
-						sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
-						sushi->applyDisplayMode();
+						sushi->setSushiType(SUSHI_TYPE_5_CROSS);
+						sushi->applySushiType();
 					}
 					markRemove(sushi);
 				}
@@ -665,7 +570,7 @@ void PlayLayer::checkAndRemoveChain()
 			return;
 		}
 
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS)
+		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_5_CROSS)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(true);
@@ -678,10 +583,10 @@ void PlayLayer::checkAndRemoveChain()
 				}
 				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
 				{
-					if (sushi->getDisplayMode() == DISPLAY_MODE_NORMAL)
+					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
 					{
-						sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
-						sushi->applyDisplayMode();
+						sushi->setSushiType(SUSHI_TYPE_5_CROSS);
+						sushi->applySushiType();
 					}
 					markRemove(sushi);
 				}
@@ -691,7 +596,7 @@ void PlayLayer::checkAndRemoveChain()
 			return;
 		}
 
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS && m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS)
+		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_CROSS && m_srcSushi->getSushiType() == SUSHI_TYPE_5_CROSS)
 		{
 			//两个T形和T形交换 消除周围 5*5区域
 			for (int i = 0; i < m_height * m_width; i++) {
@@ -710,7 +615,7 @@ void PlayLayer::checkAndRemoveChain()
 			return;
 		}
 
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS && (m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_srcSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE) )
+		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_CROSS && (m_srcSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE || m_srcSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE) )
 		{
 			//T形和4消交换 消除周围 三行三列
 			for (int i = 0; i < m_height * m_width; i++) {
@@ -728,7 +633,7 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi = nullptr;
 			return;
 		}
-		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_CROSS && (m_destSushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE || m_destSushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE))
+		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_CROSS && (m_destSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE || m_destSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE))
 		{
 			//T形和4消交换 消除周围 三行三列
 			for (int i = 0; i < m_height * m_width; i++) {
@@ -746,7 +651,7 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi = nullptr;
 			return;
 		}
-		else if (m_srcSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_destSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
+		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_destSushi->getSushiType() != SUSHI_TYPE_5_LINE)
 		{
 			m_srcSushi->setIsNeedRemove(false);
 			markRemove(m_srcSushi);
@@ -755,7 +660,7 @@ void PlayLayer::checkAndRemoveChain()
 			m_destSushi = nullptr;
 			return;
 		}
-		else if (m_destSushi->getDisplayMode() == DISPLAY_MODE_5_LINE && m_srcSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)
+		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_srcSushi->getSushiType() != SUSHI_TYPE_5_LINE)
 		{
 			m_destSushi->setIsNeedRemove(false);
 			markRemove(m_destSushi);
@@ -792,39 +697,39 @@ void PlayLayer::checkAndRemoveChain()
 			}
 		}
 
-		typedef std::map<SushiSprite*, DisplayMode> SushiModeMap;
+		typedef std::map<SushiSprite*, SushiType> SushiModeMap;
 		SushiModeMap superSushiModeMap;
 
 		if (colChainList.size() >= 5 || rowChainList.size() >= 5)
 		{
 			m_srcSushi->setIgnoreCheck(true);
-			m_srcSushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+			m_srcSushi->setSushiType(SUSHI_TYPE_5_LINE);
 			m_srcSushi->setIsNeedRemove(false);
-			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_5_LINE));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_5_LINE));
 		}
 		else if (colChainList.size() >= 3 && rowChainList.size() >= 3)
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(false);
-			m_srcSushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+			m_srcSushi->setSushiType(SUSHI_TYPE_5_CROSS);
 
-			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_5_CROSS));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_5_CROSS));
 		}
 		else if (colChainList.size() >= 4)
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(false);
-			m_srcSushi->setDisplayMode(DISPLAY_MODE_4_HORIZONTAL_LINE);
+			m_srcSushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
 
-			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_4_HORIZONTAL_LINE));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_4_HORIZONTAL_LINE));
 		}
 		else if (rowChainList.size() >= 4)
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(false);
-			m_srcSushi->setDisplayMode(DISPLAY_MODE_4_VERTICAL_LINE);
+			m_srcSushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
 
-			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, DISPLAY_MODE_4_VERTICAL_LINE));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_4_VERTICAL_LINE));
 		}
 
 		colChainList.clear();
@@ -853,38 +758,38 @@ void PlayLayer::checkAndRemoveChain()
 		if (colChainList.size() >= 5 || rowChainList.size() >= 5)
 		{
 			m_destSushi->setIgnoreCheck(true);
-			m_destSushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+			m_destSushi->setSushiType(SUSHI_TYPE_5_LINE);
 			m_destSushi->setIsNeedRemove(false);
-			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_5_LINE));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_5_LINE));
 		}
 		else if (colChainList.size() >= 3 && rowChainList.size() >= 3)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(false);
-			m_destSushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+			m_destSushi->setSushiType(SUSHI_TYPE_5_CROSS);
 
-			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_5_CROSS));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_5_CROSS));
 		}
 		else if (colChainList.size() >= 4)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(false);
-			m_destSushi->setDisplayMode(DISPLAY_MODE_4_HORIZONTAL_LINE);
+			m_destSushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
 
-			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_4_HORIZONTAL_LINE));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_4_HORIZONTAL_LINE));
 		}
 		else if (rowChainList.size() >= 4)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(false);
-			m_destSushi->setDisplayMode(DISPLAY_MODE_4_VERTICAL_LINE);
+			m_destSushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
 
-			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, DISPLAY_MODE_4_VERTICAL_LINE));
+			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_4_VERTICAL_LINE));
 		}
 
 		removeSushi();
 		for (SushiModeMap::iterator it = superSushiModeMap.begin(); it != superSushiModeMap.end(); ++it) {
-			it->first->applyDisplayMode();
+			it->first->applySushiType();
 		}
 
 		m_srcSushi = nullptr;
@@ -893,7 +798,7 @@ void PlayLayer::checkAndRemoveChain()
 	}
 	else
 	{
-		typedef std::map<SushiSprite*, DisplayMode> SushiModeMap;
+		typedef std::map<SushiSprite*, SushiType> SushiModeMap;
 		SushiModeMap superSushiModeMap;
 
 		for (int i = 0; i < m_height * m_width; i++) {
@@ -949,58 +854,58 @@ void PlayLayer::checkAndRemoveChain()
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+				sushi->setSushiType(SUSHI_TYPE_5_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_5_LINE);
 				setChainMaxPriority(colChainList, PRIORITY_5_LINE);
 
-				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_LINE));
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, SUSHI_TYPE_5_LINE));
 			}
 			else if (rowChainList.size() >= 5)
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setDisplayMode(DISPLAY_MODE_5_LINE);
+				sushi->setSushiType(SUSHI_TYPE_5_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_5_LINE);
 				setChainMaxPriority(rowChainList, PRIORITY_5_LINE);
 
-				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_LINE));
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, SUSHI_TYPE_5_LINE));
 			}
 			else if (colChainList.size() >= 3 && rowChainList.size() >= 3 && (int)pRow < (int)PRIORITY_5_CROSS && (int)pCol < (int)PRIORITY_5_CROSS)
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setDisplayMode(DISPLAY_MODE_5_CROSS);
+				sushi->setSushiType(SUSHI_TYPE_5_CROSS);
 				sushi->setSushiPriorityLevel(PRIORITY_5_CROSS);
 
 				setChainMaxPriority(rowChainList, PRIORITY_5_CROSS);
 				setChainMaxPriority(colChainList, PRIORITY_5_CROSS);
 
-				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_5_CROSS));
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, SUSHI_TYPE_5_CROSS));
 			}
 			else if (colChainList.size() >= 4 && (int)pCol < (int)PRIORITY_4_LINE)
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setDisplayMode(DISPLAY_MODE_4_HORIZONTAL_LINE);
+				sushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_4_LINE);
 				setChainMaxPriority(colChainList, PRIORITY_4_LINE);
 
-				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_4_HORIZONTAL_LINE));
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, SUSHI_TYPE_4_HORIZONTAL_LINE));
 			}
 			else if (rowChainList.size() >= 4 && (int)pRow < (int)PRIORITY_4_LINE)
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setDisplayMode(DISPLAY_MODE_4_VERTICAL_LINE);
+				sushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_4_LINE);
 				setChainMaxPriority(rowChainList, PRIORITY_4_LINE);
 
-				superSushiModeMap.insert(SushiModeMap::value_type(sushi, DISPLAY_MODE_4_VERTICAL_LINE));
+				superSushiModeMap.insert(SushiModeMap::value_type(sushi, SUSHI_TYPE_4_VERTICAL_LINE));
 			}
 		}
 		removeSushi();
 		for (SushiModeMap::iterator it = superSushiModeMap.begin(); it != superSushiModeMap.end(); ++it) {
-			it->first->applyDisplayMode();
+			it->first->applySushiType();
 		}
 	}
 }
@@ -1038,7 +943,7 @@ bool PlayLayer::checkActualRoundEnd()
 
 void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList)
 {
-	if (sushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
+	if (sushi->getSushiType() == SUSHI_TYPE_5_LINE)
 		return;
 
 	chainList.push_back(sushi);// add first sushi
@@ -1048,7 +953,7 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 		SushiSprite *neighborSushi = m_sushiMatrix[sushi->getRow() * m_width + neighborCol];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex()
-			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE)) {
+			&& neighborSushi->getSushiType() != SUSHI_TYPE_5_LINE)) {
 			chainList.push_back(neighborSushi);
 			neighborCol--;
 		}
@@ -1062,7 +967,7 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 		SushiSprite *neighborSushi = m_sushiMatrix[sushi->getRow() * m_width + neighborCol];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex())
-			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE) {
+			&& neighborSushi->getSushiType() != SUSHI_TYPE_5_LINE) {
 			chainList.push_back(neighborSushi);
 			neighborCol++;
 		}
@@ -1084,7 +989,7 @@ void PlayLayer::setChainMaxPriority(std::list<SushiSprite *> &chainList, Priorit
 		{
 			sushiTemp->setIgnoreCheck(false);
 			sushiTemp->setIsNeedRemove(true);
-			sushiTemp->setDisplayMode(DISPLAY_MODE_NORMAL);
+			sushiTemp->setSushiType(SUSHI_TYPE_NORMAL);
 		}
 		sushiTemp->setSushiPriorityLevel(p);
 	}
@@ -1109,7 +1014,7 @@ PriorityLevel PlayLayer::getChainMaxPriority(std::list<SushiSprite *> &chainList
 
 void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList)
 {
-	if (sushi->getDisplayMode() == DISPLAY_MODE_5_LINE)
+	if (sushi->getSushiType() == SUSHI_TYPE_5_LINE)
 		return;
 
 	chainList.push_back(sushi);// add first sushi
@@ -1119,7 +1024,7 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 		SushiSprite *neighborSushi = m_sushiMatrix[neighborRow * m_width + sushi->getCol()];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex())
-			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE) {
+			&& neighborSushi->getSushiType() != SUSHI_TYPE_5_LINE) {
 			chainList.push_back(neighborSushi);
 			neighborRow--;
 		}
@@ -1133,7 +1038,7 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 		SushiSprite *neighborSushi = m_sushiMatrix[neighborRow * m_width + sushi->getCol()];
 		if (neighborSushi
 			&& (neighborSushi->getImgIndex() == sushi->getImgIndex())
-			&& neighborSushi->getDisplayMode() != DISPLAY_MODE_5_LINE) {
+			&& neighborSushi->getSushiType() != SUSHI_TYPE_5_LINE) {
 			chainList.push_back(neighborSushi);
 			neighborRow++;
 		}
@@ -1148,7 +1053,7 @@ void PlayLayer::removeSushi()
 	// make sequence remove
 	m_isAnimationing = true;
 
-	int removeCount = 0;
+	int score = 0;
 
 	for (int i = 0; i < m_height * m_width; i++) {
 		SushiSprite *sushi = m_sushiMatrix[i];
@@ -1164,24 +1069,23 @@ void PlayLayer::removeSushi()
 		if (sushi->getIsNeedRemove()) {
 			m_isNeedFillVacancies = true;  // 需要掉落
 			// TODO: 检查类型，并播放一行消失的动画
-			if (sushi->getDisplayMode() == DISPLAY_MODE_5_LINE) {
+			if (sushi->getSushiType() == SUSHI_TYPE_5_LINE) {
 				explode5LineLineSushi(sushi);
-			} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE)
+			} else if (sushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
 			{
 				explode4HorizonytalLineSushi(sushi->getPosition());
-			} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE)
+			} else if (sushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE)
 			{
 				explode4VerticalLineSushi(sushi->getPosition());
-			} else if (sushi->getDisplayMode() == DISPLAY_MODE_5_CROSS) {
+			} else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {
 				explode5CrossLineSushi(sushi->getPosition());
 			}
-			explodeSushi(sushi);
-			++removeCount;
+			explodeSushi(sushi, &score);
 		}
 	}
-	if (0 != removeCount)
+	if (0 != score)
 	{
-		GameController::getInstance()->onRemoveSushiCompleted(removeCount);
+		GameController::getInstance()->onRemoveSushiCompleted(score);
 	}
 	else {
 		if (isLock())
@@ -1193,7 +1097,7 @@ void PlayLayer::removeSushi()
 }
 
 void PlayLayer::explode4HorizonytalLineSushi(Point point) {
-	Size size = Director::getInstance()->getWinSize();
+	Size size = Director::getInstance()->getVisibleSize();
 	float scaleX = 4;
 	float scaleY = 0.7;
 	float time = 0.3;
@@ -1203,7 +1107,6 @@ void PlayLayer::explode4HorizonytalLineSushi(Point point) {
 	auto colorSpriteRight = Sprite::createWithSpriteFrameName(s_colorHRight);
 	addChild(colorSpriteRight, 10);
 	Point endPosition1 = Point(point.x - size.width, point.y);
-	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	colorSpriteRight->setPosition(startPosition);
 	colorSpriteRight->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
 		MoveTo::create(speed, endPosition1),
@@ -1231,7 +1134,6 @@ void PlayLayer::explode4VerticalLineSushi(Point point) {
 	auto colorSpriteDown = Sprite::createWithSpriteFrameName(s_colorVDown);
 	addChild(colorSpriteDown, 10);
 	Point endPosition1 = Point(point.x, point.y - size.height);
-	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	colorSpriteDown->setPosition(startPosition);
 	colorSpriteDown->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
 		MoveTo::create(speed, endPosition1),
@@ -1271,7 +1173,7 @@ void PlayLayer::actionEndCallback(Node *node)
 	sushi->removeFromParent();
 }
 
-void PlayLayer::explodeSushi(SushiSprite *sushi)
+void PlayLayer::explodeSushi(SushiSprite *sushi, int* score)
 {
 	if (!sushi)
 		return;
@@ -1304,6 +1206,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 	// 4. score animation
 	Point pos = sushi->getPosition();
 	auto label = LabelBMFont::create("+" + StringUtils::toString(sushi->getScore()), "fonts/boundsTestFont.fnt");
+	(*score) += sushi->getScore();
 	label->retain();
 	label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	label->setPosition(pos);
@@ -1337,7 +1240,6 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 	if (isValidCol(col - 1)) {
 		changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true);
 	}
-	
 }
 
 void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor) {
@@ -1681,13 +1583,7 @@ void PlayLayer::fillVacancies()
 
 	m_needRefresh = false;
 
-	/*bool isActualEnd = checkActualRoundEnd();
-	if (isActualEnd)
-	{
 	GameController::getInstance()->onExplosionStopped();
-	}*/
-	GameController::getInstance()->onExplosionStopped();
-
 }
 
 void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<int>* directionStack, int startIndex, bool isCreate)
@@ -1740,8 +1636,8 @@ void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<int>*
 		SushiSprite *sushi = SushiSprite::create(rowDist, colDist, topImgIndex, leftImgIndex, PRIORITY_NORMAL);
 		if (m_needRefresh)
 		{
-			sushi->setDisplayMode((DisplayMode)m_sushiModeMatrix[rowDist * m_width + colDist]);
-			sushi->applyDisplayMode();
+			sushi->setSushiType((SushiType)m_sushiModeMatrix[rowDist * m_width + colDist]);
+			sushi->applySushiType();
 		}
 
 		// create animation
@@ -1753,8 +1649,7 @@ void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<int>*
 		int col = getColByIndex(startIndex);
 
 		Point startPosition = positionOfItem(row, col);
-		Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-		sushi->setPosition(ccpAdd(visibleOrigin, startPosition));
+		sushi->setPosition(startPosition);
 		sushiStack->pop_back();
 		moveAction(sushi, sushiStack, directionStack, startIndex, isCreate);
 		// add to BatchNode
@@ -1793,7 +1688,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 	// mark self
 	sushi->setIsNeedRemove(true);
 
-	if (sushi->getDisplayMode() == DISPLAY_MODE_5_LINE) {  // 所有相同的寿司消除
+	if (sushi->getSushiType() == SUSHI_TYPE_5_LINE) {  // 所有相同的寿司消除
 		int index = -1;
 		if (sushi == m_srcSushi && m_destSushi)
 			index = m_destSushi->getImgIndex();
@@ -1809,16 +1704,16 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				}
 				if (tmp->getImgIndex() == index)
 				{
-					if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+					if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
 						tmp->setIsNeedRemove(true);
 					}
-					else if (tmp->getDisplayMode() != DISPLAY_MODE_NORMAL) {
+					else if (tmp->getSushiType() != SUSHI_TYPE_NORMAL) {
 						markRemove(tmp);
 					}
 				}
 			}
 		}
-	} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_VERTICAL_LINE) {
+	} else if (sushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE) {
 		// check for type and mark for certical neighbour
 		for (int row = 0; row < m_height; row++) {
 			SushiSprite *tmp = m_sushiMatrix[row * m_width + sushi->getCol()];
@@ -1826,7 +1721,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				continue;
 			}
 
-			if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+			if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
 				tmp->setIsNeedRemove(true);
 			}
 			else {
@@ -1834,7 +1729,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 			}
 		}
 		
-	} else if (sushi->getDisplayMode() == DISPLAY_MODE_4_HORIZONTAL_LINE) {
+	} else if (sushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE) {
 		// check for type and mark for horizontal neighbour
 		for (int col = 0; col < m_width; col++) {
 			SushiSprite *tmp = m_sushiMatrix[sushi->getRow() * m_width + col];
@@ -1842,7 +1737,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				continue;
 			}
 
-			if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+			if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
 				tmp->setIsNeedRemove(true);
 			}
 			else {
@@ -1850,7 +1745,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 			}
 		}
 	}
-	else if (sushi->getDisplayMode() == DISPLAY_MODE_5_CROSS) {  // 九宫格内的寿司消除
+	else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {  // 九宫格内的寿司消除
 		int startX = sushi->getRow() - 1;
 		if (startX < 0) startX = 0;
 		int startY = sushi->getCol() - 1;
@@ -1865,7 +1760,7 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				if (!tmp || tmp == sushi) {
 					continue;
 				}
-				if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+				if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
 					tmp->setIsNeedRemove(true);
 				}
 				else {
@@ -1911,7 +1806,7 @@ void PlayLayer::refresh() {
 			if (SushiSprite* sushi = m_sushiMatrix[row*m_width + col])
 			{
 				sushi->setIsNeedRemove(true);
-				m_sushiModeMatrix[row*m_width + col] = (int)sushi->getDisplayMode();
+				m_sushiModeMatrix[row*m_width + col] = (int)sushi->getSushiType();
 			}
 		}
 	}

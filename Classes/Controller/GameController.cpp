@@ -1,16 +1,14 @@
 #include "Controller/GameController.h"
 
+#include "Common/ConfigService.h"
 #include "Common/Messages.h"
 #include "Common/Resource.h"
-
-const int kPerSushiScore = 10;
 
 static GameController *s_sharedGameController = nullptr;
 
 GameController::GameController() {
 }
 GameController::~GameController() {
-	m_roundInfoMap.clear();
 }
 
 // static
@@ -29,19 +27,7 @@ void GameController::destroyInstance()
 }
 
 void GameController::init() {
-	int baseScore = 300;
-	int deltaScore = 50;
-	int baseMoves = 10;
-	int deltaMoves = 1;
-	for (int i = 1; i <= TOTAL_ROUND; ++i) {
-		RoundInfo item;
-		item.m_round = i;
-		item.m_targetScroe = baseScore + i*i*deltaScore;
-		item.m_totalMoves = baseMoves + i*i*deltaMoves;
-		item.m_leftMoves = item.m_totalMoves;
-		m_roundInfoMap[i] = item;
-	}
-	m_curRoundInfo = m_roundInfoMap[1];
+	setCurRound(0);
 }
 
 void GameController::uninit() {
@@ -65,7 +51,7 @@ void GameController::onExplosionStopped() {
 		CCASSERT(round != TOTAL_ROUND, "Game Over.");
 		writeToDB(m_curRoundInfo);
 		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(true));
-		m_curRoundInfo = m_roundInfoMap[round];
+		setCurRound(round);
 	}
 }
 
@@ -76,7 +62,7 @@ void GameController::onRoundReady(READY_ACTION_TYPE actionType) {
 		CCASSERT(round >= 0, "Error round!");
 		CCASSERT(round != TOTAL_ROUND, "Game Over.");
 		writeToDB(m_curRoundInfo);
-		m_curRoundInfo = m_roundInfoMap[round];
+		setCurRound(round);
 	}
 	
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
@@ -86,13 +72,13 @@ void GameController::onRoundStart() {
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_START, (Ref*)(&m_curRoundInfo));
 }
 
-void GameController::onRemoveSushiCompleted(int count) {
+void GameController::onRemoveSushiCompleted(int score) {
 	// TODO
 	if (m_curRoundInfo.m_leftMoves == m_curRoundInfo.m_totalMoves)
 	{
 		return;
 	}
-	m_curRoundInfo.m_gotScore += count*kPerSushiScore;
+	m_curRoundInfo.m_gotScore += score;
 	scoreChanged(m_curRoundInfo.m_gotScore);
 	
 }
@@ -105,18 +91,15 @@ void GameController::scoreChanged(int gotScore) {
 	NotificationCenter::getInstance()->postNotification(MSG_SCORE_CHANGED, (Ref*)(intptr_t)gotScore);
 }
 
-void GameController::writeToDB(const RoundInfo& m_curRoundInfo) {
-}
-
-RoundInfo* GameController::getRoundInfo(int round) {
-	RoundInfMapIt it = m_roundInfoMap.find(round);
-	if (m_roundInfoMap.end() == it)
-		return NULL;
-	return &(it->second);
+void GameController::writeToDB(const CurRoundInfo& m_curRoundInfo) {
 }
 
 void GameController::setCurRound(int round) {
-	RoundInfMapIt it = m_roundInfoMap.find(round);
-	if (m_roundInfoMap.end() != it)
-		m_curRoundInfo = it->second;
+	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
+	const RoundInfo* roundInfo = ConfigService::getInstance()->getRoundInfo(round);
+	m_curRoundInfo.m_round = round;
+	m_curRoundInfo.m_gotScore = 0;
+	m_curRoundInfo.m_targetScroe = roundInfo->_targetScore;
+	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
+	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
 }

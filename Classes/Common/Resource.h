@@ -21,7 +21,6 @@ const char s_rateSelected[] = "play_start_rate_btn_selected.png";
 // Guide map scene
 const char s_guideMap[] = "guideMap.jpg";
 const char s_roundButtonsNormal[][24] = {
-										  "",
 										  "round1ButtonNormal.png",
 										  "round2ButtonNormal.png",
 										  "round3ButtonNormal.png",
@@ -32,8 +31,7 @@ const char s_roundButtonsNormal[][24] = {
 										  "round8ButtonNormal.png",
 										  "round9ButtonNormal.png",
 										  "round10ButtonNormal.png" };
-const char s_roundButtonsSelected[][26] = { "",
-											"round1ButtonSelected.png",
+const char s_roundButtonsSelected[][26] = { "round1ButtonSelected.png",
 											"round2ButtonSelected.png",
 											"round3ButtonSelected.png",
 											"round4ButtonSelected.png",
@@ -84,5 +82,8 @@ const char s_sushiPlist[] = "sushi.plist";
 const char s_sushiRes[] = "sushi.png";//"sushi.pvr.ccz";
 
 const char s_resPlist[] = "res.plist";
+
+// Common
+const char s_commonConfig[] = "commonConfig.xml";
 
 #endif

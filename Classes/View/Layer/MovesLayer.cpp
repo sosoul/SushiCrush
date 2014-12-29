@@ -56,7 +56,7 @@ bool MovesLayer::init() {
 	addChild(labelMoves, 0, kLabelMovesTag);
 
 	// init moves
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	onMovesChanged((Ref*)(intptr_t)roundInfo.m_totalMoves);
 	return true;
 }
@@ -70,7 +70,7 @@ void MovesLayer::onMovesChanged(Ref* obj) {
 }
 
 void MovesLayer::onRoundEnd(Ref* obj) {
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	int moves = roundInfo.m_totalMoves;
 	auto labelMoves = (LabelAtlas*)getChildByTag(kLabelMovesTag);
 	labelMoves->setString(StringUtils::toString(moves));
@@ -79,7 +79,7 @@ void MovesLayer::onRoundEnd(Ref* obj) {
 
 void MovesLayer::onRoundReady(Ref* obj)
 {
-	RoundInfo* roundInfo = (RoundInfo*)obj;
+	CurRoundInfo* roundInfo = (CurRoundInfo*)obj;
 	if (!roundInfo)
 		return;
 	auto labelMoves = (LabelAtlas*)getChildByTag(kLabelMovesTag);

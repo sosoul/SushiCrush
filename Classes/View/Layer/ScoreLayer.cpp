@@ -55,7 +55,7 @@ bool ScoreLayer::init() {
 	addChild(labelScore, 0, kLabelScoreTag);
 
 	// init score
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	onScoreChanged((Ref*)(intptr_t)roundInfo.m_gotScore);
 	return true;
 }

@@ -11,6 +11,21 @@ enum READY_ACTION_TYPE
 	ACTION_NEXT_ROUND,
 };
 
+struct CurRoundInfo : public Ref {
+	int m_round;
+	int m_totalMoves;
+	int m_leftMoves;
+	int m_gotScore;
+	int m_targetScroe;
+
+	CurRoundInfo() : m_round(0),
+		m_totalMoves(0),
+		m_leftMoves(0),
+		m_gotScore(0),
+		m_targetScroe(0) {
+	}
+};
+
 class GameController : public Ref
 {
 public:
@@ -22,12 +37,11 @@ public:
 
 	void init();
 	void uninit();
-	const RoundInfo& get_cur_round_info() { return m_curRoundInfo; }
-	RoundInfo* getRoundInfo(int round);
+	const CurRoundInfo& get_cur_round_info() { return m_curRoundInfo; }
 	void setCurRound(int round);
 
 	void onSwapSushiCompleted();
-	void onRemoveSushiCompleted(int count);
+	void onRemoveSushiCompleted(int score);
 	void onExplosionStopped();
 	void onRoundReady(READY_ACTION_TYPE actionType);
 	void onRoundStart();
@@ -35,12 +49,10 @@ public:
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
 private:
-	void writeToDB(const RoundInfo& m_curRoundInfo);
+	void writeToDB(const CurRoundInfo& m_curRoundInfo);
 
-	typedef std::map<int, RoundInfo> RoundInfMap;
-	typedef RoundInfMap::iterator RoundInfMapIt;
-	RoundInfMap m_roundInfoMap;
-	RoundInfo m_curRoundInfo;
+	CurRoundInfo m_curRoundInfo;
+	int m_curRound;
 };
 
 

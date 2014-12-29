@@ -57,7 +57,7 @@ bool TargetLayer::init()
 	addChild(labelTarget, 0, kLabelTargetTag);
 
 	// init target
-	const RoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	int target = roundInfo.m_targetScroe;
 	labelTarget->setString(StringUtils::toString(target));
 	return true;
@@ -70,7 +70,7 @@ void TargetLayer::onRoundEnd(Ref* obj)
 
 void TargetLayer::onRoundReady(Ref* obj)
 {
-	RoundInfo* roundInfo = (RoundInfo*)obj;
+	CurRoundInfo* roundInfo = (CurRoundInfo*)obj;
 	if (!roundInfo)
 		return;
 	auto labelTarget = (LabelAtlas*)getChildByTag(kLabelTargetTag);

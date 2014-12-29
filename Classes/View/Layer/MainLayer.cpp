@@ -142,14 +142,14 @@ void MainLayer::onRoundStartActionEnd() {
 
 	// play layer - create and run a show action.
 	if (!m_playLayer) {
-		const RoundInfo& roundInfo =  GameController::getInstance()->get_cur_round_info();
+		const CurRoundInfo& roundInfo =  GameController::getInstance()->get_cur_round_info();
 		m_playLayer = PlayLayer::create(roundInfo.m_round);
 		m_playLayer->retain();
 		m_playLayer->setCascadeColorEnabled(true);
 		addChild(m_playLayer);
 	}
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	m_playLayer->setPosition(visibleOrigin.x, visibleOrigin.y + 500);
+	m_playLayer->setPosition(0, 0 + 500);
 	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
 	m_playLayer->runAction(Sequence::create(actMoveDown, nullptr));
 

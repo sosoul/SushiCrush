@@ -5,29 +5,13 @@
 
 USING_NS_CC;
 
-struct RoundInfo : public Ref {
-	int m_round;
-	int m_totalMoves;
-	int m_leftMoves;
-	int m_gotScore;
-	int m_targetScroe;
-
-	RoundInfo() : m_round(0),
-		m_totalMoves(0),
-		m_leftMoves(0),
-		m_gotScore(0),
-		m_targetScroe(0) {
-	}
+enum SushiType {
+	SUSHI_TYPE_NORMAL = 0,
+	SUSHI_TYPE_4_HORIZONTAL_LINE,
+	SUSHI_TYPE_4_VERTICAL_LINE,
+	SUSHI_TYPE_5_LINE,
+	SUSHI_TYPE_5_CROSS,
 };
-
-typedef enum {
-	DISPLAY_MODE_NORMAL = 0,
-	DISPLAY_MODE_4_HORIZONTAL_LINE,
-	DISPLAY_MODE_4_VERTICAL_LINE,
-	DISPLAY_MODE_5_LINE,
-	DISPLAY_MODE_5_CROSS,
-	DISPLAY_MODE_7_T_SHAPED,
-} DisplayMode;
 
 
 enum GridType {

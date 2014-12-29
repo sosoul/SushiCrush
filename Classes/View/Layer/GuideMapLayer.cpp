@@ -29,7 +29,7 @@ bool GuideMapLayer::init()
 	addChild(background);
 
 	// round buttons
-	for (int i = 1; i <= 10; ++i)
+	for (int i = 0; i < 10; ++i)
 		createRoundButton(i);
 
 	setTouchEnabled(true);
@@ -76,7 +76,7 @@ void GuideMapLayer::createRoundButton(int round) {
 	roundButton->loadTextures(normalButton, selectedButton, "", ui::Button::TextureResType::PLIST);
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	const int step = 100;
-	roundButton->setPosition(ccpAdd(visibleOrigin, Point(round*step, round*step)));
+	roundButton->setPosition(ccpAdd(visibleOrigin, Point((round+1)*step, (round+1)*step)));
 	roundButton->setUserData((void*)round);
 	addChild(roundButton);
 	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&GuideMapLayer::onRoundButtonTouched));
