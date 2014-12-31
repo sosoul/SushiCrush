@@ -406,15 +406,13 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 	else
 	{
 		Vector<FiniteTimeAction *> moveVector;
-		auto actionMoveTo = MoveTo::create(DROP_TIME, positionOfItem(MATRIX_HEIGHT - 1, col));
-
+		sushi->setPosition(ccpAdd(Vec2(0, SushiSprite::getContentWidth() + SUSHI_GAP), endPosition));
 		if (m_moveNumMatrix[row * m_width + col] > 0)
 		{
 			moveVector.pushBack(DelayTime::create(DROP_TIME * m_moveNumMatrix[row * m_width + col]));
 		}
 
-		moveVector.pushBack(actionMoveTo);
-		moveVector.pushBack(MoveTo::create(DROP_TIME * (MATRIX_HEIGHT - 1 - row), endPosition));
+		moveVector.pushBack(MoveTo::create(DROP_TIME, endPosition));
 		auto sequence = Sequence::create(moveVector);
 		sushi->runAction(sequence);
 	}
@@ -674,6 +672,22 @@ void PlayLayer::checkAndRemoveChain()
 		}
 		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_destSushi->getSushiType() != SUSHI_TYPE_5_LINE)
 		{
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_sushiMatrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getImgIndex() == m_destSushi->getImgIndex())
+				{
+					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
+					{
+						animation5line(m_srcSushi->getPosition(), sushi->getPosition());
+					}
+				}
+			}
+
+
+
 			m_srcSushi->setIsNeedRemove(false);
 			markRemove(m_srcSushi);
 
@@ -683,6 +697,21 @@ void PlayLayer::checkAndRemoveChain()
 		}
 		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_srcSushi->getSushiType() != SUSHI_TYPE_5_LINE)
 		{
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_sushiMatrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getImgIndex() == m_srcSushi->getImgIndex())
+				{
+					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
+					{
+						animation5line(m_destSushi->getPosition(), sushi->getPosition());
+					}
+				}
+			}
+
+
 			m_destSushi->setIsNeedRemove(false);
 			markRemove(m_destSushi);
 
@@ -1099,7 +1128,7 @@ void PlayLayer::removeSushi()
 			{
 				explode4VerticalLineSushi(sushi->getPosition());
 			} else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {
-				explode5CrossLineSushi(sushi->getPosition());
+				explode5CrossLineSushi(sushi);
 			}
 			explodeSushi(sushi, &score);
 		}
@@ -1173,9 +1202,29 @@ void PlayLayer::explode4VerticalLineSushi(Point point) {
 }
 
 void PlayLayer::explode5LineLineSushi(SushiSprite* sushi) {
+	Point point = sushi->getPosition();
+	auto explosion = ParticleExplosion::create();
+	explosion->setTexture(Director::getInstance()->getTextureCache()->addImage(s_absExploadCross));
+	explosion->setPosition(point);
+
+	explosion->setTotalParticles(1000);
+	explosion->setLife(2.0f);
+
+	this->addChild(explosion);
 }
 
-void PlayLayer::explode5CrossLineSushi(Point point) {
+void PlayLayer::explode5CrossLineSushi(SushiSprite* sushi) {
+
+	Point point = sushi->getPosition();
+	auto explosion = ParticleExplosion::create();
+	explosion->setTexture(Director::getInstance()->getTextureCache()->addImage(s_absExploadCross));
+	explosion->setPosition(point);
+
+	explosion->setTotalParticles(1000);
+	explosion->setLife(2.0f);
+
+	this->addChild(explosion);
+
 }
 
 void PlayLayer::actionEndCallback(Node *node)
@@ -1617,9 +1666,13 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, int startInd
 		{
 			if (isCreate)
 			{
-				sushi->setVisible(false);
-				moveVector.pushBack(DelayTime::create(DROP_TIME * (m_moveNumMatrix[startIndex])));
-				moveVector.pushBack(Show::create());
+				if (m_moveNumMatrix[startIndex] >= 1)
+				{
+					auto oriPosition = sushi->getPosition();
+					sushi->setPosition(ccpAdd(Vec2(0, SushiSprite::getContentWidth() + SUSHI_GAP), sushi->getPosition()));
+					moveVector.pushBack(DelayTime::create(DROP_TIME * (m_moveNumMatrix[startIndex] - 1)));
+					moveVector.pushBack(MoveTo::create(DROP_TIME, oriPosition));
+			}
 			}
 			else
 			{
@@ -1667,6 +1720,8 @@ void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDi
 		int col = getColByIndex(startIndex);
 
 		Point startPosition = positionOfItem(row, col);
+		//Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+		//sushi->setPosition(ccpAdd(visibleOrigin, startPosition));
 		sushi->setPosition(startPosition);
 		sushiStack->pop_back();
 		moveAction(sushi, sushiStack, startIndex, isCreate);
@@ -1845,6 +1900,16 @@ bool PlayLayer::canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int
 	if (!sushi1 || !sushi2)
 		return false;
 	return (sushi1->getImgIndex() == sushi2->getImgIndex() && sushi1->getImgIndex() == imgIndex);
+}
+
+void PlayLayer::animation5line(Point start, Point end){
+	auto sp = Sprite::createWithSpriteFrameName(s_starMidDone);
+	sp->setScale(0.5f);
+	this->addChild(sp);
+	sp->setPosition(start);
+	//ScaleTo::create(time, scaleX, scaleY),
+		//MoveTo::create(0.5f, end)
+	sp->runAction(Sequence::create(MoveTo::create(0.5f, end), Hide::create(), nullptr));
 }
 
 bool PlayLayer::isLock(int row, int col) {

@@ -83,6 +83,8 @@ const char s_sushiRes[] = "sushi.png";//"sushi.pvr.ccz";
 
 const char s_resPlist[] = "res.plist";
 
+const char s_absExploadCross[] = "common/common_starRight_img_normal.png";
+
 // Common
 const char s_commonConfig[] = "commonConfig.xml";
 

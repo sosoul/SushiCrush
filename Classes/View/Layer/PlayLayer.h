@@ -77,7 +77,7 @@ private:
 	void explode4HorizonytalLineSushi(Point point);
 	void explode4VerticalLineSushi(Point point);
 	void explode5LineLineSushi(SushiSprite* sushi);
-	void explode5CrossLineSushi(Point point);
+	void explode5CrossLineSushi(SushiSprite* sushi);
 	bool canCreateNewSushi(int index);
 	int getRowByIndex(int index);
 	int getColByIndex(int index);
@@ -94,7 +94,7 @@ private:
 	GridType getGridType(int row, int col);
 	static bool isValidRow(int row);
 	static bool isValidCol(int col);
-
+	void animation5line(Point start, Point end);
 	// is the marix stay lock status.
 	bool isLock();
 	// is the sushi stay lock status.
