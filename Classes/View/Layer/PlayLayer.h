@@ -8,11 +8,16 @@
 
 USING_NS_CC;
 
-#define DROP_SPEED 0.2
+#define DROP_TIME 0.3
 
 class PlayLayer : public Layer
 {
 public:
+	enum DfsDirection {
+		DFS_DIR_LEFT = 0,
+		DFS_DIR_MIDDLE,
+		DFS_DIR_RIGHT,
+	};
 	PlayLayer(int round);
 	~PlayLayer();
 	static PlayLayer* create(int round);
@@ -49,12 +54,13 @@ private:
 	int m_round;
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
+	ClippingNode* m_clipper;
 
 	void initMatrix();
-	void createGrid(int row, int col);
+	void createGrid(int row, int col, Point* points, int* index);
 	void createAndDropSushi(int row, int col, bool isInit);
-	void moveAction(Node *node, std::deque<int>* sushiStack, std::deque<int>* directionStack, int startIndex, bool isCreated);
-	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<int>* directionStack, int rowNow, int colNow, bool isCreate);
+	void moveAction(Node *node, std::deque<int>* sushiStack, int startIndex, bool isCreated);
+	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int rowNow, int colNow, bool isCreate);
 
 	Point positionOfItem(int row, int col);
 	void checkAndRemoveChain();
@@ -75,7 +81,7 @@ private:
 	bool canCreateNewSushi(int index);
 	int getRowByIndex(int index);
 	int getColByIndex(int index);
-	bool bfs(std::deque<int>* sushiStack, int *visited, std::deque<int>* direction);
+	bool bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDirection>* direction);
 	int getMinEndMove(int row, int col);
 	void fillVacancies();
 	void setMoveNum(std::deque<int>* sushiStack, int row, int col);
