@@ -202,8 +202,11 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 	for (; mapPortalDest.end() != itDest; ++itDest)
 	{
 		std::map<int, int>::iterator itSrc = mapPortalSrc.find(itDest->first);
-		if (mapPortalSrc.end() != itSrc)
-			roundInfo->_mapPortal.insert(MapPortal::value_type(itDest->second, itSrc->second));
+		if (mapPortalSrc.end() != itSrc) {
+			roundInfo->_mapPortalSrcToDest.insert(MapPortal::value_type(itSrc->second, itDest->second));
+			roundInfo->_mapPortalDestToSrc.insert(MapPortal::value_type(itDest->second, itSrc->second));
+		}
+			
 	}
 }
 
@@ -337,8 +340,19 @@ int ConfigService::getPortalSrc(int round, int row, int col) {
 	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
 	if (_mapRoundInfo.end() == it)
 		return false;
-	MapPortal::iterator itMap = it->second._mapPortal.find(MATRIX_WIDTH*row + col);
-	if (it->second._mapPortal.end() == itMap)
+	MapPortal::iterator itMap = it->second._mapPortalDestToSrc.find(MATRIX_WIDTH*row + col);
+	if (it->second._mapPortalDestToSrc.end() == itMap)
+		return -1;
+	return itMap->second;
+}
+
+int ConfigService::getPortalDest(int round, int row, int col) {
+	std::pair<int, int> pair;
+	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
+	if (_mapRoundInfo.end() == it)
+		return false;
+	MapPortal::iterator itMap = it->second._mapPortalSrcToDest.find(MATRIX_WIDTH*row + col);
+	if (it->second._mapPortalSrcToDest.end() == itMap)
 		return -1;
 	return itMap->second;
 }

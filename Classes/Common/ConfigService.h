@@ -29,7 +29,8 @@ struct RoundInfo {
 	std::string _mapFile;
 	GridType _layoutInfo[MATRIX_WIDTH*MATRIX_HEIGHT];
 	VecProducer _vecProducer;
-	MapPortal _mapPortal;
+	MapPortal _mapPortalSrcToDest;
+	MapPortal _mapPortalDestToSrc;
 	int _targetScore;
 	int _moves;
 
@@ -64,6 +65,7 @@ public:
 
 	bool isProducer(int round, int row, int col);
 	int getPortalSrc(int round, int row, int col);
+	int getPortalDest(int round, int row, int col);
 
 private:
 	void parseMap(RoundInfo* roundInfo);
