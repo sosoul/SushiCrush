@@ -4,6 +4,11 @@
 #include "Common/Resource.h"
 #include "Common/Types.h"
 
+namespace tinyxml2
+{
+	class XMLElement;
+}
+
 struct SushiInfo {
 	int _score;
 
@@ -16,9 +21,15 @@ struct GridInfo {
 	GridInfo() : _score(0) {}
 };
 
+typedef std::vector<int> VecProducer;
+typedef std::map<int, int> MapPortal;
+typedef std::map<int, int> MapGidToIndex;
+
 struct RoundInfo {
 	std::string _mapFile;
 	GridType _layoutInfo[MATRIX_WIDTH*MATRIX_HEIGHT];
+	VecProducer _vecProducer;
+	MapPortal _mapPortal;
 	int _targetScore;
 	int _moves;
 
@@ -51,8 +62,14 @@ public:
 	const GridInfo* getGridInfo(GridType type) const;
 	const RoundInfo* getRoundInfo(int round) const;
 
+	bool isProducer(int round, int row, int col);
+	int getPortalSrc(int round, int row, int col);
+
 private:
-	void parseMap(std::string mapFile, GridType* layout);
+	void parseMap(RoundInfo* roundInfo);
+	void parseLayout(tinyxml2::XMLElement *layerEle, GridType* layout);
+	void parseProducer(tinyxml2::XMLElement *layerEle, VecProducer* vecProducer);
+	void parsePortal(tinyxml2::XMLElement *layerEle, MapGidToIndex* mapSrcOrDest);
 	int _roundCount;
 	MapSushiInfo _mapSushiInfo;
 	MapGridInfo _mapGridInfo;

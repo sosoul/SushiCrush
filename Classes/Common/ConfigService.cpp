@@ -86,7 +86,7 @@ void ConfigService::loadConfig() {
 			// map
 			if (XMLElement* mapEle = roundEle->FirstChildElement("map")) {
 				item._mapFile = mapEle->GetText();
-				parseMap(item._mapFile, item._layoutInfo);
+				parseMap(&item);
 			}
 
 			// targetScore
@@ -162,10 +162,10 @@ const RoundInfo* ConfigService::getRoundInfo(int round) const {
 	return NULL;
 }
 
-void ConfigService::parseMap(std::string mapFile, GridType* layout) {
-	if (!layout)
+void ConfigService::parseMap(RoundInfo* roundInfo) {
+	if (!roundInfo)
 		return;
-	std::string filePath = FileUtils::getInstance()->fullPathForFilename(mapFile);
+	std::string filePath = FileUtils::getInstance()->fullPathForFilename(roundInfo->_mapFile);
 	tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument();
 	XMLError errorId = doc->LoadFile(filePath.c_str());
 
@@ -177,11 +177,39 @@ void ConfigService::parseMap(std::string mapFile, GridType* layout) {
 	if (!mapEle)
 		return;
 
+	MapGidToIndex mapPortalSrc;
+	MapGidToIndex mapPortalDest;
 	const XMLAttribute* attribute = NULL;
 	XMLElement *layerEle = mapEle->FirstChildElement("layer");
-	if (!layerEle)
-		return;
+	while (layerEle) {
+		std::string attrValue = layerEle->Attribute("name");
+		if ("gridLayer" == attrValue) {
+			parseLayout(layerEle, roundInfo->_layoutInfo);
+		}
+		else if ("producerLayer" == attrValue) {
+			parseProducer(layerEle, &roundInfo->_vecProducer);
+		}
+		else if ("portalSrcLayer" == attrValue) {
+			parsePortal(layerEle, &mapPortalSrc);
+		}
+		else if ("portalDestLayer" == attrValue) {
+			parsePortal(layerEle, &mapPortalDest);
+		}
+		layerEle = layerEle->NextSiblingElement();
+	}
 
+	std::map<int, int>::iterator itDest = mapPortalDest.begin();
+	for (; mapPortalDest.end() != itDest; ++itDest)
+	{
+		std::map<int, int>::iterator itSrc = mapPortalSrc.find(itDest->first);
+		if (mapPortalSrc.end() != itSrc)
+			roundInfo->_mapPortal.insert(MapPortal::value_type(itDest->second, itSrc->second));
+	}
+}
+
+void ConfigService::parseLayout(XMLElement *layerEle, GridType* layout) {
+	if (!layerEle || !layout)
+		return;
 	int width = 0, height = 0;
 	layerEle->QueryIntAttribute("width", &width);
 	layerEle->QueryIntAttribute("height", &height);
@@ -193,7 +221,7 @@ void ConfigService::parseMap(std::string mapFile, GridType* layout) {
 		return;
 
 	XMLElement *tileEle = dataEle->FirstChildElement("tile");
-	int row = height-1, col = 0;
+	int row = height - 1, col = 0;
 	while (tileEle)
 	{
 		if (width == col) {
@@ -228,4 +256,89 @@ void ConfigService::parseMap(std::string mapFile, GridType* layout) {
 		++col;
 		tileEle = tileEle->NextSiblingElement();
 	}
+}
+
+void ConfigService::parseProducer(XMLElement *layerEle, VecProducer* vecProducer) {
+	if (!layerEle || !vecProducer)
+		return;
+
+	XMLElement *dataEle = layerEle->FirstChildElement("data");
+	if (!dataEle)
+		return;
+
+	int width = 0, height = 0;
+	layerEle->QueryIntAttribute("width", &width);
+	layerEle->QueryIntAttribute("height", &height);
+	CCASSERT(width > 0 && width <= MATRIX_WIDTH && height > 0 &&
+		height <= MATRIX_HEIGHT, "width or height is out of range!");
+
+	XMLElement *tileEle = dataEle->FirstChildElement("tile");
+	int row = height - 1, col = 0;
+	while (tileEle)
+	{
+		if (width == col) {
+			--row;
+			CCASSERT(row >= 0, "row is out of range!");
+			col = 0;
+		}
+		int gid;
+		tileEle->QueryIntAttribute("gid", &gid);
+		if (0 != gid)
+			vecProducer->push_back(MATRIX_WIDTH*row + col);
+		++col;
+		tileEle = tileEle->NextSiblingElement();
+	}
+}
+
+void ConfigService::parsePortal(XMLElement *layerEle,  MapGidToIndex* mapPortalSrc) {
+	if (!layerEle)
+		return;
+
+	XMLElement *dataEle = layerEle->FirstChildElement("data");
+	if (!dataEle)
+		return;
+
+	int width = 0, height = 0;
+	layerEle->QueryIntAttribute("width", &width);
+	layerEle->QueryIntAttribute("height", &height);
+	CCASSERT(width > 0 && width <= MATRIX_WIDTH && height > 0 &&
+		height <= MATRIX_HEIGHT, "width or height is out of range!");
+
+	XMLElement *tileEle = dataEle->FirstChildElement("tile");
+	int row = height - 1, col = 0;
+	while (tileEle)
+	{
+		if (width == col) {
+			--row;
+			CCASSERT(row >= 0, "row is out of range!");
+			col = 0;
+		}
+		int gid;
+		tileEle->QueryIntAttribute("gid", &gid);
+		if (0 != gid)
+			mapPortalSrc->insert(std::map<int, int>::value_type(gid, MATRIX_WIDTH*row + col));
+		++col;
+		tileEle = tileEle->NextSiblingElement();
+	}
+}
+
+bool ConfigService::isProducer(int round, int row, int col) {
+	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
+	if (_mapRoundInfo.end() == it)
+		return false;
+	VecProducer::iterator itVec = std::find(it->second._vecProducer.begin(),
+		it->second._vecProducer.end(), MATRIX_WIDTH*row + col);
+	if (it->second._vecProducer.end() == itVec)
+		return false;
+	return true;
+}
+
+int ConfigService::getPortalSrc(int round, int row, int col) {
+	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
+	if (_mapRoundInfo.end() == it)
+		return false;
+	MapPortal::iterator itMap = it->second._mapPortal.find(MATRIX_WIDTH*row + col);
+	if (it->second._mapPortal.end() == itMap)
+		return -1;
+	return itMap->second;
 }
