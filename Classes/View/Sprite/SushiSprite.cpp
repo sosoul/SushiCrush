@@ -91,6 +91,20 @@ SushiSprite *SushiSprite::create(int row, int col, int topImgIndex, int leftImgI
 	return sushi;
 }
 
+SushiSprite *SushiSprite::create(int row, int col, int imgIndex, SushiType mode)
+{
+	SushiSprite *sushi = new SushiSprite();
+	sushi->m_row = row;
+	sushi->m_col = col;
+	sushi->setSushiType(SUSHI_TYPE_NORMAL);
+	
+	sushi->m_sushiType = mode;
+	sushi->m_imgIndex = imgIndex;
+	sushi->initWithSpriteFrameName(sushiNormal[sushi->m_imgIndex]);
+	sushi->autorelease();
+	return sushi;
+}
+
 float SushiSprite::getContentWidth()
 {
 	static float itemWidth = 0;

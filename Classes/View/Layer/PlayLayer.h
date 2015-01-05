@@ -17,6 +17,7 @@ public:
 		DFS_DIR_LEFT = 0,
 		DFS_DIR_MIDDLE,
 		DFS_DIR_RIGHT,
+		DFS_DIR_DIRECT,
 	};
 	PlayLayer(int round);
 	~PlayLayer();
@@ -51,6 +52,7 @@ private:
 	bool m_isAnimationing;
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
+	bool m_needStopBfs;//判断是否需要结束 bfs
 	int m_round;
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
@@ -59,7 +61,7 @@ private:
 	void initMatrix();
 	void createGrid(int row, int col, Point* points, int* index);
 	void createAndDropSushi(int row, int col, bool isInit);
-	void moveAction(Node *node, std::deque<int>* sushiStack, int startIndex, bool isCreated);
+	void moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int startIndex, bool isCreated);
 	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int rowNow, int colNow, bool isCreate);
 
 	Point positionOfItem(int row, int col);

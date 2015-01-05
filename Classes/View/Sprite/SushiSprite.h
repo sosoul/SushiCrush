@@ -19,6 +19,7 @@ public:
 	SushiSprite();
 	~SushiSprite();
 	static SushiSprite *create(int row, int col, int topImgIndex, int leftImgIndex, PriorityLevel priorityLevel);
+	static SushiSprite *create(int row, int col, int imgIndex, SushiType mode);
 	static float getContentWidth();
 
 	CC_SYNTHESIZE(int, m_row, Row);

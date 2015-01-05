@@ -1,5 +1,6 @@
 #include "View/Layer/PlayLayer.h"
 
+#include "Common/ConfigService.h"
 #include "Common/Messages.h"
 #include "Common/Resource.h"
 #include "Controller/GameController.h"
@@ -17,6 +18,7 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_srcSushi(NULL),
 						 m_destSushi(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
+						 m_needStopBfs(false),
 						 m_round(round),
 						 m_roundInfo(NULL),
 						 m_needRefresh(false)
@@ -1346,11 +1348,14 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor)
 bool PlayLayer::canCreateNewSushi(int index)
 {
 	//to do 目前设定为 最上面一列的为可掉落
-	if (index / m_width == m_height - 1)
+	/*if (index / m_width == m_height - 1)
 	{
-		return true;
+	return true;
 	}
-	return false;
+	return false;*/
+
+	return ConfigService::getInstance()->isProducer(m_round, index/m_width, index%m_width);
+
 }
 
 int PlayLayer::getRowByIndex(int index)
@@ -1364,7 +1369,7 @@ int PlayLayer::getColByIndex(int index)
 }
 
 //深搜获取路径 如果顶部位置有sushi那么用现有sushi 否则掉落新sushi
-bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDirection>* directionStack)  //  0 左上方 1 正上方 2 右上方
+bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDirection>* directionStack)  //  0 左上方 1 正上方 2 右上方 3 直接来源
 {
 	if (sushiStack->size() == 0)
 	{
@@ -1381,13 +1386,24 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 	int row = getRowByIndex(index);
 	int col = getColByIndex(index);
 
-	row++;
-	col = col + (int)direction - 1;
-	int curIndex = row * m_width + col;
+	int curIndex = -1;
+	//增加直接来源
+	if (direction == DFS_DIR_DIRECT)
+	{
+		curIndex = ConfigService::getInstance()->getPortalSrc(m_round, row, col);
+		row = getRowByIndex(curIndex);
+		col = getColByIndex(curIndex);
+	}
+	else
+	{
+		row++;
+		col = col + (int)direction - 1;
+		curIndex = row * m_width + col;
+	}
 
 	if (visited[curIndex])
 	{
-		if (direction == DFS_DIR_RIGHT)
+		if (direction == DFS_DIR_RIGHT || direction == DFS_DIR_DIRECT)
 		{
 			sushiStack->pop_back();
 			directionStack->pop_back();
@@ -1427,7 +1443,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 
 	if (!isValidCol(col) || !isValidRow(row))
 	{
-		if (direction == DFS_DIR_RIGHT)
+		if (direction == DFS_DIR_RIGHT || direction == DFS_DIR_DIRECT)
 		{
 			sushiStack->pop_back();
 			directionStack->pop_back();
@@ -1468,7 +1484,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 	SushiSprite *sushi = m_sushiMatrix[curIndex];
 	if (!isValidGrid(row, col)){
 		visited[curIndex] = 1;
-		if (direction == DFS_DIR_RIGHT)
+		if (direction == DFS_DIR_RIGHT || direction == DFS_DIR_DIRECT)
 		{
 			sushiStack->pop_back();
 			directionStack->pop_back();
@@ -1516,12 +1532,20 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 		sushiStack->push_back(curIndex);
 		return true;
 	}
-	if (direction == DFS_DIR_RIGHT)
+	if (direction == DFS_DIR_RIGHT || direction == DFS_DIR_DIRECT)
 	{
 		visited[curIndex] = 1;
 	}
 	sushiStack->push_back(curIndex);
-	directionStack->push_back(DFS_DIR_MIDDLE);
+
+	if (ConfigService::getInstance()->getPortalSrc(m_round, row, col) != -1)
+	{
+		directionStack->push_back(DFS_DIR_DIRECT);
+	}
+	else
+	{
+		directionStack->push_back(DFS_DIR_MIDDLE);
+	}
 
 	return bfs(sushiStack, visited, directionStack);
 }
@@ -1529,6 +1553,17 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 int PlayLayer::getMinEndMove(int row, int col)
 {
 	int minEndMove = 0;
+
+	/*int indexBefore = ConfigService::getInstance()->getPortalDest(m_round, row, col);
+
+	if (indexBefore != -1)
+	{
+	if (m_minEndMoveMatrix[indexBefore] > minEndMove)
+	{
+	minEndMove = m_minEndMoveMatrix[indexBefore];
+	}
+	}
+	else */
 	if (isValidRow(row - 1) && isValidCol(col) && isValidGrid(row - 1, col) && m_minEndMoveMatrix[(row - 1) * m_width + col] > minEndMove)
 	{
 		minEndMove = m_minEndMoveMatrix[(row - 1) * m_width + col];
@@ -1569,6 +1604,7 @@ void PlayLayer::fillVacancies(int row, int col, SushiSprite *sushi)
 	{
 		if (canCreateNewSushi(row * m_width + col))
 		{
+			m_needStopBfs = false;
 			createAndDropSushi(row, col, false);
 		}
 		else
@@ -1582,13 +1618,23 @@ void PlayLayer::fillVacancies(int row, int col, SushiSprite *sushi)
 			int *visited = new int[m_height * m_width];
 			memset(visited, 0, sizeof(int)* m_height * m_width);
 			std::deque<DfsDirection> directionStack;
-			directionStack.push_back(DFS_DIR_MIDDLE);
+
+			if (ConfigService::getInstance()->getPortalSrc(m_round, row, col) != -1)
+			{
+				directionStack.push_back(DFS_DIR_DIRECT);
+			}
+			else
+			{
+				directionStack.push_back(DFS_DIR_MIDDLE);
+			}
 			sushiStack.push_back(row * m_width + col);
 			visited[row * m_width + col] = 1;
 			bool canDrop = bfs(&sushiStack, visited, &directionStack);
 
 			if (canDrop)
 			{
+				m_needStopBfs = false;
+
 				SushiSprite *newSushi = NULL;
 				newSushi = m_sushiMatrix[sushiStack.back()];
 				if (newSushi)
@@ -1629,25 +1675,31 @@ void PlayLayer::fillVacancies()
 	memset(m_moveNumMatrix, 0, m_width * m_height * sizeof(int));
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
 
-	for (int row = 0; row < m_height; row++)
-	{
-		if (m_width % 2 == 0)
-		{
-			for (int col = 0; col < m_width / 2; col++)
-			{
-				fillVacancies(row, col, sushi);
-				fillVacancies(row, m_width - 1 - col, sushi);
-			}
-		}
-		else
-		{
-			for (int col = 0; col < m_width / 2; col++)
-			{
-				fillVacancies(row, col, sushi);
-				fillVacancies(row, m_width - 1 - col, sushi);
-			}
+	m_needStopBfs = false;
 
-			fillVacancies(row, m_width / 2, sushi);
+	while (!m_needStopBfs)
+	{
+		m_needStopBfs = true;
+		for (int row = 0; row < m_height; row++)
+		{
+			if (m_width % 2 == 0)
+			{
+				for (int col = 0; col < m_width / 2; col++)
+				{
+					fillVacancies(row, col, sushi);
+					fillVacancies(row, m_width - 1 - col, sushi);
+				}
+			}
+			else
+			{
+				for (int col = 0; col < m_width / 2; col++)
+				{
+					fillVacancies(row, col, sushi);
+					fillVacancies(row, m_width - 1 - col, sushi);
+				}
+
+				fillVacancies(row, m_width / 2, sushi);
+			}
 		}
 	}
 
@@ -1656,12 +1708,29 @@ void PlayLayer::fillVacancies()
 	GameController::getInstance()->onExplosionStopped();
 }
 
-void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, int startIndex, bool isCreate)
+void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int startIndex, bool isCreate)
 {
+
+	int lastIndex = startIndex;
+
+	bool needClone = false;
+
 	if (sushiStack->size() > 0)
 	{
 		SushiSprite *sushi = (SushiSprite *)node;
 		Vector<FiniteTimeAction *> moveVector;
+
+		SushiSprite *sushiClone = SushiSprite::create(sushi->getRow(), sushi->getCol(), sushi->getImgIndex(), sushi->getSushiType());
+		m_spriteSheet->addChild(sushiClone);
+		sushiClone->setSushiPriorityLevel(sushi->getSushiPriorityLevel());
+		sushiClone->setPosition(positionOfItem(getRowByIndex(lastIndex), getColByIndex(lastIndex)));
+		sushiClone->setSushiType(sushi->getSushiType());
+		sushiClone->applySushiType();
+		sushiClone->setVisible(false);
+		
+
+		Vector<FiniteTimeAction *> moveVectorClone;
+
 		if (m_moveNumMatrix[startIndex] > 0)
 		{
 			if (isCreate)
@@ -1672,26 +1741,56 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, int startInd
 					sushi->setPosition(ccpAdd(Vec2(0, SushiSprite::getContentWidth() + SUSHI_GAP), sushi->getPosition()));
 					moveVector.pushBack(DelayTime::create(DROP_TIME * (m_moveNumMatrix[startIndex] - 1)));
 					moveVector.pushBack(MoveTo::create(DROP_TIME, oriPosition));
-			}
+
+					moveVectorClone.pushBack(DelayTime::create(DROP_TIME * (m_moveNumMatrix[startIndex])));
+				}
 			}
 			else
 			{
 				moveVector.pushBack(DelayTime::create(DROP_TIME * (m_moveNumMatrix[startIndex])));
+				
+				moveVectorClone.pushBack(DelayTime::create(DROP_TIME * (m_moveNumMatrix[startIndex])));
 			}
 		}
 		while (sushiStack->size() > 0)
 		{
 			int curIndex = sushiStack->back();
+			DfsDirection dir = directionStack->back();
 			int curCol = getColByIndex(curIndex);
 			int curRow = getRowByIndex(curIndex);
 			sushiStack->pop_back();
+			directionStack->pop_back();
 
-			auto actionMoveTo = MoveTo::create(DROP_TIME, positionOfItem(curRow, curCol));
-			moveVector.pushBack(actionMoveTo);
-			
+			if (dir != DFS_DIR_DIRECT)
+			{
+				auto actionMoveTo = MoveTo::create(DROP_TIME, positionOfItem(curRow, curCol));
+				moveVector.pushBack(actionMoveTo);
+
+				moveVectorClone.pushBack(DelayTime::create(DROP_TIME ));
+			}
+			else
+			{
+				moveVector.pushBack(MoveBy::create(DROP_TIME, Vec2(0.0f, SushiSprite::getContentWidth() * -1)));
+				auto placeAction = Place::create(positionOfItem(curRow, curCol));
+				moveVector.pushBack(placeAction);
+
+
+				needClone = true;
+				moveVectorClone.pushBack(Place::create(positionOfItem(curRow + 1, curCol)));
+				moveVectorClone.pushBack(Show::create());
+				moveVectorClone.pushBack(MoveTo::create(DROP_TIME, positionOfItem(curRow, curCol)));
+				moveVectorClone.pushBack(Hide::create());
+
+			}
+			lastIndex = curIndex;
 		}
 		auto sequence = Sequence::create(moveVector);
 		sushi->runAction(sequence);
+		if (needClone)
+		{
+			auto sequenceClone = Sequence::create(moveVectorClone);
+			sushiClone->runAction(sequenceClone);
+		}
 	}
 }
 
@@ -1724,7 +1823,7 @@ void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDi
 		//sushi->setPosition(ccpAdd(visibleOrigin, startPosition));
 		sushi->setPosition(startPosition);
 		sushiStack->pop_back();
-		moveAction(sushi, sushiStack, startIndex, isCreate);
+		moveAction(sushi, sushiStack, directionStack, startIndex, isCreate);
 		// add to BatchNode
 		m_spriteSheet->addChild(sushi);
 		m_sushiMatrix[rowDist * m_width + colDist] = sushi;
@@ -1744,7 +1843,7 @@ void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDi
 		sushi->setCol(colDist);
 		Point startPosition = sushi->getPosition();
 		sushi->stopAllActions();// must stop pre drop action
-		moveAction(sushi, sushiStack, startIndex, isCreate);
+		moveAction(sushi, sushiStack, directionStack, startIndex, isCreate);
 	}
 
 }
