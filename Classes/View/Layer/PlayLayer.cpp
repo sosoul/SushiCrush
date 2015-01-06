@@ -20,6 +20,7 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
 						 m_needStopBfs(false),
 						 m_round(round),
+						 m_isPreBfs(false),
 						 m_roundInfo(NULL),
 						 m_needRefresh(false)
 {
@@ -48,6 +49,21 @@ PlayLayer::~PlayLayer()
 	{
 		delete m_sushiModeMatrix;
 		m_sushiModeMatrix = nullptr;
+	}
+	if (m_preBfsMatrix)
+	{
+		delete m_preBfsMatrix;
+		m_preBfsMatrix = nullptr;
+	}
+	if (m_inDegreeMatrix)
+	{
+		delete m_inDegreeMatrix;
+		m_inDegreeMatrix = nullptr;
+	}
+	if (m_bfsPathMatrix)
+	{
+		delete m_bfsPathMatrix;
+		m_bfsPathMatrix = nullptr;
 	}
 
 
@@ -110,8 +126,17 @@ bool PlayLayer::init()
 	m_minEndMoveMatrix = new int[m_width * m_height];
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
 
+	m_preBfsMatrix = new int[m_width * m_height];
+	memset(m_preBfsMatrix, 0, m_width * m_height * sizeof(int));
+
 	m_sushiModeMatrix = new int[m_width * m_height];
 	memset(m_sushiModeMatrix, 0, m_width * m_height * sizeof(int));
+
+	m_inDegreeMatrix = new int[m_width * m_height];
+	memset(m_inDegreeMatrix, 0, m_width * m_height * sizeof(int));
+
+	m_bfsPathMatrix = new int[m_width * m_height * m_width * m_height];
+	memset(m_bfsPathMatrix, 0, m_width * m_height * m_width * m_height * sizeof(int));
 
 	initMatrix();
 
@@ -1354,7 +1379,7 @@ bool PlayLayer::canCreateNewSushi(int index)
 	}
 	return false;*/
 
-	return ConfigService::getInstance()->isProducer(m_round, index/m_width, index%m_width);
+	return ConfigService::getInstance()->isProducer(m_round, getRowByIndex(index), getColByIndex(index));
 
 }
 
@@ -1481,7 +1506,6 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 		}
 	}
 
-	SushiSprite *sushi = m_sushiMatrix[curIndex];
 	if (!isValidGrid(row, col)){
 		visited[curIndex] = 1;
 		if (direction == DFS_DIR_RIGHT || direction == DFS_DIR_DIRECT)
@@ -1522,11 +1546,24 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 		}
 	}
 
-	if (NULL != sushi)
+	if (!m_isPreBfs)
 	{
-		sushiStack->push_back(curIndex);
-		return true;
+		SushiSprite *sushi = m_sushiMatrix[curIndex];
+		if (NULL != sushi)
+		{
+			sushiStack->push_back(curIndex);
+			return true;
+		}
 	}
+	else
+	{
+		if (m_preBfsMatrix[curIndex] == 1)
+		{
+			sushiStack->push_back(curIndex);
+			return true;
+		}
+	}
+
 	if (canCreateNewSushi(curIndex))
 	{
 		sushiStack->push_back(curIndex);
@@ -1554,17 +1591,16 @@ int PlayLayer::getMinEndMove(int row, int col)
 {
 	int minEndMove = 0;
 
-	/*int indexBefore = ConfigService::getInstance()->getPortalDest(m_round, row, col);
+	int indexBefore = ConfigService::getInstance()->getPortalDest(m_round, row, col);
 
 	if (indexBefore != -1)
 	{
-	if (m_minEndMoveMatrix[indexBefore] > minEndMove)
-	{
-	minEndMove = m_minEndMoveMatrix[indexBefore];
+		if (m_minEndMoveMatrix[indexBefore] > minEndMove)
+		{
+			minEndMove = m_minEndMoveMatrix[indexBefore];
+		}
 	}
-	}
-	else */
-	if (isValidRow(row - 1) && isValidCol(col) && isValidGrid(row - 1, col) && m_minEndMoveMatrix[(row - 1) * m_width + col] > minEndMove)
+	else if (isValidRow(row - 1) && isValidCol(col) && isValidGrid(row - 1, col) && m_minEndMoveMatrix[(row - 1) * m_width + col] > minEndMove)
 	{
 		minEndMove = m_minEndMoveMatrix[(row - 1) * m_width + col];
 	}
@@ -1593,19 +1629,41 @@ void PlayLayer::setMoveNum(std::deque<int>* sushiStack, int row, int col)
 	}
 }
 
-void PlayLayer::fillVacancies(int row, int col, SushiSprite *sushi)
+void PlayLayer::fillVacancies(int row, int col)
 {
-
-	sushi = m_sushiMatrix[row * m_width + col];
 	if (!isValidGrid(row, col)){
 		return;
 	}
-	if (NULL == sushi)
+	bool needFind = false;
+
+	if (m_isPreBfs)
+	{
+		if (m_preBfsMatrix[row * m_width + col] == 0)
+		{
+			needFind = true;
+		}
+	}
+	else
+	{
+		if (NULL == m_sushiMatrix[row * m_width + col])
+		{
+			needFind = true;
+		}
+	}
+
+	if (needFind)
 	{
 		if (canCreateNewSushi(row * m_width + col))
 		{
 			m_needStopBfs = false;
-			createAndDropSushi(row, col, false);
+			if (!m_isPreBfs)
+			{
+				createAndDropSushi(row, col, false);
+			}
+			else
+			{
+				m_preBfsMatrix[row * m_width + col] = 1;
+			}
 		}
 		else
 		{
@@ -1634,24 +1692,55 @@ void PlayLayer::fillVacancies(int row, int col, SushiSprite *sushi)
 			if (canDrop)
 			{
 				m_needStopBfs = false;
-
-				SushiSprite *newSushi = NULL;
-				newSushi = m_sushiMatrix[sushiStack.back()];
-				if (newSushi)
+				if (!m_isPreBfs)
 				{
-					setMoveNum(&sushiStack, row, col);
+					SushiSprite *newSushi = NULL;
+					newSushi = m_sushiMatrix[sushiStack.back()];
+					if (newSushi)
+					{
+						setMoveNum(&sushiStack, row, col);
 
-					//寿司移动
-					createAndDropSushi(&sushiStack, &directionStack, row, col, false);
+						//寿司移动
+						createAndDropSushi(&sushiStack, &directionStack, row, col, false);
+					}
+					else
+					{
+						//createAndDropSushi(row, col, false);
+						//掉落新寿司
+						m_moveNumMatrix[sushiStack.back()] = m_moveNumMatrix[sushiStack.back()] + 1;
+						setMoveNum(&sushiStack, row, col);
+
+						createAndDropSushi(&sushiStack, &directionStack, row, col, true);
+					}
 				}
 				else
 				{
-					//createAndDropSushi(row, col, false);
-					//掉落新寿司
-					m_moveNumMatrix[sushiStack.back()] = m_moveNumMatrix[sushiStack.back()] + 1;
-					setMoveNum(&sushiStack, row, col);
-					
-					createAndDropSushi(&sushiStack, &directionStack, row, col, true);
+					//由sushiStack进行拓扑排序
+
+					int sourceIndex = sushiStack.back();
+
+					if (!canCreateNewSushi(sourceIndex))
+					{
+						m_preBfsMatrix[sourceIndex] = 0;
+					}
+
+
+					int destIndex = 0;
+					sushiStack.pop_back();
+					while (sushiStack.size() > 0)
+					{
+						destIndex = sushiStack.back();
+
+						if (m_bfsPathMatrix[destIndex * (m_height * m_width) + sourceIndex] == 0)
+						{
+							m_bfsPathMatrix[destIndex * (m_height * m_width) + sourceIndex] = 1;
+							m_inDegreeMatrix[sourceIndex] ++;
+						}
+						sushiStack.pop_back();
+						sourceIndex = destIndex;
+					}
+
+					m_preBfsMatrix[row * m_width + col] = 1;
 				}
 			}
 			delete visited;
@@ -1670,10 +1759,22 @@ void PlayLayer::fillVacancies()
 	Size size = CCDirector::getInstance()->getWinSize();
 
 	// 1. drop exist sushi
-	SushiSprite *sushi = NULL;
+	//SushiSprite *sushi = NULL;
 
 	memset(m_moveNumMatrix, 0, m_width * m_height * sizeof(int));
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
+	memset(m_preBfsMatrix, 0, m_width * m_height * sizeof(int));
+
+	memset(m_inDegreeMatrix, 0, m_width * m_height * sizeof(int));
+	memset(m_bfsPathMatrix, 0, m_width * m_height * m_width * m_height * sizeof(int));
+	m_isPreBfs = true;
+	for (int i = 0; i < m_width*m_height; i++)
+	{
+		if (NULL != m_sushiMatrix[i])
+		{
+			m_preBfsMatrix[i] = 1;
+		}
+	}
 
 	m_needStopBfs = false;
 
@@ -1686,22 +1787,101 @@ void PlayLayer::fillVacancies()
 			{
 				for (int col = 0; col < m_width / 2; col++)
 				{
-					fillVacancies(row, col, sushi);
-					fillVacancies(row, m_width - 1 - col, sushi);
+					fillVacancies(row, col);
+					fillVacancies(row, m_width - 1 - col);
 				}
 			}
 			else
 			{
 				for (int col = 0; col < m_width / 2; col++)
 				{
-					fillVacancies(row, col, sushi);
-					fillVacancies(row, m_width - 1 - col, sushi);
+					fillVacancies(row, col);
+					fillVacancies(row, m_width - 1 - col);
 				}
 
-				fillVacancies(row, m_width / 2, sushi);
+				fillVacancies(row, m_width / 2);
 			}
 		}
 	}
+
+
+	m_isPreBfs = false;
+
+	std::deque<int> searchStack;
+	int searchCount = 0;
+
+	for (int i = 0; i < m_width*m_height; i++)
+	{
+		int tempRow = getRowByIndex(i);
+		int tempCol = getColByIndex(i);
+		if (m_inDegreeMatrix[i] == 0)
+		{
+			searchStack.push_back(i);
+		}
+	}
+
+	while (searchStack.size() != 0)
+	{
+		int curSearchIndex = searchStack.back();
+
+		int tempRow = getRowByIndex(curSearchIndex);
+		int tempCol = getColByIndex(curSearchIndex);
+
+
+		fillVacancies(getRowByIndex(curSearchIndex), getColByIndex(curSearchIndex));
+		searchStack.pop_back();
+		searchCount ++;
+
+		for (int i = curSearchIndex * m_width * m_height; i < (curSearchIndex + 1) * m_width * m_height; i++)
+		{
+			if (m_bfsPathMatrix[i] == 1)
+			{
+				int destIndex = i % (m_width * m_height);
+
+				m_bfsPathMatrix[i] = 0;
+				m_inDegreeMatrix[destIndex] --;
+
+				if (m_inDegreeMatrix[destIndex] == 0)
+				{
+					searchStack.push_back(destIndex);
+				}
+
+			}
+		}
+	}
+
+	if (searchCount != m_width * m_height)
+	{
+		//SOMETHING WRONG!
+	}
+
+
+
+		/*while (!m_needStopBfs)
+		{
+		m_needStopBfs = true;
+		for (int row = 0; row < m_height; row++)
+		{
+		if (m_width % 2 == 0)
+		{
+		for (int col = 0; col < m_width / 2; col++)
+		{
+		fillVacancies(row, col);
+		fillVacancies(row, m_width - 1 - col);
+		}
+		}
+		else
+		{
+		for (int col = 0; col < m_width / 2; col++)
+		{
+		fillVacancies(row, col);
+		fillVacancies(row, m_width - 1 - col);
+		}
+
+		fillVacancies(row, m_width / 2);
+		}
+		}
+		}*/
 
 	m_needRefresh = false;
 

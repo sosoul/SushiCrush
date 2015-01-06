@@ -41,6 +41,11 @@ private:
 	int * m_moveNumMatrix;
 	int * m_minEndMoveMatrix;
 	int * m_sushiModeMatrix;
+	int * m_preBfsMatrix;
+
+	int * m_inDegreeMatrix;
+	int * m_bfsPathMatrix;
+
 	int m_width;
 	int m_height;
 	// for rapid count position
@@ -54,6 +59,7 @@ private:
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	bool m_needStopBfs;//判断是否需要结束 bfs
 	int m_round;
+	bool m_isPreBfs;
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
 	ClippingNode* m_clipper;
@@ -87,7 +93,7 @@ private:
 	int getMinEndMove(int row, int col);
 	void fillVacancies();
 	void setMoveNum(std::deque<int>* sushiStack, int row, int col);
-	void fillVacancies(int row, int col, SushiSprite *sushi);
+	void fillVacancies(int row, int col);
 	SushiSprite *sushiOfPoint(Point *point);
 	void swapSushi();
 	void markRemove(SushiSprite *sushi);
