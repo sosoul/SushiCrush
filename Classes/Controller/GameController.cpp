@@ -28,6 +28,7 @@ void GameController::destroyInstance()
 
 void GameController::init() {
 	setCurRound(0);
+	ReadUnlockInfo();
 }
 
 void GameController::uninit() {
@@ -51,6 +52,7 @@ void GameController::onExplosionStopped() {
 		CCASSERT(round != TOTAL_ROUND, "Game Over.");
 		writeToDB(m_curRoundInfo);
 		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(true));
+		UpdateUnlockInfo(round+1, true);
 		setCurRound(round);
 	}
 }
@@ -102,4 +104,20 @@ void GameController::setCurRound(int round) {
 	m_curRoundInfo.m_targetScroe = roundInfo->_targetScore;
 	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
 	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
+}
+
+void GameController::ReadUnlockInfo() {
+	for (int i = 0; i < TOTAL_ROUND; ++i)
+		_roundUnlock.insert(MapRoundUnLock::value_type(i, false));
+	_roundUnlock[0] = true;
+}
+
+void GameController::UpdateUnlockInfo(int round, bool isUnlock) {
+	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
+	_roundUnlock[round] = isUnlock;
+}
+
+bool GameController::isUnlock(int round) {
+	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
+	return _roundUnlock[round];
 }

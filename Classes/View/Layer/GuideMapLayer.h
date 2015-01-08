@@ -21,7 +21,7 @@ public:
 	void onRoundButtonTouched(Ref *pSender, ui::TouchEventType type);
 
 private:
-	void createRoundButton(int round);
+	void createRoundButton(int round, bool isUnlock, const Point& pos);
 	void onBackButtonTouched(Ref *pSender, ui::TouchEventType type);
 };
 

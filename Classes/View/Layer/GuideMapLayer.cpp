@@ -5,6 +5,7 @@
 #include "View/Scene/PlayScene.h"
 #include "View/Scene/StartScene.h"
 #include "ui/UIButton.h"
+#include "Common/TiledMapParser.h"
 
 GuideMapLayer::GuideMapLayer()
 {
@@ -21,20 +22,43 @@ bool GuideMapLayer::init()
 		return false;
 
 	// background
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	auto background = CCSprite::createWithSpriteFrameName(s_guideMap);
-	background->retain();
-	background->setAnchorPoint(Vec2::ZERO);
-	background->setPosition(origin);
-	addChild(background);
+	std::string filePath = FileUtils::getInstance()->fullPathForFilename("guideMap.tmx");
+	TiledMapParser* tiledMapParser = TiledMapParser::create(filePath);
+	TMXLayer* layer = tiledMapParser->createLayer("backgroundLayer");
+	addChild(layer);
 
 	// round buttons
-	for (int i = 0; i < 10; ++i)
-		createRoundButton(i);
+	MapGidToGamePos map;
+	tiledMapParser->getGidToGamePosMap("roundIconLayer", &map);
+	MapGidToGamePos::iterator it = map.begin();
+	for (; map.end() != it; ++it) {
+		int round = it->first - 1;
+		createRoundButton(round, GameController::getInstance()->isUnlock(round), it->second);
+	}
 
 	setTouchEnabled(true);
 
 	return true;
+}
+
+void GuideMapLayer::createRoundButton(int round, bool isUnlock, const Point& pos) {
+	auto roundButton = ui::Button::create();
+
+	std::string normalButton;
+	std::string selectedButton = s_roundButtonsSelected[round];
+	if (isUnlock) {
+		normalButton = s_roundButtonsNormal[round];
+	}
+	else {
+		normalButton = selectedButton;
+	}
+	roundButton->loadTextures(normalButton, selectedButton, "", ui::Button::TextureResType::PLIST);
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	const int step = 100;
+	roundButton->setPosition(ccpAdd(visibleOrigin, pos));
+	roundButton->setUserData((void*)round);
+	addChild(roundButton);
+	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&GuideMapLayer::onRoundButtonTouched));
 }
 
 void GuideMapLayer::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event) {
@@ -64,22 +88,6 @@ void GuideMapLayer::onRoundButtonTouched(Ref *pSender, ui::TouchEventType type) 
 		CCTransitionScene * transScene = CCTransitionFadeTR::create(time, scene);
 		CCDirector::sharedDirector()->replaceScene(transScene);
 	}
-}
-
-void GuideMapLayer::createRoundButton(int round) {
-	auto roundButton = ui::Button::create();
-	roundButton->setTouchEnabled(true);
-
-	std::string normalButton = s_roundButtonsNormal[round];
-	std::string selectedButton = s_roundButtonsSelected[round];
-
-	roundButton->loadTextures(normalButton, selectedButton, "", ui::Button::TextureResType::PLIST);
-	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-	const int step = 100;
-	roundButton->setPosition(ccpAdd(visibleOrigin, Point((round+1)*step, (round+1)*step)));
-	roundButton->setUserData((void*)round);
-	addChild(roundButton);
-	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&GuideMapLayer::onRoundButtonTouched));
 }
 
 GuideMapOptionsLayer::GuideMapOptionsLayer() {

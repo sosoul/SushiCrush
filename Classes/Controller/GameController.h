@@ -26,6 +26,8 @@ struct CurRoundInfo : public Ref {
 	}
 };
 
+typedef std::map<int, bool> MapRoundUnLock;
+
 class GameController : public Ref
 {
 public:
@@ -48,11 +50,16 @@ public:
 
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
+
+	void ReadUnlockInfo();
+	void UpdateUnlockInfo(int round, bool isUnlock);
+	bool isUnlock(int round);
 private:
 	void writeToDB(const CurRoundInfo& m_curRoundInfo);
 
 	CurRoundInfo m_curRoundInfo;
 	int m_curRound;
+	MapRoundUnLock _roundUnlock;
 };
 
 

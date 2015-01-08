@@ -23,11 +23,10 @@ struct GridInfo {
 
 typedef std::vector<int> VecProducer;
 typedef std::map<int, int> MapPortal;
-typedef std::map<int, int> MapGidToIndex;
 
 struct RoundInfo {
 	std::string _mapFile;
-	GridType _layoutInfo[MATRIX_WIDTH*MATRIX_HEIGHT];
+	GridType _matrixInfo[MATRIX_WIDTH*MATRIX_HEIGHT];
 	VecProducer _vecProducer;
 	MapPortal _mapPortalSrcToDest;
 	MapPortal _mapPortalDestToSrc;
@@ -35,7 +34,7 @@ struct RoundInfo {
 	int _moves;
 
 	RoundInfo() : _targetScore(0), _moves(0) {
-		memset((void*)_layoutInfo, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
+		memset((void*)_matrixInfo, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
 	}
 };
 
@@ -69,9 +68,6 @@ public:
 
 private:
 	void parseMap(RoundInfo* roundInfo);
-	void parseLayout(tinyxml2::XMLElement *layerEle, GridType* layout);
-	void parseProducer(tinyxml2::XMLElement *layerEle, VecProducer* vecProducer);
-	void parsePortal(tinyxml2::XMLElement *layerEle, MapGidToIndex* mapSrcOrDest);
 	int _roundCount;
 	MapSushiInfo _mapSushiInfo;
 	MapGridInfo _mapGridInfo;

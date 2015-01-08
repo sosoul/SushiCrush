@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="10" tilewidth="180" tileheight="170">
+ <tileset firstgid="1" name="roundIcon" tilewidth="180" tileheight="170">
+  <image source="../w640/roundIcon.png" width="1792" height="340"/>
+ </tileset>
+ <tileset firstgid="19" name="res" tilewidth="180" tileheight="170">
+  <image source="../w640/res.png" width="3642" height="2175"/>
+ </tileset>
+ <layer name="backgroundLayer" width="14" height="10">
+  <data encoding="base64" compression="zlib">
+   eJwNw0c7FgAAAODvP0RGkZud0I3scIukrJudebNHuNFApZuV7WYm6xbZ4wd53+d5HwUCgSCDfWyIoYYZ7hOfGmGkz4wy2hhjjTPeBBN9bpIvTDbFVF+aZrqvzDDTLLPNMdc8X5tvgYW+schi31riO0t97wfLLLfCSqustsZa66y3wUY/2mSzLbbaZrsddtpltz322me/Aw76ySGHHXHUMT/7xa9+c9wJJ/3uD3865S+nnXHWOef97YKLLrnsiquuue6Gm2657Y67/nHPv+574KFHHvvPE0/975nnXnjpldfeeOud9z4AuKc/Kw==
+  </data>
+ </layer>
+ <layer name="roundIconLayer" width="14" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtAasQMxGoh4WJDY7AbWMQMwExMxY5DhItJcQAAAV+AAl
+  </data>
+ </layer>
+</map>

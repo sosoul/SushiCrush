@@ -139,6 +139,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Common\ConfigService.cpp" />
+    <ClCompile Include="..\Classes\Common\TiledMapParser.cpp" />
     <ClCompile Include="..\Classes\Controller\GameController.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\View\Layer\GuideMapLayer.cpp" />
@@ -164,6 +165,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Common\Messages.h" />
     <ClInclude Include="..\Classes\Common\Resource.h" />
     <ClInclude Include="..\Classes\Common\TextMessage.h" />
+    <ClInclude Include="..\Classes\Common\TiledMapParser.h" />
     <ClInclude Include="..\Classes\Common\Types.h" />
     <ClInclude Include="..\Classes\Controller\GameController.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />

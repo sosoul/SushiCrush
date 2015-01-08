@@ -182,7 +182,7 @@ void PlayLayer::createGrid(int row, int col, Point* points, int* index) {
 	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
 		return;
 
-	GridType type = m_roundInfo->_layoutInfo[m_width*row + col];
+	GridType type = m_roundInfo->_matrixInfo[m_width*row + col];
 	GridSprite* grid = NULL;
 	if (GIRD_TYPE_NONE != type) {
 		grid = GridSprite::create(row, col, type);
