@@ -204,6 +204,15 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 	MapGidToIndex mapPortalDest;
 	tiledMapParser->getValidGidToIndexMap("portalSrcLayer", &mapPortalSrc);
 	tiledMapParser->getValidGidToIndexMap("portalDestLayer", &mapPortalDest);
+	std::map<int, int>::iterator itDest = mapPortalDest.begin();
+	for (; mapPortalDest.end() != itDest; ++itDest)
+	{
+		std::map<int, int>::iterator itSrc = mapPortalSrc.find(itDest->first);
+		if (mapPortalSrc.end() != itSrc) {
+			roundInfo->_mapPortalDestToSrc.insert(MapPortal::value_type(itDest->second, itSrc->second));
+			roundInfo->_mapPortalSrcToDest.insert(MapPortal::value_type(itSrc->second, itDest->second));
+		}
+	}
 }
 
 bool ConfigService::isProducer(int round, int row, int col) {

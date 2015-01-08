@@ -3,14 +3,14 @@
  <tileset firstgid="1" name="sushi" tilewidth="92" tileheight="92">
   <image source="../w640/sushi.png" width="1382" height="186"/>
  </tileset>
- <layer name="matrixLayer" width="7" height="8" visible="0">
+ <layer name="matrixLayer" width="7" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYKUyxgeobRchDABsEAD2
+   eJxjZWBgYKUyRgbY+PTEAG6QAPs=
   </data>
  </layer>
  <layer name="producerLayer" width="7" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYMWBaQXoaRcAJ6AAPQ==
+   eJxjZWBgYMWBaQWQzae1XQAlrAA4
   </data>
  </layer>
  <layer name="portalSrcLayer" width="7" height="8">
@@ -18,7 +18,7 @@
    eJxjYCAPcOAQ5yHTPFoBAAzgABU=
   </data>
  </layer>
- <layer name="portalDestLayer" width="7" height="8" visible="0">
+ <layer name="portalDestLayer" width="7" height="8">
   <data encoding="base64" compression="zlib">
    eJxjYKAv4MAhzkMj+wAIgAAV
   </data>
