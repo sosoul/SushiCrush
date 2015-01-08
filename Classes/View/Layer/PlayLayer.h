@@ -13,7 +13,7 @@ USING_NS_CC;
 class PlayLayer : public Layer
 {
 public:
-	enum DfsDirection {
+	enum DfsSearchDirection {
 		DFS_DIR_LEFT = 0,
 		DFS_DIR_MIDDLE,
 		DFS_DIR_RIGHT,
@@ -41,10 +41,10 @@ private:
 	int * m_moveNumMatrix;
 	int * m_minEndMoveMatrix;
 	int * m_sushiModeMatrix;
-	int * m_preBfsMatrix;
+	int * m_preDfsMatrix;
 
 	int * m_inDegreeMatrix;
-	int * m_bfsPathMatrix;
+	int * m_dfsPathMatrix;
 
 	int m_width;
 	int m_height;
@@ -57,9 +57,9 @@ private:
 	bool m_isAnimationing;
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
-	bool m_needStopBfs;//判断是否需要结束 bfs
+	bool m_needStopDfs;//判断是否需要结束 dfs
 	int m_round;
-	bool m_isPreBfs;
+	bool m_isPreDfs;
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
 	ClippingNode* m_clipper;
@@ -67,8 +67,8 @@ private:
 	void initMatrix();
 	void createGrid(int row, int col, Point* points, int* index);
 	void createAndDropSushi(int row, int col, bool isInit);
-	void moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int startIndex, bool isCreated);
-	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int rowNow, int colNow, bool isCreate);
+	void moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int startIndex, bool isCreated);
+	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int rowNow, int colNow, bool isCreate);
 
 	Point positionOfItem(int row, int col);
 	void checkAndRemoveChain();
@@ -89,7 +89,7 @@ private:
 	bool canCreateNewSushi(int index);
 	int getRowByIndex(int index);
 	int getColByIndex(int index);
-	bool bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDirection>* direction);
+	bool dfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsSearchDirection>* direction);
 	int getMinEndMove(int row, int col);
 	void fillVacancies();
 	void setMoveNum(std::deque<int>* sushiStack, int row, int col);

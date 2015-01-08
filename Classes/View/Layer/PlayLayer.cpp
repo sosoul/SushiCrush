@@ -18,9 +18,9 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_srcSushi(NULL),
 						 m_destSushi(NULL),
 						 m_movingVertical(true),  // drop animation is vertical
-						 m_needStopBfs(false),
+						 m_needStopDfs(false),
 						 m_round(round),
-						 m_isPreBfs(false),
+						 m_isPreDfs(false),
 						 m_roundInfo(NULL),
 						 m_needRefresh(false)
 {
@@ -50,20 +50,20 @@ PlayLayer::~PlayLayer()
 		delete m_sushiModeMatrix;
 		m_sushiModeMatrix = nullptr;
 	}
-	if (m_preBfsMatrix)
+	if (m_preDfsMatrix)
 	{
-		delete m_preBfsMatrix;
-		m_preBfsMatrix = nullptr;
+		delete m_preDfsMatrix;
+		m_preDfsMatrix = nullptr;
 	}
 	if (m_inDegreeMatrix)
 	{
 		delete m_inDegreeMatrix;
 		m_inDegreeMatrix = nullptr;
 	}
-	if (m_bfsPathMatrix)
+	if (m_dfsPathMatrix)
 	{
-		delete m_bfsPathMatrix;
-		m_bfsPathMatrix = nullptr;
+		delete m_dfsPathMatrix;
+		m_dfsPathMatrix = nullptr;
 	}
 
 
@@ -126,8 +126,8 @@ bool PlayLayer::init()
 	m_minEndMoveMatrix = new int[m_width * m_height];
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
 
-	m_preBfsMatrix = new int[m_width * m_height];
-	memset(m_preBfsMatrix, 0, m_width * m_height * sizeof(int));
+	m_preDfsMatrix = new int[m_width * m_height];
+	memset(m_preDfsMatrix, 0, m_width * m_height * sizeof(int));
 
 	m_sushiModeMatrix = new int[m_width * m_height];
 	memset(m_sushiModeMatrix, 0, m_width * m_height * sizeof(int));
@@ -135,8 +135,8 @@ bool PlayLayer::init()
 	m_inDegreeMatrix = new int[m_width * m_height];
 	memset(m_inDegreeMatrix, 0, m_width * m_height * sizeof(int));
 
-	m_bfsPathMatrix = new int[m_width * m_height * m_width * m_height];
-	memset(m_bfsPathMatrix, 0, m_width * m_height * m_width * m_height * sizeof(int));
+	m_dfsPathMatrix = new int[m_width * m_height * m_width * m_height];
+	memset(m_dfsPathMatrix, 0, m_width * m_height * m_width * m_height * sizeof(int));
 
 	initMatrix();
 
@@ -1394,7 +1394,7 @@ int PlayLayer::getColByIndex(int index)
 }
 
 //深搜获取路径 如果顶部位置有sushi那么用现有sushi 否则掉落新sushi
-bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDirection>* directionStack)  //  0 左上方 1 正上方 2 右上方 3 直接来源
+bool PlayLayer::dfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsSearchDirection>* directionStack)  //  0 左上方 1 正上方 2 右上方 3 直接来源
 {
 	if (sushiStack->size() == 0)
 	{
@@ -1406,7 +1406,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 	}
 
 	int index = sushiStack->back();
-	DfsDirection direction = directionStack->back();
+	DfsSearchDirection direction = directionStack->back();
 
 	int row = getRowByIndex(index);
 	int col = getColByIndex(index);
@@ -1437,7 +1437,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 			{
 				return false;
 			}
-			DfsDirection curDic = directionStack->back();
+			DfsSearchDirection curDic = directionStack->back();
 
 			if (curDic == DFS_DIR_MIDDLE)
 			{
@@ -1450,19 +1450,19 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 			directionStack->pop_back();
 			directionStack->push_back(curDic);
 
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 		else if (direction == DFS_DIR_LEFT)
 		{
 			directionStack->pop_back();
 			directionStack->push_back(DFS_DIR_RIGHT);
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 		else if (direction == DFS_DIR_MIDDLE)
 		{
 			directionStack->pop_back();
 			directionStack->push_back(DFS_DIR_LEFT);
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 	}
 
@@ -1477,7 +1477,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 			{
 				return false;
 			}
-			DfsDirection curDic = directionStack->back();
+			DfsSearchDirection curDic = directionStack->back();
 
 			if (curDic == DFS_DIR_MIDDLE)
 			{
@@ -1490,19 +1490,19 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 			directionStack->pop_back();
 			directionStack->push_back(curDic);
 
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 		else if (direction == DFS_DIR_LEFT)
 		{
 			directionStack->pop_back();
 			directionStack->push_back(DFS_DIR_RIGHT);
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 		else if (direction == DFS_DIR_MIDDLE)
 		{
 			directionStack->pop_back();
 			directionStack->push_back(DFS_DIR_LEFT);
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 	}
 
@@ -1517,7 +1517,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 			{
 				return false;
 			}
-			DfsDirection curDic = directionStack->back();
+			DfsSearchDirection curDic = directionStack->back();
 
 			if (curDic == DFS_DIR_MIDDLE)
 			{
@@ -1530,23 +1530,23 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 			directionStack->pop_back();
 			directionStack->push_back(curDic);
 
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 		else if (direction == DFS_DIR_LEFT)
 		{
 			directionStack->pop_back();
 			directionStack->push_back(DFS_DIR_RIGHT);
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 		else if (direction == DFS_DIR_MIDDLE)
 		{
 			directionStack->pop_back();
 			directionStack->push_back(DFS_DIR_LEFT);
-			return bfs(sushiStack, visited, directionStack);
+			return dfs(sushiStack, visited, directionStack);
 		}
 	}
 
-	if (!m_isPreBfs)
+	if (!m_isPreDfs)
 	{
 		SushiSprite *sushi = m_sushiMatrix[curIndex];
 		if (NULL != sushi)
@@ -1557,7 +1557,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 	}
 	else
 	{
-		if (m_preBfsMatrix[curIndex] == 1)
+		if (m_preDfsMatrix[curIndex] == 1)
 		{
 			sushiStack->push_back(curIndex);
 			return true;
@@ -1584,7 +1584,7 @@ bool PlayLayer::bfs(std::deque<int>* sushiStack, int *visited, std::deque<DfsDir
 		directionStack->push_back(DFS_DIR_MIDDLE);
 	}
 
-	return bfs(sushiStack, visited, directionStack);
+	return dfs(sushiStack, visited, directionStack);
 }
 
 int PlayLayer::getMinEndMove(int row, int col)
@@ -1636,9 +1636,9 @@ void PlayLayer::fillVacancies(int row, int col)
 	}
 	bool needFind = false;
 
-	if (m_isPreBfs)
+	if (m_isPreDfs)
 	{
-		if (m_preBfsMatrix[row * m_width + col] == 0)
+		if (m_preDfsMatrix[row * m_width + col] == 0)
 		{
 			needFind = true;
 		}
@@ -1655,14 +1655,14 @@ void PlayLayer::fillVacancies(int row, int col)
 	{
 		if (canCreateNewSushi(row * m_width + col))
 		{
-			m_needStopBfs = false;
-			if (!m_isPreBfs)
+			m_needStopDfs = false;
+			if (!m_isPreDfs)
 			{
 				createAndDropSushi(row, col, false);
 			}
 			else
 			{
-				m_preBfsMatrix[row * m_width + col] = 1;
+				m_preDfsMatrix[row * m_width + col] = 1;
 			}
 		}
 		else
@@ -1675,7 +1675,7 @@ void PlayLayer::fillVacancies(int row, int col)
 			std::deque<int> sushiStack;
 			int *visited = new int[m_height * m_width];
 			memset(visited, 0, sizeof(int)* m_height * m_width);
-			std::deque<DfsDirection> directionStack;
+			std::deque<DfsSearchDirection> directionStack;
 
 			if (ConfigService::getInstance()->getPortalSrc(m_round, row, col) != -1)
 			{
@@ -1687,12 +1687,12 @@ void PlayLayer::fillVacancies(int row, int col)
 			}
 			sushiStack.push_back(row * m_width + col);
 			visited[row * m_width + col] = 1;
-			bool canDrop = bfs(&sushiStack, visited, &directionStack);
+			bool canDrop = dfs(&sushiStack, visited, &directionStack);
 
 			if (canDrop)
 			{
-				m_needStopBfs = false;
-				if (!m_isPreBfs)
+				m_needStopDfs = false;
+				if (!m_isPreDfs)
 				{
 					SushiSprite *newSushi = NULL;
 					newSushi = m_sushiMatrix[sushiStack.back()];
@@ -1721,7 +1721,7 @@ void PlayLayer::fillVacancies(int row, int col)
 
 					if (!canCreateNewSushi(sourceIndex))
 					{
-						m_preBfsMatrix[sourceIndex] = 0;
+						m_preDfsMatrix[sourceIndex] = 0;
 					}
 
 
@@ -1731,16 +1731,16 @@ void PlayLayer::fillVacancies(int row, int col)
 					{
 						destIndex = sushiStack.back();
 
-						if (m_bfsPathMatrix[destIndex * (m_height * m_width) + sourceIndex] == 0)
+						if (m_dfsPathMatrix[destIndex * (m_height * m_width) + sourceIndex] == 0)
 						{
-							m_bfsPathMatrix[destIndex * (m_height * m_width) + sourceIndex] = 1;
+							m_dfsPathMatrix[destIndex * (m_height * m_width) + sourceIndex] = 1;
 							m_inDegreeMatrix[sourceIndex] ++;
 						}
 						sushiStack.pop_back();
 						sourceIndex = destIndex;
 					}
 
-					m_preBfsMatrix[row * m_width + col] = 1;
+					m_preDfsMatrix[row * m_width + col] = 1;
 				}
 			}
 			delete visited;
@@ -1763,24 +1763,24 @@ void PlayLayer::fillVacancies()
 
 	memset(m_moveNumMatrix, 0, m_width * m_height * sizeof(int));
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
-	memset(m_preBfsMatrix, 0, m_width * m_height * sizeof(int));
+	memset(m_preDfsMatrix, 0, m_width * m_height * sizeof(int));
 
 	memset(m_inDegreeMatrix, 0, m_width * m_height * sizeof(int));
-	memset(m_bfsPathMatrix, 0, m_width * m_height * m_width * m_height * sizeof(int));
-	m_isPreBfs = true;
+	memset(m_dfsPathMatrix, 0, m_width * m_height * m_width * m_height * sizeof(int));
+	m_isPreDfs = true;
 	for (int i = 0; i < m_width*m_height; i++)
 	{
 		if (NULL != m_sushiMatrix[i])
 		{
-			m_preBfsMatrix[i] = 1;
+			m_preDfsMatrix[i] = 1;
 		}
 	}
 
-	m_needStopBfs = false;
+	m_needStopDfs = false;
 
-	while (!m_needStopBfs)
+	while (!m_needStopDfs)
 	{
-		m_needStopBfs = true;
+		m_needStopDfs = true;
 		for (int row = 0; row < m_height; row++)
 		{
 			if (m_width % 2 == 0)
@@ -1805,7 +1805,7 @@ void PlayLayer::fillVacancies()
 	}
 
 
-	m_isPreBfs = false;
+	m_isPreDfs = false;
 
 	std::deque<int> searchStack;
 	int searchCount = 0;
@@ -1834,11 +1834,11 @@ void PlayLayer::fillVacancies()
 
 		for (int i = curSearchIndex * m_width * m_height; i < (curSearchIndex + 1) * m_width * m_height; i++)
 		{
-			if (m_bfsPathMatrix[i] == 1)
+			if (m_dfsPathMatrix[i] == 1)
 			{
 				int destIndex = i % (m_width * m_height);
 
-				m_bfsPathMatrix[i] = 0;
+				m_dfsPathMatrix[i] = 0;
 				m_inDegreeMatrix[destIndex] --;
 
 				if (m_inDegreeMatrix[destIndex] == 0)
@@ -1888,7 +1888,7 @@ void PlayLayer::fillVacancies()
 	GameController::getInstance()->onExplosionStopped();
 }
 
-void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int startIndex, bool isCreate)
+void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int startIndex, bool isCreate)
 {
 
 	int lastIndex = startIndex;
@@ -1935,7 +1935,7 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<D
 		while (sushiStack->size() > 0)
 		{
 			int curIndex = sushiStack->back();
-			DfsDirection dir = directionStack->back();
+			DfsSearchDirection dir = directionStack->back();
 			int curCol = getColByIndex(curIndex);
 			int curRow = getRowByIndex(curIndex);
 			sushiStack->pop_back();
@@ -1974,7 +1974,7 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<D
 	}
 }
 
-void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsDirection>* directionStack, int rowDist, int colDist, bool isCreate)
+void PlayLayer::createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int rowDist, int colDist, bool isCreate)
 {
 	if (isCreate)
 	{
