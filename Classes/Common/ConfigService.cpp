@@ -167,10 +167,23 @@ const RoundInfo* ConfigService::getRoundInfo(int round) const {
 void ConfigService::parseMap(RoundInfo* roundInfo) {
 	if (!roundInfo)
 		return;
+
 	std::string filePath = FileUtils::getInstance()->fullPathForFilename(roundInfo->_mapFile);
 	TiledMapParser* tiledMapParser = TiledMapParser::create(filePath.c_str());
+	if (!tiledMapParser)
+		return;
+
+	int clipper[MATRIX_WIDTH*MATRIX_HEIGHT];
+	Size size = tiledMapParser->getLayerSize("clipperLayer");
+	if (MATRIX_WIDTH == size.width && MATRIX_HEIGHT == size.height) {
+		tiledMapParser->getGidMatrix("clipperLayer", clipper, MATRIX_WIDTH*MATRIX_HEIGHT);
+		for (int i = 0; i < MATRIX_WIDTH*MATRIX_HEIGHT; ++i) {
+			roundInfo->_clipper[i] = clipper[i];
+		}
+	}
+
 	int matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
-	Size size = tiledMapParser->getLayerSize("matrixLayer");
+	size = tiledMapParser->getLayerSize("matrixLayer");
 	if (MATRIX_WIDTH == size.width && MATRIX_HEIGHT == size.height) {
 		tiledMapParser->getGidMatrix("matrixLayer", matrix, MATRIX_WIDTH*MATRIX_HEIGHT);
 		for (int i = 0; i < MATRIX_WIDTH*MATRIX_HEIGHT; ++i) {
@@ -195,7 +208,7 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 			default:
 				break;
 			}
-			roundInfo->_matrixInfo[i] = type;
+			roundInfo->_matrix[i] = type;
 		}
 	}
 

@@ -26,7 +26,8 @@ typedef std::map<int, int> MapPortal;
 
 struct RoundInfo {
 	std::string _mapFile;
-	GridType _matrixInfo[MATRIX_WIDTH*MATRIX_HEIGHT];
+	int _clipper[MATRIX_WIDTH*MATRIX_HEIGHT];
+	GridType _matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
 	VecProducer _vecProducer;
 	MapPortal _mapPortalSrcToDest;
 	MapPortal _mapPortalDestToSrc;
@@ -34,7 +35,8 @@ struct RoundInfo {
 	int _moves;
 
 	RoundInfo() : _targetScore(0), _moves(0) {
-		memset((void*)_matrixInfo, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
+		memset((void*)_clipper, 0, MATRIX_WIDTH*MATRIX_HEIGHT);
+		memset((void*)_matrix, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
 	}
 };
 

@@ -153,24 +153,21 @@ bool PlayLayer::init()
 
 void PlayLayer::initMatrix()
 {
-	Point points[MATRIX_WIDTH*MATRIX_HEIGHT * 4];
 	int index = 0;
 
+	Node* stencil = Node::create();
 	// init sushi and grid matrix
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
-			createGrid(row, col, points, &index);
+			createGrid(row, col, stencil);
 			if (isValidGrid(row, col))
 				createAndDropSushi(row, col, true);
 		}
 	}
 
-	DrawNode* shap = DrawNode::create();
-	shap->drawPolygon(points, MATRIX_WIDTH*MATRIX_HEIGHT * 4,
-		ccc4f(255, 255, 255, 255), 2, ccc4f(255, 255, 255, 255));
 	m_clipper = ClippingNode::create();
 	m_clipper->retain();
-	m_clipper->setStencil(shap);
+	m_clipper->setStencil(stencil);
 	m_clipper->setAnchorPoint(Vec2(0.5, 0.5));
 	m_clipper->setPosition(0, 0);
 	addChild(m_clipper);
@@ -178,24 +175,24 @@ void PlayLayer::initMatrix()
 	m_clipper->addChild(m_spriteSheet);
 }
 
-void PlayLayer::createGrid(int row, int col, Point* points, int* index) {
+void PlayLayer::createGrid(int row, int col, Node* stencil) {
 	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
 		return;
 
-	GridType type = m_roundInfo->_matrixInfo[m_width*row + col];
+	GridType type = m_roundInfo->_matrix[m_width*row + col];
 	GridSprite* grid = NULL;
 	if (GIRD_TYPE_NONE != type) {
 		grid = GridSprite::create(row, col, type);
 		grid->setPosition(positionOfItem(row, col));
-		Rect bound = grid->getBoundingBox();
-		points[(*index)++] = bound.origin;
-		points[(*index)++] = Vec2(bound.origin.x + bound.size.width, bound.origin.y);
-		points[(*index)++] = Vec2(bound.origin.x + bound.size.width, bound.origin.y + bound.size.height);
-		points[(*index)++] = Vec2(bound.origin.x, bound.origin.y + bound.size.height);
-		
 		m_spriteSheet->addChild(grid);
 	}
 	m_gridMatrix[row * m_width + col] = grid;
+
+	if (m_roundInfo->_clipper[m_width*row + col]) {
+		grid = GridSprite::create(row, col, GIRD_TYPE_NORMAL);
+		grid->setPosition(positionOfItem(row, col));
+		stencil->addChild(grid);
+	}
 }
 
 SushiSprite *PlayLayer::sushiOfPoint(Point *point)

@@ -65,7 +65,7 @@ private:
 	ClippingNode* m_clipper;
 
 	void initMatrix();
-	void createGrid(int row, int col, Point* points, int* index);
+	void createGrid(int row, int col, Node* stencil);
 	void createAndDropSushi(int row, int col, bool isInit);
 	void moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int startIndex, bool isCreated);
 	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int rowNow, int colNow, bool isCreate);
