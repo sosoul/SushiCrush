@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 
 #include "Common/ConfigService.h"
+#include "Common/GameDB.h"
 #include "Common/Resource.h"
 #include "Controller/GameController.h"
 #include "View/Scene/StartScene.h"
@@ -89,6 +90,7 @@ void AppDelegate::applicationWillEnterForeground() {
 
 void AppDelegate::initialize() {
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_resPlist);
+	GameDB::getInstance()->init();
 	ConfigService::getInstance()->init();
 	GameController::getInstance()->init();
 }

@@ -7,6 +7,8 @@
 #define SUSHI_COUNT (6)
 #define GRID_COUNT (3)
 
+#define BASE_DB_IS_INITED "BASE_DB_IS_INITED"
+
 // Start scene
 const char s_startBackground[] = "play_start_start_back_normal.png";
 const char s_startNormal[] = "play_start_start_btn_normal.png";

@@ -89,6 +89,9 @@
     <ClCompile Include="..\Classes\Common\TiledMapParser.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Common\GameDB.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -160,6 +163,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common\TiledMapParser.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\GameDB.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
