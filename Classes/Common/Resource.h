@@ -9,6 +9,11 @@
 
 #define BASE_DB_IS_INITED "BASE_DB_IS_INITED"
 
+#define TABLE_USER_BASIC_DATA "basic_data"
+#define TABLE_ROUND_DATA "round_data"
+
+#define USER_NAME "testuser1"
+
 // Start scene
 const char s_startBackground[] = "play_start_start_back_normal.png";
 const char s_startNormal[] = "play_start_start_btn_normal.png";

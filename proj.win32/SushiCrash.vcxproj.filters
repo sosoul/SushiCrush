@@ -92,6 +92,14 @@
     <ClCompile Include="..\Classes\Common\GameDB.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\shell.c" />
+    <ClCompile Include="..\Classes\Utiles\sqlite3.c" />
+    <ClCompile Include="..\Classes\Common\DataBase.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\ModelService.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -166,6 +174,14 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common\GameDB.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\sqlite3.h" />
+    <ClInclude Include="..\Classes\Utiles\sqlite3ext.h" />
+    <ClInclude Include="..\Classes\Common\DataBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\ModelService.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

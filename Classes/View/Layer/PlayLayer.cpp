@@ -1947,7 +1947,7 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<D
 			}
 			else
 			{
-				moveVector.pushBack(MoveBy::create(DROP_TIME, Vec2(0.0f, SushiSprite::getContentWidth() * -1)));
+				moveVector.pushBack(MoveBy::create(DROP_TIME, Vec2(0.0f, (SushiSprite::getContentWidth() + SUSHI_GAP) * -1)));
 				auto placeAction = Place::create(positionOfItem(curRow, curCol));
 				moveVector.pushBack(placeAction);
 

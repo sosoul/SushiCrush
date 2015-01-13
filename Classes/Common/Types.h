@@ -23,5 +23,10 @@ enum GridType {
 	GRID_TYPE_DOUBLE_CREAM,  // 5
 };
 
+enum DataBaseDataType {
+	DATA_TYPE_STRING = 0,
+	DATA_TYPE_INT,  // 1
+};
+
 #endif // _TYPES_H_
 
