@@ -21,7 +21,7 @@ public:
 	void initUserData();
 
 	bool openDB();
-	bool execSQL(const char *sql);
+	bool execute(const char *sql);
 	char **rawQuery(const char *sql, int *row, int *column, char **result);
 
 	bool createTable(const std::string& sql);
@@ -30,13 +30,11 @@ public:
 	int getDataCount(const std::string& table_name, const std::string& key, int value);
 	int getDataCount(const std::string& table_name, const std::string& key, const std::string& value);
 
-	bool getTargetValue(const std::string& table_name, const std::string& key, int value, const std::string& target_key, int& target_value);
-	bool getTargetValue(const std::string& table_name, const std::string& key, int value, const std::string& target_key, std::string& target_value);
+	bool queryValue(const std::string& table_name, const std::string& condition_key, int condition_value, const std::string& target_key, int& target_value);
+	bool queryValue(const std::string& table_name, const std::string& condition_key, int condition_value, const std::string& target_key, std::string& target_value);
 
-	bool getTargetValue(const std::string& table_name, const std::string& key, const std::string& value, const std::string& target_key, int& target_value);
-	bool getTargetValue(const std::string& table_name, const std::string& key, const std::string& value, const std::string& target_key, std::string& target_value);
-
-	int getKeyNum(DataBaseDataType types[]);
+	bool queryValue(const std::string& table_name, const std::string& condition_key, const std::string& condition_value, const std::string& target_key, int& target_value);
+	bool queryValue(const std::string& table_name, const std::string& condition_key, const std::string& condition_value, const std::string& target_key, std::string& target_value);
 
 	int getDataCountBySql(const std::string& sql);
 

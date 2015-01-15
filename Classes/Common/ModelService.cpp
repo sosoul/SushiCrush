@@ -86,7 +86,7 @@ void ModelService::initUserData()
 		std::ostringstream os;
 		os << "insert into " << TABLE_USER_BASIC_DATA << "('user_name', 'current_round')  values('" << USER_NAME "', 0)";
 		std::string sql = os.str();
-		DataBase::getInstance()->execSQL(sql.c_str());
+		DataBase::getInstance()->execute(sql.c_str());
 	}
 }
 
@@ -192,18 +192,18 @@ void ModelService::setBestStar(int round, int star)
 
 bool ModelService::getScore(int round, int& score)
 {
-	return DataBase::getInstance()->getTargetValue(TABLE_ROUND_DATA, "round", round, "score", score);
+	return DataBase::getInstance()->queryValue(TABLE_ROUND_DATA, "round", round, "score", score);
 }
 bool ModelService::getBestScore(int round, int& score)
 {
-	return DataBase::getInstance()->getTargetValue(TABLE_ROUND_DATA, "round", round, "best_score", score);
+	return DataBase::getInstance()->queryValue(TABLE_ROUND_DATA, "round", round, "best_score", score);
 }
 bool ModelService::getBestStar(int round, int& star)
 {
-	return DataBase::getInstance()->getTargetValue(TABLE_ROUND_DATA, "round", round, "best_star", star);
+	return DataBase::getInstance()->queryValue(TABLE_ROUND_DATA, "round", round, "best_star", star);
 }
 
 bool ModelService::getCurrentRound(int& round)
 {
-	return DataBase::getInstance()->getTargetValue(TABLE_USER_BASIC_DATA, "user_name", USER_NAME, "current_round", round);
+	return DataBase::getInstance()->queryValue(TABLE_USER_BASIC_DATA, "user_name", USER_NAME, "current_round", round);
 }

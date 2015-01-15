@@ -91,7 +91,7 @@ bool DataBase::createTable(const std::string& sql)
 
 
 
-bool DataBase::execSQL(const char *sql)
+bool DataBase::execute(const char *sql)
 {
 	if (s_pointer_db == NULL)
 	{
@@ -124,13 +124,7 @@ char **DataBase::rawQuery(const char *sql, int *row, int *column, char **result)
 	return result;
 }
 
-int DataBase::getKeyNum(DataBaseDataType types[])
-{
-	int num = sizeof(types) / sizeof(DataBaseDataType);
-	return num;
-}
-
-bool DataBase::getTargetValue(const std::string& table_name, const std::string& key, int value, const std::string& target_key, int& target_value)
+bool DataBase::queryValue(const std::string& table_name, const std::string& key, int value, const std::string& target_key, int& target_value)
 {
 	std::ostringstream os;
 	os << "select " << target_key << " from " << table_name << " where " << key << " = " << value;
@@ -149,7 +143,7 @@ bool DataBase::getTargetValue(const std::string& table_name, const std::string& 
 	return false;
 }
 
-bool DataBase::getTargetValue(const std::string& table_name, const std::string& key, int value, const std::string& target_key, std::string& target_value)
+bool DataBase::queryValue(const std::string& table_name, const std::string& key, int value, const std::string& target_key, std::string& target_value)
 {
 	std::ostringstream os;
 	os << "select " << target_key << " from " << table_name << " where " << key << " = " << value;
@@ -167,7 +161,7 @@ bool DataBase::getTargetValue(const std::string& table_name, const std::string& 
 	return true;
 }
 
-bool DataBase::getTargetValue(const std::string& table_name, const std::string& key, const std::string& value, const std::string& target_key, int& target_value)
+bool DataBase::queryValue(const std::string& table_name, const std::string& key, const std::string& value, const std::string& target_key, int& target_value)
 {
 	std::ostringstream os;
 	os << "select " << target_key << " from " << table_name << " where " << key << " = '" << value << "'";
@@ -186,7 +180,7 @@ bool DataBase::getTargetValue(const std::string& table_name, const std::string& 
 	return false;
 }
 
-bool DataBase::getTargetValue(const std::string& table_name, const std::string& key, const std::string& value, const std::string& target_key, std::string& target_value)
+bool DataBase::queryValue(const std::string& table_name, const std::string& key, const std::string& value, const std::string& target_key, std::string& target_value)
 {
 	std::ostringstream os;
 	os << "select " << target_key << " from " << table_name << " where " << key << " = '" << value << "'";
@@ -281,7 +275,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		std::string sql = os.str();
 
 		CCLOG("updateData sql %s", sql);
-		execSQL(sql.c_str());
+		execute(sql.c_str());
 	}
 	else
 	{
@@ -299,7 +293,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		std::string sql = os.str();
 
 		CCLOG("updateData sql %s", sql);
-		execSQL(sql.c_str());
+		execute(sql.c_str());
 	}
 }
 
@@ -330,7 +324,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		std::string sql = os.str();
 
 		CCLOG("updateData sql %s", sql);
-		execSQL(sql.c_str());
+		execute(sql.c_str());
 	}
 	else
 	{
@@ -348,6 +342,6 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		std::string sql = os.str();
 
 		CCLOG("updateData sql %s", sql);
-		execSQL(sql.c_str());
+		execute(sql.c_str());
 	}
 }
