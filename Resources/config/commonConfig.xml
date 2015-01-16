@@ -12,6 +12,7 @@
         <map>round1.tmx</map>
 		<target>
 			<score>50</score>
+			<jelly>9</jelly>
 		</target>
 		<moves>10</moves>
     </round>
@@ -19,6 +20,9 @@
         <map>round2.tmx</map>
 		<target>
 			<score>60</score>
+			<doubleJelly>10</doubleJelly>
+			<cream>10</cream>
+			<doubleCream>10</doubleCream>
 		</target>
 		<moves>15</moves>
     </round>

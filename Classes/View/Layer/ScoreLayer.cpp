@@ -56,7 +56,11 @@ bool ScoreLayer::init() {
 
 	// init score
 	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	onScoreChanged((Ref*)(intptr_t)roundInfo.m_gotScore);
+	int gotScore = 0;
+	MapTarget::const_iterator it = roundInfo.m_mapGotTarget.find(TARGET_TYPE_SCORE);
+	if (roundInfo.m_mapGotTarget.end() != it)
+		gotScore = it->second;
+	onScoreChanged((Ref*)(intptr_t)gotScore);
 	return true;
 }
 

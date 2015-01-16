@@ -80,7 +80,7 @@ private:
 
 	void removeSushi();
 	void actionEndCallback(Node *node);
-	void explodeSushi(SushiSprite *sushi, int* score);
+	void explodeSushi(SushiSprite *sushi, int* score, MapTarget* map);
 
 	void explode4HorizonytalLineSushi(Point point);
 	void explode4VerticalLineSushi(Point point);
@@ -109,7 +109,7 @@ private:
 	bool isLock(int row, int col);
 	bool canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex);
 	void didShowScoreNumber(LabelBMFont* label);
-	void changeGridType(GridSprite* grid, GridType type, bool isNeighbor);
+	void changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map);
 	
 };
 

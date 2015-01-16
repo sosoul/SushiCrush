@@ -1,6 +1,6 @@
 #include "Controller/GameController.h"
 
-#include "Common/ConfigService.h"
+
 #include "Common/Messages.h"
 #include "Common/Resource.h"
 
@@ -42,7 +42,11 @@ void GameController::onSwapSushiCompleted() {
 
 void GameController::onExplosionStopped() {
 	if (0 == m_curRoundInfo.m_leftMoves) {
-		if (m_curRoundInfo.m_gotScore < m_curRoundInfo.m_targetScroe) {
+		if (m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_SCORE] &&
+			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_JELLY] &&
+			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_JELLY] &&
+			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_CREAM] &&
+			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_CREAM]) {
 			NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
 			return;
 		}
@@ -74,14 +78,47 @@ void GameController::onRoundStart() {
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_START, (Ref*)(&m_curRoundInfo));
 }
 
-void GameController::onRemoveSushiCompleted(int score) {
+void GameController::onRemoveSushiCompleted(const MapTarget& map) {
 	// TODO
 	if (m_curRoundInfo.m_leftMoves == m_curRoundInfo.m_totalMoves)
 	{
 		return;
 	}
-	m_curRoundInfo.m_gotScore += score;
-	scoreChanged(m_curRoundInfo.m_gotScore);
+	MapTarget::const_iterator it = map.find(TARGET_TYPE_SCORE);
+	if (map.end() != it) {
+		int score = it->second;
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] += score;
+	}
+	scoreChanged(m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE]);
+
+	it = map.find(TARGET_TYPE_JELLY);
+	if (map.end() != it) {
+		int jelly = it->second;
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] += jelly;
+		targetChanged();
+	}
+
+
+	it = map.find(TARGET_TYPE_DOUBLE_JELLY);
+	if (map.end() != it) {
+		int doubleDelly = it->second;
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] += doubleDelly;
+		targetChanged();
+	}
+
+	it = map.find(TARGET_TYPE_CREAM);
+	if (map.end() != it) {
+		int cream = it->second;
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] += cream;
+		targetChanged();
+	}
+
+	it = map.find(TARGET_TYPE_DOUBLE_CREAM);
+	if (map.end() != it) {
+		int doubleCream = it->second;
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] += it->second;
+		targetChanged();
+	}
 	
 }
 
@@ -93,6 +130,10 @@ void GameController::scoreChanged(int gotScore) {
 	NotificationCenter::getInstance()->postNotification(MSG_SCORE_CHANGED, (Ref*)(intptr_t)gotScore);
 }
 
+void GameController::targetChanged() {
+	NotificationCenter::getInstance()->postNotification(MSG_TARGET_CHANGED, (Ref*)nullptr);
+}
+
 void GameController::writeToDB(const CurRoundInfo& m_curRoundInfo) {
 }
 
@@ -100,8 +141,8 @@ void GameController::setCurRound(int round) {
 	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
 	const RoundInfo* roundInfo = ConfigService::getInstance()->getRoundInfo(round);
 	m_curRoundInfo.m_round = round;
-	m_curRoundInfo.m_gotScore = 0;
-	m_curRoundInfo.m_targetScroe = roundInfo->_targetScore;
+	m_curRoundInfo.m_mapTarget = roundInfo->_mapTarget;
+
 	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
 	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
 }

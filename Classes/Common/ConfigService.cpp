@@ -93,8 +93,32 @@ void ConfigService::loadConfig() {
 
 			// targetScore
 			if (XMLElement* targetEle = roundEle->FirstChildElement("target")) {
-				if (XMLElement* scoreEle = targetEle->FirstChildElement("score"))
-					scoreEle->QueryIntText(&item._targetScore);
+				XMLElement* targetItemEle = nullptr;
+				if (targetItemEle = targetEle->FirstChildElement("score")) {
+					int score;
+					targetItemEle->QueryIntText(&score);
+					item._mapTarget[TARGET_TYPE_SCORE] = score;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("jelly")) {
+					int jelly;
+					targetItemEle->QueryIntText(&jelly);
+					item._mapTarget[TARGET_TYPE_JELLY] = jelly;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("doubleJelly")) {
+					int doubleJelly;
+					targetItemEle->QueryIntText(&doubleJelly);
+					item._mapTarget[TARGET_TYPE_DOUBLE_JELLY] = doubleJelly;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("cream")) {
+					int cream;
+					targetItemEle->QueryIntText(&cream);
+					item._mapTarget[TARGET_TYPE_CREAM] = cream;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("doubleCream")) {
+					int doubleCream;
+					targetItemEle->QueryIntText(&doubleCream);
+					item._mapTarget[TARGET_TYPE_DOUBLE_CREAM] = doubleCream;
+				}
 			}
 
 			// moves

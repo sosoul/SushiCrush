@@ -75,10 +75,60 @@ bool PostPlayLayer::init()
 	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelTargetX, visibleOrigin.y + kLabelTargetY));
 	addChild(labelTarget);
 
-	int target = roundInfo.m_targetScroe;
-	int score = roundInfo.m_gotScore;
+	int targetScore = 0, gotScore = 0;
+	const MapTarget& targetMap = roundInfo.m_mapTarget;
+	MapTarget::const_iterator itTarget = targetMap.find(TARGET_TYPE_SCORE);
+	if (targetMap.end() != itTarget)
+		targetScore = itTarget->second;
+	const MapTarget& gotTargetMap = roundInfo.m_mapGotTarget;
+	MapTarget::const_iterator itGotTarget = gotTargetMap.find(TARGET_TYPE_SCORE);
+	if (gotTargetMap.end() != itGotTarget)
+		gotScore = itGotTarget->second;
+	if (nextBtn) {
+		bool isPass = true;
+		if (gotScore < targetScore)
+			isPass = false;
 
-	if (score >= target)
+		if (isPass) {
+			itTarget = targetMap.find(TARGET_TYPE_JELLY);
+			itGotTarget = gotTargetMap.find(TARGET_TYPE_JELLY);
+			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
+				&& itTarget->second > itGotTarget->second)
+				isPass = false;
+		}
+		
+		if (isPass) {
+			itTarget = targetMap.find(TARGET_TYPE_DOUBLE_JELLY);
+			itGotTarget = gotTargetMap.find(TARGET_TYPE_DOUBLE_JELLY);
+			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
+				&& itTarget->second > itGotTarget->second)
+				isPass = false;
+		}
+
+		if (isPass) {
+			itTarget = targetMap.find(TARGET_TYPE_CREAM);
+			itGotTarget = gotTargetMap.find(TARGET_TYPE_CREAM);
+			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
+				&& itTarget->second > itGotTarget->second)
+				isPass = false;
+		}
+
+		if (isPass) {
+			itTarget = targetMap.find(TARGET_TYPE_DOUBLE_CREAM);
+			itGotTarget = gotTargetMap.find(TARGET_TYPE_DOUBLE_CREAM);
+			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
+				&& itTarget->second > itGotTarget->second)
+				isPass = false;
+		}
+		
+		if (isPass)
+			nextBtn->setVisible(true);
+		else
+			nextBtn->setVisible(false);
+	}
+	
+
+	if (gotScore >= targetScore)
 	{
 		auto sprite1 = Sprite::createWithSpriteFrameName(s_starLeftDone);
 		sprite1->setPosition(Vec2(visibleOrigin.x + kStar1X, visibleOrigin.y + kStar1Y));
@@ -90,7 +140,7 @@ bool PostPlayLayer::init()
 		sprite1->setPosition(Vec2(visibleOrigin.x + kStar1X, visibleOrigin.y +  kStar1Y));
 		addChild(sprite1);
 	}
-	if (score >= target * 2)
+	if (gotScore >= targetScore * 2)
 	{
 		auto sprite2 = Sprite::createWithSpriteFrameName(s_starMidDone);
 		sprite2->setPosition(Vec2(visibleOrigin.x + kStar2X, visibleOrigin.y + kStar2Y));
@@ -102,7 +152,7 @@ bool PostPlayLayer::init()
 		sprite2->setPosition(Vec2(visibleOrigin.x + kStar2X, visibleOrigin.y + kStar2Y));
 		addChild(sprite2);
 	}
-	if (score >= target * 3)
+	if (gotScore >= targetScore * 3)
 	{
 		auto sprite3 = Sprite::createWithSpriteFrameName(s_starRightDone);
 		sprite3->setPosition(Vec2(visibleOrigin.x + kStar3X, visibleOrigin.y + kStar3Y));

@@ -48,11 +48,11 @@ void GuideMapLayer::createRoundButton(int round, bool isUnlock, const Point& pos
 	std::string selectedButton = s_roundButtonsSelected[round];
 	if (isUnlock) {
 		normalButton = s_roundButtonsNormal[round];
-		//roundButton->setTouchEnabled(true);
+		roundButton->setTouchEnabled(true);
 	}
 	else {
 		normalButton = selectedButton;
-		//roundButton->setTouchEnabled(false);
+		roundButton->setTouchEnabled(false);
 	}
 	roundButton->loadTextures(normalButton, selectedButton, "", ui::Button::TextureResType::PLIST);
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();

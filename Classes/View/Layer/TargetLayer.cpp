@@ -36,6 +36,9 @@ bool TargetLayer::init()
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(TargetLayer::onRoundReady),
 		MSG_ROUND_READY, nullptr);
 
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(TargetLayer::onTargetChanged),
+		MSG_TARGET_CHANGED, nullptr);
+
 	// background
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
@@ -51,15 +54,103 @@ bool TargetLayer::init()
 	addChild(labelTitle, 0, kLabelTitleTag);
 
 	// label of target
-	auto labelTarget = LabelAtlas::create("", "fonts/tuffy_bold_italic-charmap.plist");
-	labelTarget->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
-	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelTargetX, visibleOrigin.y + visibleSize.height + kLabelTargetY));
-	addChild(labelTarget, 0, kLabelTargetTag);
-
 	// init target
+	const int kX1 = visibleOrigin.x + 150;
+	const int kX2 = kX1 + 150;
+	const int kDeltaX = -40;
+	const int kStartY = visibleOrigin.y + visibleSize.height - 100;
+	const int kDeltaY = -40;
+	int x = kX1;
+	int y = kStartY;
 	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	int target = roundInfo.m_targetScroe;
-	labelTarget->setString(StringUtils::toString(target));
+	const MapTarget& target = roundInfo.m_mapTarget;
+	MapTarget::const_iterator it = target.find(TARGET_TYPE_SCORE);
+	if (target.end() != it) {
+		auto score_label = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		score_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		score_label->setPosition(Vec2(x, y));
+		if (x == kX2)
+			y += kDeltaY;
+		addChild(score_label);
+		score_label->setString(StringUtils::toString(it->second));
+	}
+	it = target.find(TARGET_TYPE_JELLY);
+	if (target.end() != it) {
+		auto jelly_label = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		jelly_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		x = (x == kX1 ? kX2 : kX1);
+		jelly_label->setPosition(Vec2(x, y));
+		addChild(jelly_label);
+		jelly_label->setString("/ " + StringUtils::toString(it->second));
+
+		got_jelly_label_ = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		got_jelly_label_->retain();
+		got_jelly_label_->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		got_jelly_label_->setPosition(Vec2(x + kDeltaX, y));
+		addChild(got_jelly_label_);
+		got_jelly_label_->setString("0");
+
+		if (x == kX2)
+			y += kDeltaY;
+	}
+	it = target.find(TARGET_TYPE_DOUBLE_JELLY);
+	if (target.end() != it) {
+		auto double_jelly_label = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		double_jelly_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		x = (x == kX1 ? kX2 : kX1);
+		double_jelly_label->setPosition(Vec2(x, y));
+		addChild(double_jelly_label);
+		double_jelly_label->setString("/ " + StringUtils::toString(it->second));
+
+		got_double_jelly_label_ = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		got_double_jelly_label_->retain();
+		got_double_jelly_label_->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		got_double_jelly_label_->setPosition(Vec2(x + kDeltaX, y));
+		addChild(got_double_jelly_label_);
+		got_double_jelly_label_->setString("0");
+
+		if (x == kX2)
+			y += kDeltaY;
+	}
+	it = target.find(TARGET_TYPE_CREAM);
+	if (target.end() != it) {
+		auto cream_label = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		cream_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		x = (x == kX1 ? kX2 : kX1);
+		cream_label->setPosition(Vec2(x, y));
+		addChild(cream_label);
+		cream_label->setString("/ " + StringUtils::toString(it->second));
+
+		got_cream_label_ = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		got_cream_label_->retain();
+		got_cream_label_->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		got_cream_label_->setPosition(Vec2(x + kDeltaX, y));
+		addChild(got_cream_label_);
+		got_cream_label_->setString("0");
+
+		if (x == kX2)
+			y += kDeltaY;
+	}
+	it = target.find(TARGET_TYPE_DOUBLE_CREAM);
+	if (target.end() != it) {
+		auto double_cream_label = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		double_cream_label->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		x = (x == kX1 ? kX2 : kX1);
+		double_cream_label->setPosition(Vec2(x, y));
+		addChild(double_cream_label);
+		double_cream_label->setString("/ " + StringUtils::toString(it->second));
+
+		got_double_cream_label_ = LabelBMFont::create("Target:", "fonts/boundsTestFont.fnt");
+		got_double_cream_label_->retain();
+		got_double_cream_label_->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+		got_double_cream_label_->setPosition(Vec2(x + kDeltaX, y));
+		addChild(got_double_cream_label_);
+		got_double_cream_label_->setString("0");
+
+		if (x == kX2)
+			y += kDeltaY;
+	}
+	
 	return true;
 }
 
@@ -70,10 +161,25 @@ void TargetLayer::onRoundEnd(Ref* obj)
 
 void TargetLayer::onRoundReady(Ref* obj)
 {
-	CurRoundInfo* roundInfo = (CurRoundInfo*)obj;
-	if (!roundInfo)
-		return;
-	auto labelTarget = (LabelAtlas*)getChildByTag(kLabelTargetTag);
-	int target = roundInfo->m_targetScroe;
-	labelTarget->setString(StringUtils::toString(target));
+}
+
+void TargetLayer::onTargetChanged(Ref* obj) {
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	const MapTarget& mapTarget = roundInfo.m_mapGotTarget;
+	MapTarget::const_iterator it = mapTarget.find(TARGET_TYPE_JELLY);
+	if (mapTarget.end() != it && got_jelly_label_) {
+		got_jelly_label_->setString(StringUtils::toString(it->second));
+	}
+	it = mapTarget.find(TARGET_TYPE_DOUBLE_JELLY);
+	if (mapTarget.end() != it && got_double_jelly_label_) {
+		got_double_jelly_label_->setString(StringUtils::toString(it->second));
+	}
+	it = mapTarget.find(TARGET_TYPE_CREAM);
+	if (mapTarget.end() != it && got_cream_label_) {
+		got_cream_label_->setString(StringUtils::toString(it->second));
+	}
+	it = mapTarget.find(TARGET_TYPE_DOUBLE_CREAM);
+	if (mapTarget.end() != it && got_double_cream_label_) {
+		got_double_cream_label_->setString(StringUtils::toString(it->second));
+	}
 }

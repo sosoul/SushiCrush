@@ -43,7 +43,10 @@ bool TargetTipsLayer::init() {
 	addChild(labelTarget, 0, kLabelTargetTag);
 
 	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	int score = roundInfo.m_targetScroe;
+	int score = 0;
+	MapTarget::const_iterator it = roundInfo.m_mapTarget.find(TARGET_TYPE_SCORE);
+	if (roundInfo.m_mapTarget.end() != it)
+		score = it->second;
 	int moves = roundInfo.m_totalMoves;
 	labelTarget->setString("get at least " + StringUtils::toString(score) + " in " + StringUtils::toString(moves) + " moves");
 

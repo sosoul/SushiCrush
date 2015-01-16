@@ -16,9 +16,13 @@ public:
 
 	void onRoundEnd(Ref* obj);
 	void onRoundReady(Ref* obj);
+	void onTargetChanged(Ref* obj);
 
 private:
-	
+	LabelBMFont* got_jelly_label_;
+	LabelBMFont* got_double_jelly_label_;
+	LabelBMFont* got_cream_label_;
+	LabelBMFont* got_double_cream_label_;
 
 };
 

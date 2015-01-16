@@ -2,6 +2,7 @@
 #define __CONTROLLER_GAME_CONTROLLER_H__
 
 #include "Common/Types.h"
+#include "Common/ConfigService.h"
 
 #define TOTAL_ROUND	(10)
 
@@ -15,14 +16,12 @@ struct CurRoundInfo : public Ref {
 	int m_round;
 	int m_totalMoves;
 	int m_leftMoves;
-	int m_gotScore;
-	int m_targetScroe;
+	MapTarget m_mapTarget;
+	MapTarget m_mapGotTarget;
 
 	CurRoundInfo() : m_round(0),
 		m_totalMoves(0),
-		m_leftMoves(0),
-		m_gotScore(0),
-		m_targetScroe(0) {
+		m_leftMoves(0) {
 	}
 };
 
@@ -43,13 +42,14 @@ public:
 	void setCurRound(int round);
 
 	void onSwapSushiCompleted();
-	void onRemoveSushiCompleted(int score);
+	void onRemoveSushiCompleted(const MapTarget& map);
 	void onExplosionStopped();
 	void onRoundReady(READY_ACTION_TYPE actionType);
 	void onRoundStart();
 
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
+	void targetChanged();
 
 	void ReadUnlockInfo();
 	void UpdateUnlockInfo(int round, bool isUnlock);

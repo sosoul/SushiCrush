@@ -21,8 +21,18 @@ struct GridInfo {
 	GridInfo() : _score(0) {}
 };
 
+enum TargetType {
+	TARGET_TYPE_SCORE = 0,
+	TARGET_TYPE_JELLY,
+	TARGET_TYPE_DOUBLE_JELLY,
+	TARGET_TYPE_CREAM,
+	TARGET_TYPE_DOUBLE_CREAM,
+};
+
+
 typedef std::vector<int> VecProducer;
 typedef std::map<int, int> MapPortal;
+typedef std::map<TargetType, int> MapTarget;
 
 struct RoundInfo {
 	std::string _mapFile;
@@ -31,20 +41,18 @@ struct RoundInfo {
 	VecProducer _vecProducer;
 	MapPortal _mapPortalSrcToDest;
 	MapPortal _mapPortalDestToSrc;
-	int _targetScore;
+	MapTarget _mapTarget;
 	int _moves;
 
-	RoundInfo() : _targetScore(0), _moves(0) {
+	RoundInfo() : _moves(0) {
 		memset((void*)_clipper, 0, MATRIX_WIDTH*MATRIX_HEIGHT);
 		memset((void*)_matrix, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
 	}
 };
 
-
 typedef std::map<int, SushiInfo> MapSushiInfo;
 typedef std::map<int, GridInfo> MapGridInfo;
 typedef std::map<int, RoundInfo> MapRoundInfo;
-
 
 class ConfigService : public Ref
 {

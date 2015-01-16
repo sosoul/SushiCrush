@@ -437,6 +437,8 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 		}
 
 		moveVector.pushBack(MoveTo::create(DROP_TIME, endPosition));
+		moveVector.pushBack(MoveBy::create(0.1, Vec2(0, 2)));
+		moveVector.pushBack(MoveBy::create(0.1, Vec2(0, -2)));
 		auto sequence = Sequence::create(moveVector);
 		sushi->runAction(sequence);
 	}
@@ -1128,6 +1130,7 @@ void PlayLayer::removeSushi()
 	m_isAnimationing = true;
 
 	int score = 0;
+	MapTarget map;
 
 	for (int i = 0; i < m_height * m_width; i++) {
 		SushiSprite *sushi = m_sushiMatrix[i];
@@ -1154,12 +1157,13 @@ void PlayLayer::removeSushi()
 			} else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {
 				explode5CrossLineSushi(sushi);
 			}
-			explodeSushi(sushi, &score);
+			explodeSushi(sushi, &score, &map);
 		}
 	}
-	if (0 != score)
+	if (!map.empty() || score)
 	{
-		GameController::getInstance()->onRemoveSushiCompleted(score);
+		map[TARGET_TYPE_SCORE] = score;
+		GameController::getInstance()->onRemoveSushiCompleted(map);
 	}
 	else {
 		if (isLock())
@@ -1267,7 +1271,7 @@ void PlayLayer::actionEndCallback(Node *node)
 	sushi->removeFromParent();
 }
 
-void PlayLayer::explodeSushi(SushiSprite *sushi, int* score)
+void PlayLayer::explodeSushi(SushiSprite *sushi, int* score, MapTarget* map)
 {
 	if (!sushi)
 		return;
@@ -1320,23 +1324,23 @@ void PlayLayer::explodeSushi(SushiSprite *sushi, int* score)
 	int row = sushi->getRow();
 	int col = sushi->getCol();
 	GridSprite* grid = m_gridMatrix[row*m_width + col];
-	changeGridType(grid, getGridType(row, col), false);
+	changeGridType(grid, getGridType(row, col), false, map);
 	
 	if (isValidRow(row - 1)) {
-		changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true);
+		changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true, map);
 	}
 	if (isValidCol(col + 1)) {
-		changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true);
+		changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true, map);
 	}
 	if (isValidRow(row + 1)) {
-		changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true);
+		changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true, map);
 	}
 	if (isValidCol(col - 1)) {
-		changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true);
+		changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true, map);
 	}
 }
 
-void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor) {
+void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map) {
 	if (!grid)
 		return;
 	if (isNeighbor) {
@@ -1344,9 +1348,23 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor)
 		{
 		case GRID_TYPE_CREAM:
 			grid->setGridType(GRID_TYPE_DOUBLE_JELLY);
+			if (map) {
+				MapTarget::iterator it = map->find(TARGET_TYPE_CREAM);
+				if (map->end() == it)
+					map->insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
+				it = map->find(TARGET_TYPE_CREAM);
+				++it->second;
+			}
 			break;
 		case GRID_TYPE_DOUBLE_CREAM:
 			grid->setGridType(GRID_TYPE_CREAM);
+			if (map) {
+				MapTarget::iterator it = map->find(TARGET_TYPE_DOUBLE_CREAM);
+				if (map->end() == it)
+					map->insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
+				it = map->find(TARGET_TYPE_DOUBLE_CREAM);
+				++it->second;
+			}
 			break;
 		default:
 			break;
@@ -1356,9 +1374,23 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor)
 		{
 		case GRID_TYPE_JELLY:
 			grid->setGridType(GIRD_TYPE_NORMAL);
+			if (map) {
+				MapTarget::iterator it = map->find(TARGET_TYPE_JELLY);
+				if (map->end() == it)
+					map->insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
+				it = map->find(TARGET_TYPE_JELLY);
+				++it->second;
+			}
 			break;
 		case GRID_TYPE_DOUBLE_JELLY:
 			grid->setGridType(GRID_TYPE_JELLY);
+			if (map) {
+				MapTarget::iterator it = map->find(TARGET_TYPE_DOUBLE_JELLY);
+				if (map->end() == it)
+					map->insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
+				it = map->find(TARGET_TYPE_DOUBLE_JELLY);
+				++it->second;
+			}
 			break;
 		default:
 			break;
@@ -1951,7 +1983,6 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<D
 				auto placeAction = Place::create(positionOfItem(curRow, curCol));
 				moveVector.pushBack(placeAction);
 
-
 				needClone = true;
 				moveVectorClone.pushBack(Place::create(positionOfItem(curRow + 1, curCol)));
 				moveVectorClone.pushBack(Show::create());
@@ -1961,6 +1992,8 @@ void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<D
 			}
 			lastIndex = curIndex;
 		}
+		moveVector.pushBack(MoveBy::create(0.1, Vec2(0, 2)));
+		moveVector.pushBack(MoveBy::create(0.1, Vec2(0, -2)));
 		auto sequence = Sequence::create(moveVector);
 		sushi->runAction(sequence);
 		if (needClone)
