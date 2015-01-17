@@ -184,6 +184,9 @@
     <ClInclude Include="..\Classes\Common\ModelService.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Common\Utils.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

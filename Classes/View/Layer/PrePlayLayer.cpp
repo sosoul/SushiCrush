@@ -75,10 +75,7 @@ bool PrePlayLayer::init()
 
 
 	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	int target = 0;
-	MapTarget::const_iterator it = roundInfo.m_mapTarget.find(TARGET_TYPE_SCORE);
-	if (roundInfo.m_mapTarget.end() != it)
-		target = it->second;
+	int target = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
 	auto labelTarget = LabelAtlas::create("Target:" + StringUtils::toString(target),
 		"fonts/tuffy_bold_italic-charmap.plist");
 	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE);

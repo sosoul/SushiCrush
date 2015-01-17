@@ -175,6 +175,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Common\TextMessage.h" />
     <ClInclude Include="..\Classes\Common\TiledMapParser.h" />
     <ClInclude Include="..\Classes\Common\Types.h" />
+    <ClInclude Include="..\Classes\Common\Utils.h" />
     <ClInclude Include="..\Classes\Controller\GameController.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\Utiles\sqlite3.h" />

@@ -84,42 +84,22 @@ void GameController::onRemoveSushiCompleted(const MapTarget& map) {
 	{
 		return;
 	}
-	MapTarget::const_iterator it = map.find(TARGET_TYPE_SCORE);
-	if (map.end() != it) {
-		int score = it->second;
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] += score;
-	}
-	scoreChanged(m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE]);
-
-	it = map.find(TARGET_TYPE_JELLY);
-	if (map.end() != it) {
-		int jelly = it->second;
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] += jelly;
-		targetChanged();
-	}
-
-
-	it = map.find(TARGET_TYPE_DOUBLE_JELLY);
-	if (map.end() != it) {
-		int doubleDelly = it->second;
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] += doubleDelly;
-		targetChanged();
-	}
-
-	it = map.find(TARGET_TYPE_CREAM);
-	if (map.end() != it) {
-		int cream = it->second;
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] += cream;
-		targetChanged();
-	}
-
-	it = map.find(TARGET_TYPE_DOUBLE_CREAM);
-	if (map.end() != it) {
-		int doubleCream = it->second;
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] += it->second;
-		targetChanged();
+	MapTarget new_map = map;
+	
+	if (0 != new_map[TARGET_TYPE_SCORE]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] += new_map[TARGET_TYPE_SCORE];
+		scoreChanged(m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE]);
 	}
 	
+	if (0 != new_map[TARGET_TYPE_JELLY])
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] += new_map[TARGET_TYPE_JELLY];
+	if (0 != new_map[TARGET_TYPE_DOUBLE_JELLY])
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] += new_map[TARGET_TYPE_DOUBLE_JELLY];
+	if (0 != new_map[TARGET_TYPE_DOUBLE_CREAM])
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] += new_map[TARGET_TYPE_DOUBLE_CREAM];
+
+	if (!map.empty())
+		targetChanged();
 }
 
 void GameController::movesChanged(int leftMoves) {
@@ -161,4 +141,12 @@ void GameController::UpdateUnlockInfo(int round, bool isUnlock) {
 bool GameController::isUnlock(int round) {
 	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
 	return _roundUnlock[round];
+}
+
+int GameController::getTargetValue(TargetType type) {
+	return m_curRoundInfo.m_mapTarget[type];
+}
+
+int GameController::getGotTargetValue(TargetType type) {
+	return m_curRoundInfo.m_mapGotTarget[type];
 }

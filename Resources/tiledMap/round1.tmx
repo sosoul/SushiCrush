@@ -13,12 +13,12 @@
    </properties>
   </tile>
  </tileset>
- <layer name="matrixLayer" width="7" height="8" visible="0">
+ <layer name="matrixLayer" width="7" height="8">
   <data encoding="base64" compression="zlib">
    eJxjZWBgYKUAsyBhaslREwMAeRABEA==
   </data>
  </layer>
- <layer name="clipperLayer" width="7" height="8" visible="0">
+ <layer name="clipperLayer" width="7" height="8">
   <data encoding="base64" compression="zlib">
    eJxjZWBgYB3GGAB9kAEZ
   </data>

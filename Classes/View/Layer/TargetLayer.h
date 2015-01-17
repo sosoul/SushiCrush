@@ -19,6 +19,10 @@ public:
 	void onTargetChanged(Ref* obj);
 
 private:
+	void createTargetPanels();
+	void createTargetPanel(int* x, int* y, int value, const std::string image, LabelBMFont** targetLabel);
+
+	LabelBMFont* got_score_label_;
 	LabelBMFont* got_jelly_label_;
 	LabelBMFont* got_double_jelly_label_;
 	LabelBMFont* got_cream_label_;

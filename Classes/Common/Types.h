@@ -28,5 +28,13 @@ enum DataBaseDataType {
 	DATA_TYPE_INT,  // 1
 };
 
+enum TargetType {
+	TARGET_TYPE_SCORE = 0,
+	TARGET_TYPE_JELLY,
+	TARGET_TYPE_DOUBLE_JELLY,
+	TARGET_TYPE_CREAM,
+	TARGET_TYPE_DOUBLE_CREAM,
+};
+
 #endif // _TYPES_H_
 

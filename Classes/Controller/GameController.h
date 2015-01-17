@@ -22,6 +22,17 @@ struct CurRoundInfo : public Ref {
 	CurRoundInfo() : m_round(0),
 		m_totalMoves(0),
 		m_leftMoves(0) {
+		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_SCORE, 0));
+		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
+		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
+		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
+		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
+
+		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_SCORE, 0));
+		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
+		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
+		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
+		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
 	}
 };
 
@@ -39,6 +50,8 @@ public:
 	void init();
 	void uninit();
 	const CurRoundInfo& get_cur_round_info() { return m_curRoundInfo; }
+	int getTargetValue(TargetType type);
+	int getGotTargetValue(TargetType type);
 	void setCurRound(int round);
 
 	void onSwapSushiCompleted();

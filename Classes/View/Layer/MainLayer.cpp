@@ -55,11 +55,6 @@ bool MainLayer::init() {
 	background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	addChild(background);
 
-	m_targetLayer = TargetLayer::create();
-	m_targetLayer->retain();
-	m_targetLayer->setCascadeColorEnabled(true);
-	addChild(m_targetLayer);
-
 	m_movesLayer = MovesLayer::create();
 	m_movesLayer->retain();
 	m_movesLayer->setCascadeColorEnabled(true);
@@ -100,13 +95,19 @@ void MainLayer::onRoundReady(Ref* obj) {
 }
 
 void MainLayer::onRoundEnd(Ref* obj) {
+	MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
+	auto hideAction1 = Hide::create();
 	// play layer - run a hide action.
 	if (m_playLayer) {
-		MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
-		auto hideAction1 = Hide::create();
 		Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 		m_playLayer->setPosition(visibleOrigin.x, visibleOrigin.y);
 		m_playLayer->runAction(Sequence::create(actMoveUp, hideAction1,
+			CallFunc::create(CC_CALLBACK_0(MainLayer::onPlayLayerActionEnded, this)), nullptr));
+	}
+
+	// target layer - run a hide action.
+	if (m_targetLayer) {
+		m_targetLayer->runAction(Sequence::create(actMoveUp, hideAction1,
 			CallFunc::create(CC_CALLBACK_0(MainLayer::onPlayLayerActionEnded, this)), nullptr));
 	}
 }
@@ -115,6 +116,10 @@ void MainLayer::onPlayLayerActionEnded() {
 	m_playLayer->removeFromParentAndCleanup(true);
 	m_playLayer->release();
 	m_playLayer = nullptr;
+
+	m_targetLayer->removeFromParentAndCleanup(true);
+	m_targetLayer->release();
+	m_targetLayer = nullptr;
 }
 
 void MainLayer::onRoundStart(Ref* obj) {
@@ -152,6 +157,13 @@ void MainLayer::onRoundStartActionEnd() {
 	m_playLayer->setPosition(0, 0 + 500);
 	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
 	m_playLayer->runAction(Sequence::create(actMoveDown, nullptr));
+
+	if (!m_targetLayer) {
+		m_targetLayer = TargetLayer::create();
+		m_targetLayer->retain();
+		m_targetLayer->setCascadeColorEnabled(true);
+		addChild(m_targetLayer);
+	}
 
 	if (m_targetTipsLayer) {
 		m_targetTipsLayer->removeFromParentAndCleanup(true);

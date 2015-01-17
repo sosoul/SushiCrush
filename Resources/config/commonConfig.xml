@@ -4,7 +4,7 @@
     <round id="0">
         <map>round0.tmx</map>
 		<target>
-			<score>30</score>
+			<score>800</score>
 		</target>
 		<moves>10</moves>
     </round>
@@ -20,9 +20,8 @@
         <map>round2.tmx</map>
 		<target>
 			<score>60</score>
-			<doubleJelly>10</doubleJelly>
-			<cream>10</cream>
-			<doubleCream>10</doubleCream>
+			<doubleJelly>3</doubleJelly>
+			<cream>1</cream>
 		</target>
 		<moves>15</moves>
     </round>
@@ -30,6 +29,7 @@
         <map>round3.tmx</map>
 		<target>
 			<score>800</score>
+			<jelly>6</jelly>
 		</target>
 		<moves>20</moves>
     </round>

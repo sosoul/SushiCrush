@@ -75,49 +75,34 @@ bool PostPlayLayer::init()
 	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelTargetX, visibleOrigin.y + kLabelTargetY));
 	addChild(labelTarget);
 
-	int targetScore = 0, gotScore = 0;
-	const MapTarget& targetMap = roundInfo.m_mapTarget;
-	MapTarget::const_iterator itTarget = targetMap.find(TARGET_TYPE_SCORE);
-	if (targetMap.end() != itTarget)
-		targetScore = itTarget->second;
-	const MapTarget& gotTargetMap = roundInfo.m_mapGotTarget;
-	MapTarget::const_iterator itGotTarget = gotTargetMap.find(TARGET_TYPE_SCORE);
-	if (gotTargetMap.end() != itGotTarget)
-		gotScore = itGotTarget->second;
+	int gotScore = GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SCORE);
+	int targetScore = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
 	if (nextBtn) {
 		bool isPass = true;
 		if (gotScore < targetScore)
 			isPass = false;
 
 		if (isPass) {
-			itTarget = targetMap.find(TARGET_TYPE_JELLY);
-			itGotTarget = gotTargetMap.find(TARGET_TYPE_JELLY);
-			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
-				&& itTarget->second > itGotTarget->second)
+			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_JELLY) <
+				GameController::getInstance()->getTargetValue(TARGET_TYPE_JELLY))
 				isPass = false;
 		}
 		
 		if (isPass) {
-			itTarget = targetMap.find(TARGET_TYPE_DOUBLE_JELLY);
-			itGotTarget = gotTargetMap.find(TARGET_TYPE_DOUBLE_JELLY);
-			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
-				&& itTarget->second > itGotTarget->second)
+			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_DOUBLE_JELLY) <
+				GameController::getInstance()->getTargetValue(TARGET_TYPE_DOUBLE_JELLY))
 				isPass = false;
 		}
 
 		if (isPass) {
-			itTarget = targetMap.find(TARGET_TYPE_CREAM);
-			itGotTarget = gotTargetMap.find(TARGET_TYPE_CREAM);
-			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
-				&& itTarget->second > itGotTarget->second)
+			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_CREAM) <
+				GameController::getInstance()->getTargetValue(TARGET_TYPE_CREAM))
 				isPass = false;
 		}
 
 		if (isPass) {
-			itTarget = targetMap.find(TARGET_TYPE_DOUBLE_CREAM);
-			itGotTarget = gotTargetMap.find(TARGET_TYPE_DOUBLE_CREAM);
-			if (targetMap.end() != itTarget && gotTargetMap.end() != itGotTarget
-				&& itTarget->second > itGotTarget->second)
+			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_DOUBLE_CREAM) <
+				GameController::getInstance()->getTargetValue(TARGET_TYPE_DOUBLE_CREAM))
 				isPass = false;
 		}
 		
