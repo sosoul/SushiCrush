@@ -47,7 +47,7 @@ public:
 
 	void onSwapSushiCompleted();
 	void onRemoveSushiCompleted(const MapTarget& map);
-	void onExplosionStopped();
+	void onRoundEnd();
 	void onRoundReady(READY_ACTION_TYPE actionType);
 	void onRoundStart();
 

@@ -29,6 +29,7 @@ private:
 	TargetTipsLayer* m_targetTipsLayer;
 
 	void onPlayLayerActionEnded();
+	void onTargetLayerActionEnded();
 	// notifications
 	void onRoundReady(Ref* obj);
 	void onRoundStart(Ref* obj);

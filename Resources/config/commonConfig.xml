@@ -6,7 +6,6 @@
 		<target>
 			<score>800</score>
 			<sushi1>10</sushi1>
-			<sushi2>20</sushi2>
 		</target>
 		<moves>10</moves>
     </round>

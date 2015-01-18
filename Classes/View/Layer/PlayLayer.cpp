@@ -23,7 +23,8 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_round(round),
 						 m_isPreDfs(false),
 						 m_roundInfo(NULL),
-						 m_needRefresh(false)
+						 m_needRefresh(false),
+						 m_isRoundEnded(false)
 {
 	CCASSERT(m_round >= 0 && m_round < TOTAL_ROUND, "");
 }
@@ -420,16 +421,14 @@ void PlayLayer::createAndDropSushi(int row, int col, bool isInit)
 	// create animation
 	Point endPosition = positionOfItem(row, col);
 	Point startPosition = Point(endPosition.x, endPosition.y + visibleSize.height / 2);
-	sushi->setPosition(startPosition);
-
 
 	if (isInit) 
 	{
-		float speed = startPosition.y / (1.5 * visibleSize.height);
-		sushi->runAction(MoveTo::create(speed, endPosition));
+		sushi->setPosition(endPosition);
 	}
 	else
 	{
+		sushi->setPosition(startPosition);
 		Vector<FiniteTimeAction *> moveVector;
 		sushi->setPosition(ccpAdd(Vec2(0, SushiSprite::getContentWidth() + SUSHI_GAP), endPosition));
 		if (m_moveNumMatrix[row * m_width + col] > 0)
@@ -475,6 +474,11 @@ void PlayLayer::update(float dt)
 	m_isTouchEnable = !m_isAnimationing;
 
 	if (!m_isAnimationing) {
+		if (m_isRoundEnded) {
+			GameController::getInstance()->onRoundEnd();
+			m_isRoundEnded = false;
+		}
+
 		if (m_isNeedFillVacancies) {
 			//爆炸效果结束后才掉落新寿司，增强打击感
 			fillVacancies();
@@ -1828,8 +1832,6 @@ void PlayLayer::fillVacancies()
 	Size size = CCDirector::getInstance()->getWinSize();
 
 	// 1. drop exist sushi
-	//SushiSprite *sushi = NULL;
-
 	memset(m_moveNumMatrix, 0, m_width * m_height * sizeof(int));
 	memset(m_minEndMoveMatrix, 0, m_width * m_height * sizeof(int));
 	memset(m_preDfsMatrix, 0, m_width * m_height * sizeof(int));
@@ -1954,7 +1956,9 @@ void PlayLayer::fillVacancies()
 
 	m_needRefresh = false;
 
-	GameController::getInstance()->onExplosionStopped();
+	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+	if (0 == roundInfo.m_leftMoves)
+		m_isRoundEnded = true;
 }
 
 void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int startIndex, bool isCreate)

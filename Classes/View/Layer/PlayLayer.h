@@ -55,6 +55,7 @@ private:
 	SushiSprite *m_srcSushi;// 用户移动的寿司
 	SushiSprite *m_destSushi;// 移动到哪个寿司
 	bool m_isAnimationing;
+	bool m_isRoundEnded;
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	bool m_needStopDfs;//判断是否需要结束 dfs

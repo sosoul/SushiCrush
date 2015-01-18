@@ -17,7 +17,6 @@ GameController* GameController::getInstance() {
 	{
 		s_sharedGameController = new GameController();
 	}
-	s_sharedGameController->retain();
 	return s_sharedGameController;
 }
 
@@ -40,21 +39,19 @@ void GameController::onSwapSushiCompleted() {
 	
 }
 
-void GameController::onExplosionStopped() {
-	if (0 == m_curRoundInfo.m_leftMoves) {
-		if (isPass(m_curRoundInfo.m_round)) {
-			NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
-			return;
-		}
-		// achieve the target score store relate data
-		int round = m_curRoundInfo.m_round;
-		CCASSERT(round >= 0, "Error round!");
-		CCASSERT(round != TOTAL_ROUND, "Game Over.");
-		writeToDB(m_curRoundInfo);
-		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(true));
-		UpdateUnlockInfo(round+1, true);
-		setCurRound(round);
+void GameController::onRoundEnd() {
+	if (isPass(m_curRoundInfo.m_round)) {
+		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
+		return;
 	}
+	// achieve the target score store relate data
+	int round = m_curRoundInfo.m_round;
+	CCASSERT(round >= 0, "Error round!");
+	CCASSERT(round != TOTAL_ROUND, "Game Over.");
+	writeToDB(m_curRoundInfo);
+	NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(true));
+	UpdateUnlockInfo(round+1, true);
+	setCurRound(round);
 }
 
 void GameController::onRoundReady(READY_ACTION_TYPE actionType) {
@@ -189,17 +186,17 @@ void GameController::resetRoundInfo(int round) {
 }
 
 bool GameController::isPass(int round) {
-	if (m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SCORE] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_JELLY] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_JELLY] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_CREAM] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_CREAM] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_1] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_1] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_2] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_2] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_3] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_3] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_4] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_4] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_5] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_5] &&
-		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_6] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_6]) {
+	if (m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SCORE] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_JELLY] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_JELLY] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_CREAM] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_CREAM] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_1] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_1] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_2] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_2] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_3] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_3] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_4] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_4] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_5] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_5] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_6] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_6]) {
 		return true;
 	}
 	return false;

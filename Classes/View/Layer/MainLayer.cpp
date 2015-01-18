@@ -95,20 +95,17 @@ void MainLayer::onRoundReady(Ref* obj) {
 }
 
 void MainLayer::onRoundEnd(Ref* obj) {
-	MoveBy* actMoveUp = MoveBy::create(1, Point(0, 500));
-	auto hideAction1 = Hide::create();
+	
 	// play layer - run a hide action.
 	if (m_playLayer) {
-		Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
-		m_playLayer->setPosition(visibleOrigin.x, visibleOrigin.y);
-		m_playLayer->runAction(Sequence::create(actMoveUp, hideAction1,
+		m_playLayer->runAction(Sequence::create(MoveBy::create(1, Point(0, 800)), Hide::create(),
 			CallFunc::create(CC_CALLBACK_0(MainLayer::onPlayLayerActionEnded, this)), nullptr));
 	}
 
 	// target layer - run a hide action.
 	if (m_targetLayer) {
-		m_targetLayer->runAction(Sequence::create(actMoveUp, hideAction1,
-			CallFunc::create(CC_CALLBACK_0(MainLayer::onPlayLayerActionEnded, this)), nullptr));
+		m_targetLayer->runAction(Sequence::create(MoveBy::create(1, Point(0, 500)), Hide::create(),
+			CallFunc::create(CC_CALLBACK_0(MainLayer::onTargetLayerActionEnded, this)), nullptr));
 	}
 }
 
@@ -116,7 +113,9 @@ void MainLayer::onPlayLayerActionEnded() {
 	m_playLayer->removeFromParentAndCleanup(true);
 	m_playLayer->release();
 	m_playLayer = nullptr;
+}
 
+void MainLayer::onTargetLayerActionEnded() {
 	m_targetLayer->removeFromParentAndCleanup(true);
 	m_targetLayer->release();
 	m_targetLayer = nullptr;
