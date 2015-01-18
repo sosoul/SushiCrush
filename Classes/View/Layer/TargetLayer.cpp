@@ -27,7 +27,13 @@ TargetLayer::TargetLayer() : got_score_label_(nullptr),
 							 got_jelly_label_(nullptr),
 							 got_double_jelly_label_(nullptr),
 							 got_cream_label_(nullptr),
-							 got_double_cream_label_(nullptr)
+							 got_double_cream_label_(nullptr),
+							 got_sushi_1_label_(nullptr),
+							 got_sushi_2_label_(nullptr),
+							 got_sushi_3_label_(nullptr),
+							 got_sushi_4_label_(nullptr),
+							 got_sushi_5_label_(nullptr),
+							 got_sushi_6_label_(nullptr)
 {
 }
 
@@ -53,6 +59,30 @@ TargetLayer::~TargetLayer()
 	if (got_double_cream_label_) {
 		got_double_cream_label_->release();
 		got_double_cream_label_ = nullptr;
+	}
+	if (got_sushi_1_label_) {
+		got_sushi_1_label_->release();
+		got_sushi_1_label_ = nullptr;
+	}
+	if (got_sushi_2_label_) {
+		got_sushi_2_label_->release();
+		got_sushi_2_label_ = nullptr;
+	}
+	if (got_sushi_3_label_) {
+		got_sushi_3_label_->release();
+		got_sushi_3_label_ = nullptr;
+	}
+	if (got_sushi_4_label_) {
+		got_sushi_4_label_->release();
+		got_sushi_4_label_ = nullptr;
+	}
+	if (got_sushi_5_label_) {
+		got_sushi_5_label_->release();
+		got_sushi_5_label_ = nullptr;
+	}
+	if (got_sushi_6_label_) {
+		got_sushi_6_label_->release();
+		got_sushi_6_label_ = nullptr;
 	}
 }
 
@@ -82,25 +112,48 @@ void TargetLayer::createTargetPanels() {
 	int y = kStartY + visibleOrigin.y + visibleSize.height;
 	int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
 	if (value) {
-		createTargetPanel(&x, &y, value, "score_target.png", &got_score_label_);
+		createTargetPanel(&x, &y, value, s_scoreTarget, &got_score_label_);
 	}
 	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_JELLY);
 	if (value) {
-		createTargetPanel(&x, &y, value, "jelly_target.png", &got_jelly_label_);
+		createTargetPanel(&x, &y, value, s_jellyTarget, &got_jelly_label_);
 	}
 	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_DOUBLE_JELLY);
 	if (value) {
-		createTargetPanel(&x, &y, value, "double_jelly_target.png", &got_double_jelly_label_);
+		createTargetPanel(&x, &y, value, s_doubleJellyTarget, &got_double_jelly_label_);
 	}
 	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_CREAM);
 	if (value) {
-		createTargetPanel(&x, &y, value, "cream_target.png", &got_cream_label_);
+		createTargetPanel(&x, &y, value, s_creamTarget, &got_cream_label_);
 	}
 	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_DOUBLE_CREAM);
 	if (value) {
-		createTargetPanel(&x, &y, value, "double_cream_target.png", &got_double_cream_label_);
+		createTargetPanel(&x, &y, value, s_doubleCreamTarget, &got_double_cream_label_);
 	}
-
+	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_1);
+	if (value) {
+		createTargetPanel(&x, &y, value, s_sushi1Target, &got_sushi_1_label_);
+	}
+	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_2);
+	if (value) {
+		createTargetPanel(&x, &y, value, s_sushi2Target, &got_sushi_2_label_);
+	}
+	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_3);
+	if (value) {
+		createTargetPanel(&x, &y, value, s_sushi3Target, &got_sushi_3_label_);
+	}
+	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_4);
+	if (value) {
+		createTargetPanel(&x, &y, value, s_sushi4Target, &got_sushi_4_label_);
+	}
+	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_5);
+	if (value) {
+		createTargetPanel(&x, &y, value, s_sushi5Target, &got_sushi_5_label_);
+	}
+	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_6);
+	if (value) {
+		createTargetPanel(&x, &y, value, s_sushi5Target, &got_sushi_6_label_);
+	}
 }
 
 void TargetLayer::createTargetPanel(int* x, int* y, int value, const std::string image, LabelBMFont** targetLabel) {
@@ -177,5 +230,53 @@ void TargetLayer::onTargetChanged(Ref* obj) {
 		if (value < 0)
 			value = 0;
 		got_double_cream_label_->setString(StringUtils::toString(value));
+	}
+
+	if (got_sushi_1_label_) {
+		int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_1) -
+			GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SUSHI_1);
+		if (value < 0)
+			value = 0;
+		got_sushi_1_label_->setString(StringUtils::toString(value));
+	}
+
+	if (got_sushi_2_label_) {
+		int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_2) -
+			GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SUSHI_2);
+		if (value < 0)
+			value = 0;
+		got_sushi_2_label_->setString(StringUtils::toString(value));
+	}
+
+	if (got_sushi_3_label_) {
+		int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_3) -
+			GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SUSHI_3);
+		if (value < 0)
+			value = 0;
+		got_sushi_3_label_->setString(StringUtils::toString(value));
+	}
+
+	if (got_sushi_4_label_) {
+		int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_4) -
+			GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SUSHI_4);
+		if (value < 0)
+			value = 0;
+		got_sushi_4_label_->setString(StringUtils::toString(value));
+	}
+
+	if (got_sushi_5_label_) {
+		int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_5) -
+			GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SUSHI_5);
+		if (value < 0)
+			value = 0;
+		got_sushi_5_label_->setString(StringUtils::toString(value));
+	}
+
+	if (got_sushi_6_label_) {
+		int value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_6) -
+			GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SUSHI_6);
+		if (value < 0)
+			value = 0;
+		got_sushi_6_label_->setString(StringUtils::toString(value));
 	}
 }

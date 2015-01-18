@@ -3,6 +3,7 @@
 
 #include "Common/Resource.h"
 #include "Common/Types.h"
+#include "Common/Utils.h"
 
 namespace tinyxml2
 {
@@ -23,7 +24,6 @@ struct GridInfo {
 
 typedef std::vector<int> VecProducer;
 typedef std::map<int, int> MapPortal;
-typedef std::map<TargetType, int> MapTarget;
 
 struct RoundInfo {
 	std::string _mapFile;
@@ -38,11 +38,7 @@ struct RoundInfo {
 	RoundInfo() : _moves(0) {
 		memset((void*)_clipper, 0, MATRIX_WIDTH*MATRIX_HEIGHT);
 		memset((void*)_matrix, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
-		_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_SCORE, 0));
-		_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
-		_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
-		_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
-		_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
+		initTargetMap(&_mapTarget);
 	}
 };
 

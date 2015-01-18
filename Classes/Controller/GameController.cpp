@@ -42,11 +42,7 @@ void GameController::onSwapSushiCompleted() {
 
 void GameController::onExplosionStopped() {
 	if (0 == m_curRoundInfo.m_leftMoves) {
-		if (m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_SCORE] &&
-			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_JELLY] &&
-			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_JELLY] &&
-			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_CREAM] &&
-			m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] != m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_CREAM]) {
+		if (isPass(m_curRoundInfo.m_round)) {
 			NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
 			return;
 		}
@@ -109,6 +105,30 @@ void GameController::onRemoveSushiCompleted(const MapTarget& map) {
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] += new_map[TARGET_TYPE_DOUBLE_CREAM];
 		need_notify = true;
 	}
+	if (0 != new_map[TARGET_TYPE_SUSHI_1]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_1] += new_map[TARGET_TYPE_SUSHI_1];
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_SUSHI_2]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_2] += new_map[TARGET_TYPE_SUSHI_2];
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_SUSHI_3]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_3] += new_map[TARGET_TYPE_SUSHI_3];
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_SUSHI_4]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_4] += new_map[TARGET_TYPE_SUSHI_4];
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_SUSHI_5]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_5] += new_map[TARGET_TYPE_SUSHI_5];
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_SUSHI_6]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_6] += new_map[TARGET_TYPE_SUSHI_6];
+		need_notify = true;
+	}
 
 	if (need_notify)
 		targetChanged();
@@ -131,12 +151,7 @@ void GameController::writeToDB(const CurRoundInfo& m_curRoundInfo) {
 
 void GameController::setCurRound(int round) {
 	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
-	const RoundInfo* roundInfo = ConfigService::getInstance()->getRoundInfo(round);
-	m_curRoundInfo.m_round = round;
-	m_curRoundInfo.m_mapTarget = roundInfo->_mapTarget;
-
-	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
-	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
+	resetRoundInfo(round);
 }
 
 void GameController::ReadUnlockInfo() {
@@ -161,4 +176,31 @@ int GameController::getTargetValue(TargetType type) {
 
 int GameController::getGotTargetValue(TargetType type) {
 	return m_curRoundInfo.m_mapGotTarget[type];
+}
+
+void GameController::resetRoundInfo(int round) {
+	CCASSERT(round >= 0 && round < TOTAL_ROUND, "round is out of range!");
+	const RoundInfo* roundInfo = ConfigService::getInstance()->getRoundInfo(round);
+	m_curRoundInfo.m_round = round;
+	m_curRoundInfo.m_mapTarget = roundInfo->_mapTarget;
+	m_curRoundInfo.m_mapGotTarget.clear();
+	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
+	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
+}
+
+bool GameController::isPass(int round) {
+	if (m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SCORE] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_JELLY] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_JELLY] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_CREAM] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_CREAM] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_1] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_1] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_2] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_2] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_3] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_3] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_4] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_4] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_5] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_5] &&
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SUSHI_6] == m_curRoundInfo.m_mapTarget[TARGET_TYPE_SUSHI_6]) {
+		return true;
+	}
+	return false;
 }

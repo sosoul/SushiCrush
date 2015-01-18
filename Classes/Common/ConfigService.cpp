@@ -119,6 +119,36 @@ void ConfigService::loadConfig() {
 					targetItemEle->QueryIntText(&doubleCream);
 					item._mapTarget[TARGET_TYPE_DOUBLE_CREAM] = doubleCream;
 				}
+				if (targetItemEle = targetEle->FirstChildElement("sushi1")) {
+					int sushi1;
+					targetItemEle->QueryIntText(&sushi1);
+					item._mapTarget[TARGET_TYPE_SUSHI_1] = sushi1;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("sushi2")) {
+					int sushi2;
+					targetItemEle->QueryIntText(&sushi2);
+					item._mapTarget[TARGET_TYPE_SUSHI_2] = sushi2;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("sushi3")) {
+					int sushi3;
+					targetItemEle->QueryIntText(&sushi3);
+					item._mapTarget[TARGET_TYPE_SUSHI_3] = sushi3;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("sushi4")) {
+					int sushi4;
+					targetItemEle->QueryIntText(&sushi4);
+					item._mapTarget[TARGET_TYPE_SUSHI_4] = sushi4;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("sushi5")) {
+					int sushi5;
+					targetItemEle->QueryIntText(&sushi5);
+					item._mapTarget[TARGET_TYPE_SUSHI_5] = sushi5;
+				}
+				if (targetItemEle = targetEle->FirstChildElement("sushi6")) {
+					int sushi6;
+					targetItemEle->QueryIntText(&sushi6);
+					item._mapTarget[TARGET_TYPE_SUSHI_6] = sushi6;
+				}
 			}
 
 			// moves

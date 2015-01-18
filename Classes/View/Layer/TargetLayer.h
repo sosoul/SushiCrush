@@ -27,6 +27,12 @@ private:
 	LabelBMFont* got_double_jelly_label_;
 	LabelBMFont* got_cream_label_;
 	LabelBMFont* got_double_cream_label_;
+	LabelBMFont* got_sushi_1_label_;
+	LabelBMFont* got_sushi_2_label_;
+	LabelBMFont* got_sushi_3_label_;
+	LabelBMFont* got_sushi_4_label_;
+	LabelBMFont* got_sushi_5_label_;
+	LabelBMFont* got_sushi_6_label_;
 
 };
 

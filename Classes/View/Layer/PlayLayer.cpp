@@ -3,7 +3,7 @@
 #include "Common/ConfigService.h"
 #include "Common/Messages.h"
 #include "Common/Resource.h"
-#include "Common/Utils.h"
+//#include "Common/Utils.h"
 #include "Controller/GameController.h"
 #include "View/Sprite/SushiSprite.h"
 
@@ -1131,8 +1131,8 @@ void PlayLayer::removeSushi()
 	m_isAnimationing = true;
 
 	int score = 0;
-	MapTarget map =  createTargetMap();
-
+	MapTarget map;
+	initTargetMap(&map);
 	for (int i = 0; i < m_height * m_width; i++) {
 		SushiSprite *sushi = m_sushiMatrix[i];
 		if (!sushi) {
@@ -1157,6 +1157,47 @@ void PlayLayer::removeSushi()
 				explode4VerticalLineSushi(sushi->getPosition());
 			} else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {
 				explode5CrossLineSushi(sushi);
+			}
+			switch (sushi->getImgIndex())
+			{
+			case 0:
+			{
+				int value = map.at(TARGET_TYPE_SUSHI_1);
+				map.at(TARGET_TYPE_SUSHI_1) = value + 1;
+			}
+				break;
+			case 1:
+			{
+				int value = map.at(TARGET_TYPE_SUSHI_2);
+				map.at(TARGET_TYPE_SUSHI_2) = value + 1;
+			}
+				break;
+			case 2:
+			{
+				int value = map.at(TARGET_TYPE_SUSHI_3);
+				map.at(TARGET_TYPE_SUSHI_3) = value + 1;
+			}
+				break;
+			case 3:
+			{
+				int value = map.at(TARGET_TYPE_SUSHI_4);
+				map.at(TARGET_TYPE_SUSHI_4) = value + 1;
+			}
+				break;
+			case 4:
+			{
+				int value = map.at(TARGET_TYPE_SUSHI_5);
+				map.at(TARGET_TYPE_SUSHI_5) = value + 1;
+			}
+				break;
+			case 5:
+			{
+				int value = map.at(TARGET_TYPE_SUSHI_6);
+				map.at(TARGET_TYPE_SUSHI_6) = value + 1;
+			}
+				break;
+			default:
+				break;
 			}
 			explodeSushi(sushi, &score, &map);
 		}

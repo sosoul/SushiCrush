@@ -78,34 +78,7 @@ bool PostPlayLayer::init()
 	int gotScore = GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SCORE);
 	int targetScore = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
 	if (nextBtn) {
-		bool isPass = true;
-		if (gotScore < targetScore)
-			isPass = false;
-
-		if (isPass) {
-			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_JELLY) <
-				GameController::getInstance()->getTargetValue(TARGET_TYPE_JELLY))
-				isPass = false;
-		}
-		
-		if (isPass) {
-			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_DOUBLE_JELLY) <
-				GameController::getInstance()->getTargetValue(TARGET_TYPE_DOUBLE_JELLY))
-				isPass = false;
-		}
-
-		if (isPass) {
-			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_CREAM) <
-				GameController::getInstance()->getTargetValue(TARGET_TYPE_CREAM))
-				isPass = false;
-		}
-
-		if (isPass) {
-			if (GameController::getInstance()->getGotTargetValue(TARGET_TYPE_DOUBLE_CREAM) <
-				GameController::getInstance()->getTargetValue(TARGET_TYPE_DOUBLE_CREAM))
-				isPass = false;
-		}
-		
+		bool isPass = GameController::getInstance()->isPass(roundInfo.m_round);
 		if (isPass)
 			nextBtn->setVisible(true);
 		else

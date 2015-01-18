@@ -143,6 +143,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Common\GameDB.cpp" />
     <ClCompile Include="..\Classes\Common\ModelService.cpp" />
     <ClCompile Include="..\Classes\Common\TiledMapParser.cpp" />
+    <ClCompile Include="..\Classes\Common\Utils.cpp" />
     <ClCompile Include="..\Classes\Controller\GameController.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\Utiles\shell.c" />

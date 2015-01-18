@@ -22,17 +22,8 @@ struct CurRoundInfo : public Ref {
 	CurRoundInfo() : m_round(0),
 		m_totalMoves(0),
 		m_leftMoves(0) {
-		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_SCORE, 0));
-		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
-		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
-		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
-		m_mapTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
-
-		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_SCORE, 0));
-		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
-		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
-		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
-		m_mapGotTarget.insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
+		initTargetMap(&m_mapTarget);
+		initTargetMap(&m_mapGotTarget);
 	}
 };
 
@@ -67,8 +58,11 @@ public:
 	void ReadUnlockInfo();
 	void UpdateUnlockInfo(int round, bool isUnlock);
 	bool isUnlock(int round);
+	bool isPass(int round);
+
 private:
 	void writeToDB(const CurRoundInfo& m_curRoundInfo);
+	void resetRoundInfo(int round);
 
 	CurRoundInfo m_curRoundInfo;
 	int m_curRound;

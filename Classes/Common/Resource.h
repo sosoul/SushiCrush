@@ -87,10 +87,19 @@ const char s_gridCream[] = "play_play_grid_cream.png";
 const char s_gridDoubleCream[] = "play_play_grid_double_cream.png";
 const char s_sushiPlist[] = "sushi.plist";
 const char s_sushiRes[] = "sushi.png";//"sushi.pvr.ccz";
-
 const char s_resPlist[] = "res.plist";
-
 const char s_absExploadCross[] = "common/common_starRight_img_normal.png";
+const char s_scoreTarget[] = "score_target.png";
+const char s_jellyTarget[] = "jelly_target.png";
+const char s_doubleJellyTarget[] = "double_jelly_target.png";
+const char s_creamTarget[] = "cream_target.png";
+const char s_doubleCreamTarget[] = "double_cream_target.png";
+const char s_sushi1Target[] = "sushi_1n_target.png";
+const char s_sushi2Target[] = "sushi_2n_target.png";
+const char s_sushi3Target[] = "sushi_3n_target.png";
+const char s_sushi4Target[] = "sushi_4n_target.png";
+const char s_sushi5Target[] = "sushi_5n_target.png";
+const char s_sushi6Target[] = "sushi_6n_target.png";
 
 // Common
 const char s_commonConfig[] = "commonConfig.xml";

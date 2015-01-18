@@ -100,6 +100,9 @@
     <ClCompile Include="..\Classes\Common\ModelService.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Common\Utils.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
