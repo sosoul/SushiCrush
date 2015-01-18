@@ -9,9 +9,9 @@ USING_NS_CC;
 class PostPlayLayer : public Layer
 {
 public:
-	PostPlayLayer();
+	PostPlayLayer(bool result);
 	~PostPlayLayer();
-	CREATE_FUNC(PostPlayLayer);
+	static PostPlayLayer* create(bool result);
 
 	virtual bool init() override;
 
@@ -19,6 +19,7 @@ public:
 	void nextRound(Ref* object, ui::TouchEventType type);
 	void backToStartMap(Ref* object, ui::TouchEventType type);
 private:
+	bool _result;
 };
 
 #endif // __VIEW_LAYER_POST_PLAY_LAYER_H__

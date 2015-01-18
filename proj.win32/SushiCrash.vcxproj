@@ -149,7 +149,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Utiles\shell.c" />
     <ClCompile Include="..\Classes\Utiles\sqlite3.c" />
     <ClCompile Include="..\Classes\View\Layer\GuideMapLayer.cpp" />
-    <ClCompile Include="..\Classes\View\Layer\MainLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\MovesLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\PlayLayer.cpp" />
     <ClCompile Include="..\Classes\View\Layer\PostPlayLayer.cpp" />
@@ -182,7 +181,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Utiles\sqlite3.h" />
     <ClInclude Include="..\Classes\Utiles\sqlite3ext.h" />
     <ClInclude Include="..\Classes\View\Layer\GuideMapLayer.h" />
-    <ClInclude Include="..\Classes\View\Layer\MainLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\MovesLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\PlayLayer.h" />
     <ClInclude Include="..\Classes\View\Layer\PostPlayLayer.h" />

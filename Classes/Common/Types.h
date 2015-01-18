@@ -42,6 +42,12 @@ enum TargetType {
 	TARGET_TYPE_SUSHI_6,
 };
 
+enum TipsLayerType {
+	TIPS_TYPE_TARGET = 0,
+	TIPS_TYPE_SUCCESSFUL,
+	TIPS_TYPE_FAIL,
+};
+
 typedef std::map<TargetType, int> MapTarget;
 
 #endif // _TYPES_H_

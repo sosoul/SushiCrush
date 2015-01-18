@@ -40,7 +40,7 @@ void GameController::onSwapSushiCompleted() {
 }
 
 void GameController::onRoundEnd() {
-	if (isPass(m_curRoundInfo.m_round)) {
+	if (!isPass(m_curRoundInfo.m_round)) {
 		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
 		return;
 	}

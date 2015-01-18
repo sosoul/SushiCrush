@@ -31,7 +31,20 @@ namespace{
 	const int kStar3Y = 150;
 }
 
-PostPlayLayer::PostPlayLayer()
+PostPlayLayer* PostPlayLayer::create(bool result) {
+	PostPlayLayer* layer = new PostPlayLayer(result);
+	if (layer && layer->init()) {
+		layer->autorelease();
+		return layer;
+	}
+	else {
+		delete layer;
+		layer = nullptr;
+		return layer;
+	}
+}
+
+PostPlayLayer::PostPlayLayer(bool result) : _result(result)
 {
 }
 
@@ -78,8 +91,7 @@ bool PostPlayLayer::init()
 	int gotScore = GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SCORE);
 	int targetScore = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
 	if (nextBtn) {
-		bool isPass = GameController::getInstance()->isPass(roundInfo.m_round);
-		if (isPass)
+		if (_result)
 			nextBtn->setVisible(true);
 		else
 			nextBtn->setVisible(false);

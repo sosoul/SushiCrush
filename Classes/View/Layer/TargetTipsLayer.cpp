@@ -14,12 +14,25 @@ const int kLabelScoreX = 0;
 const int kLabelScoreY = 350;
 }
 
-TargetTipsLayer::TargetTipsLayer()
-{
+TargetTipsLayer::TargetTipsLayer(TipsLayerType type) : _type(type) {
 }
 
 TargetTipsLayer::~TargetTipsLayer()
 {
+}
+
+// static
+TargetTipsLayer* TargetTipsLayer::create(TipsLayerType type) {
+	TargetTipsLayer* layer = new TargetTipsLayer(type);
+	if (layer && layer->init()) {
+		layer->autorelease();
+		return layer;
+	}
+	else {
+		delete layer;
+		layer = nullptr;
+		return layer;
+	}
 }
 
 bool TargetTipsLayer::init() {
@@ -30,22 +43,44 @@ bool TargetTipsLayer::init() {
 	auto background = Sprite::createWithSpriteFrameName(s_targetTipsBackground);
 	background->setPosition(Vec2(visibleOrigin.x + kBackgroundX, visibleOrigin.y + kBackgroundY));
 	addChild(background);
-	// label "Score:"
-	auto labelTitle = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
-	labelTitle->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-	labelTitle->setPosition(Vec2(visibleOrigin.x + kLabelTitleX, visibleOrigin.y + kLabelTitleY));
-	addChild(labelTitle);
 
-	// label of score
-	auto labelTarget = LabelBMFont::create("", "fonts/boundsTestFont.fnt");
-	labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
-	labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
-	addChild(labelTarget, 0, kLabelTargetTag);
+	switch (_type)
+	{
+	case TIPS_TYPE_TARGET:
+	{
+		// label of score
+		auto labelTarget = LabelBMFont::create("", "fonts/boundsTestFont.fnt");
+		labelTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+		labelTarget->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
+		addChild(labelTarget, 0, kLabelTargetTag);
 
-	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	int score = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
-	int moves = roundInfo.m_totalMoves;
-	labelTarget->setString("get at least " + StringUtils::toString(score) + " in " + StringUtils::toString(moves) + " moves");
+		const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+		int score = GameController::getInstance()->getTargetValue(TARGET_TYPE_SCORE);
+		int moves = roundInfo.m_totalMoves;
+		labelTarget->setString("get at least " + StringUtils::toString(score) + " in " + StringUtils::toString(moves) + " moves");
+	}
+		break;
+	case TIPS_TYPE_SUCCESSFUL:
+	{
+		auto label = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
+		label->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+		label->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
+		label->setString("congratulations for passing!");
+		addChild(label);
+	}
+		break;
+	case TIPS_TYPE_FAIL:
+	{
+		auto label = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
+		label->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+		label->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
+		label->setString("Failed to pass!");
+		addChild(label); }
+		break;
+	default:
+		break;
+	}
+	
 
 	return true;
 }

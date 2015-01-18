@@ -53,9 +53,6 @@
     <ClCompile Include="..\Classes\View\Sprite\SushiSprite.cpp">
       <Filter>View\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\View\Layer\MainLayer.cpp">
-      <Filter>View\Layer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\View\Scene\PlayScene.cpp">
       <Filter>View\Scene</Filter>
     </ClCompile>
@@ -127,9 +124,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\View\Sprite\SushiSprite.h">
       <Filter>View\Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\View\Layer\MainLayer.h">
-      <Filter>View\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\View\Scene\PlayScene.h">
       <Filter>View\Scene</Filter>
