@@ -9,5 +9,7 @@
 #define MSG_ROUND_END		"RoundEnd"
 #define MSG_ROUND_READY		"RoundReady"
 
+#define MSG_TARGET_COMPLATE		"TargetComplate"
+#define MSG_CRASH_BEGIN		"CrashBegin"
 #endif // _MESSAGES_H_
 

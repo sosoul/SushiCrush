@@ -46,6 +46,8 @@ enum TipsLayerType {
 	TIPS_TYPE_TARGET = 0,
 	TIPS_TYPE_SUCCESSFUL,
 	TIPS_TYPE_FAIL,
+	TIPS_TYPE_TARGET_COMPLATE,
+	TIPS_TYPE_CRASH_BEGIN,
 };
 
 typedef std::map<TargetType, int> MapTarget;

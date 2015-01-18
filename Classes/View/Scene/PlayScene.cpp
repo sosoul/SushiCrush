@@ -84,6 +84,11 @@ bool PlayScene::init()
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundStart),
 		MSG_ROUND_START, nullptr);
 
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onTargetComplate),
+		MSG_TARGET_COMPLATE, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onCrashBegin),
+		MSG_CRASH_BEGIN, nullptr);
 	// buttons
 	auto backButton = ui::Button::create();
 	backButton->setTouchEnabled(true);
@@ -114,6 +119,12 @@ void PlayScene::onEnter()
 
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundStart),
 		MSG_ROUND_START, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onTargetComplate),
+		MSG_TARGET_COMPLATE, nullptr);
+
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onCrashBegin),
+		MSG_CRASH_BEGIN, nullptr);
 
 	GameController::getInstance()->onRoundReady(ACTION_RESUME);
 }
@@ -158,6 +169,14 @@ void PlayScene::onRoundStart(Ref* obj) {
 		CallFunc::create(CC_CALLBACK_0(PlayScene::onPrePlayLayerActionEnded, this)),
 		nullptr);
 	m_prePlayLayer->runAction(sequence);
+}
+
+void PlayScene::onTargetComplate(Ref* obj) {
+	showTipsLayer(TIPS_TYPE_TARGET_COMPLATE, CallFunc::create(CC_CALLBACK_0(PlayScene::onTargetComplateTipsActionEnd, this, true)));
+}
+
+void PlayScene::onCrashBegin(Ref* obj) {
+	showTipsLayer(TIPS_TYPE_CRASH_BEGIN, CallFunc::create(CC_CALLBACK_0(PlayScene::onCrashBeginTipsActionEnd, this, true)));
 }
 
 void PlayScene::onRoundEnd(Ref* obj) {
@@ -269,6 +288,24 @@ void PlayScene::OnResultTipsActionEnd(bool result) {
 	m_postPlayLayer->setPosition(visibleSize.width / 2 - 300, visibleSize.height / 2 - 200);
 	MoveBy* movebyAction = MoveBy::create(0.5, Point(200, 0));
 	m_postPlayLayer->runAction(Repeat::create(movebyAction, 1));
+}
+
+void PlayScene::onTargetComplateTipsActionEnd(bool result) {
+	if (m_tipsLayer) {
+		m_tipsLayer->removeFromParentAndCleanup(true);
+		m_tipsLayer->release();
+		m_tipsLayer = nullptr;
+	}
+	GameController::getInstance()->changeCurCrashMode();
+}
+
+void PlayScene::onCrashBeginTipsActionEnd(bool result) {
+	if (m_tipsLayer) {
+		m_tipsLayer->removeFromParentAndCleanup(true);
+		m_tipsLayer->release();
+		m_tipsLayer = nullptr;
+	}
+	GameController::getInstance()->changeCurCrashMode();
 }
 
 void PlayScene::showTipsLayer(TipsLayerType type, CallFunc* func) {

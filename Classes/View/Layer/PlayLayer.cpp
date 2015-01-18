@@ -24,7 +24,9 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_isPreDfs(false),
 						 m_roundInfo(NULL),
 						 m_needRefresh(false),
-						 m_isRoundEnded(false)
+						 m_isRoundEnded(false),
+						 m_isNeedCheck(true),
+						 m_isTriggered(false)
 {
 	CCASSERT(m_round >= 0 && m_round < TOTAL_ROUND, "");
 }
@@ -350,7 +352,10 @@ void PlayLayer::swapSushi()
 		&& !(m_destSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE)
 		&& !(m_destSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
 		)) {
-		GameController::getInstance()->onSwapSushiCompleted();
+		if (GameController::getInstance()->getCurCrashMode() == CRASH_MODE_NORMAL)
+		{
+			GameController::getInstance()->onSwapSushiCompleted();
+		}
 		// just swap
 		m_srcSushi->runAction(MoveTo::create(time, posOfDest));
 		m_destSushi->runAction(MoveTo::create(time, posOfSrc));
@@ -477,6 +482,7 @@ void PlayLayer::update(float dt)
 		if (m_isRoundEnded) {
 			GameController::getInstance()->onRoundEnd();
 			m_isRoundEnded = false;
+			m_isNeedCheck = false;
 		}
 
 		if (m_isNeedFillVacancies) {
@@ -484,10 +490,219 @@ void PlayLayer::update(float dt)
 			fillVacancies();
 			m_isNeedFillVacancies = false;
 		}
-		else {
+		else if (m_isNeedCheck){
+			if (GameController::getInstance()->getCurCrashMode() != CRASH_MODE_NORMAL)
+			{
+				triggerCrash();
+			}
+			else
+			{
+				checkAndRemoveChain();
+			}
+		}
+	}
+}
+
+void PlayLayer::triggerCrash()
+{
+	int sushiType5LineNum = getSpecialSushiNum(SUSHI_TYPE_5_LINE);
+	if (sushiType5LineNum > 0)
+	{
+		if (m_destSushi == nullptr && m_srcSushi == nullptr)
+		{
+			SushiSprite *sushi;
+			for (int i = 0; i < m_height * m_width; i++) {
+				sushi = m_sushiMatrix[i];
+				if (!sushi) {
+					continue;
+				}
+				if (sushi->getSushiType() == SUSHI_TYPE_5_LINE)
+				{
+					if (sushi->getIsNeedRemove())
+					{
+						checkAndRemoveChain();
+						break;
+					}
+
+					SushiSprite *targetSushi = getAdjoiningSushi(sushi);
+					if (!targetSushi)
+					{
+						sushi->setIsNeedRemove(true);
+						checkAndRemoveChain();
+					}
+					else
+					{
+						m_destSushi = targetSushi;
+						m_srcSushi = sushi;
+						//swapSushi();
+					}
+					break;
+				}
+			}
+		}
+		else
+		{
 			checkAndRemoveChain();
 		}
 	}
+	else
+	{
+		if (GameController::getInstance()->getCurCrashMode() == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+		{
+			int specialSushiNum = getSpecialSushiNum();
+			if (specialSushiNum > 0)
+			{
+				SushiSprite *sushi;
+				for (int i = 0; i < m_height * m_width; i++) {
+					sushi = m_sushiMatrix[i];
+					if (!sushi) {
+						continue;
+					}
+					if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
+					{
+						sushi->setIsNeedRemove(false);
+						markRemove(sushi);
+					}
+				}
+				checkAndRemoveChain();
+			}
+			else
+			{
+				if (checkActualRoundEnd())
+				{
+					const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+					if (roundInfo.m_leftMoves > 0)
+					{
+						GameController::getInstance()->curCrashModeFinish();//通知进入下一阶段
+					}
+					else
+					{
+						m_isRoundEnded = true;
+					}
+				}
+				else
+				{
+					checkAndRemoveChain();
+				}
+			}
+		}
+		else
+		{
+			if (!m_isTriggered)
+			{
+				m_isTriggered = true;
+				const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+				if (roundInfo.m_leftMoves > 0)
+				{
+					int leftNum = roundInfo.m_leftMoves;
+					SushiSprite *sushi;
+					for (int i = 0; i < m_height * m_width; i++) {
+						sushi = m_sushiMatrix[i];
+						if (!sushi) {
+							continue;
+						}
+						if (leftNum > 0)
+						{
+							if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
+							{
+								animationGenerateSpecialSushi(sushi->getRow(), sushi->getCol());
+							}
+							leftNum--;
+						}
+					}
+				}
+			}
+			else
+			{
+				const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+				if (roundInfo.m_leftMoves > 0)
+				{
+					return;
+				}
+
+				int specialSushiNum = getSpecialSushiNum();
+				if (specialSushiNum > 0)
+				{
+				
+					SushiSprite *sushi;
+					for (int i = 0; i < m_height * m_width; i++) {
+					sushi = m_sushiMatrix[i];
+					if (!sushi) {
+					continue;
+					}
+					if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
+					{
+					sushi->setIsNeedRemove(false);
+					markRemove(sushi);
+					}
+					}
+					checkAndRemoveChain();
+				}
+				else
+				{
+					if (checkActualRoundEnd())
+					{
+						m_isRoundEnded = true;
+					}
+					else
+					{
+						checkAndRemoveChain();
+					}
+				}
+			}
+		}
+	}
+}
+
+SushiSprite* PlayLayer::getAdjoiningSushi(SushiSprite* sushi)
+{
+	if (!sushi)
+	{
+		return nullptr;
+	}
+	int row = sushi->getRow();
+	int col = sushi->getCol();
+
+	SushiSprite* targetSushi = nullptr;
+	//按照上下左右的顺序找相邻sushi
+	if (isValidRow(row + 1) && isValidGrid(row + 1, col))
+	{
+		int index = (row + 1) * m_width + col;
+		targetSushi = m_sushiMatrix[index];
+		if (targetSushi != nullptr)
+		{
+			return targetSushi;
+		}
+	}
+	if (isValidRow(row - 1) && isValidGrid(row - 1, col))
+	{
+		int index = (row - 1) * m_width + col;
+		targetSushi = m_sushiMatrix[index];
+		if (targetSushi != nullptr)
+		{
+			return targetSushi;
+		}
+	}
+	if (isValidCol(col - 1) && isValidGrid(row, col - 1))
+	{
+		int index = row * m_width + col - 1;
+		targetSushi = m_sushiMatrix[index];
+		if (targetSushi != nullptr)
+		{
+			return targetSushi;
+		}
+	}
+	if (isValidCol(col + 1) && isValidGrid(row, col + 1))
+	{
+		int index = row * m_width + col + 1;
+		targetSushi = m_sushiMatrix[index];
+		if (targetSushi != nullptr)
+		{
+			return targetSushi;
+		}
+	}
+
+	return targetSushi;
 }
 
 void PlayLayer::checkAndRemoveChain()
@@ -1020,6 +1235,40 @@ bool PlayLayer::checkActualRoundEnd()
 		}
 	}
 	return true;
+}
+
+int PlayLayer::getSpecialSushiNum()
+{
+	int num = 0;
+	SushiSprite *sushi;
+	for (int i = 0; i < m_height * m_width; i++) {
+		sushi = m_sushiMatrix[i];
+		if (!sushi) {
+			continue;
+		}
+		if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
+		{
+			num++; 
+		}
+	}
+	return num;
+}
+
+int PlayLayer::getSpecialSushiNum(SushiType sushiType)
+{
+	int num = 0;
+	SushiSprite *sushi;
+	for (int i = 0; i < m_height * m_width; i++) {
+		sushi = m_sushiMatrix[i];
+		if (!sushi) {
+			continue;
+		}
+		if (sushi->getSushiType() == sushiType)
+		{
+			num++;
+		}
+	}
+	return num;
 }
 
 void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList)
@@ -1956,9 +2205,33 @@ void PlayLayer::fillVacancies()
 
 	m_needRefresh = false;
 
-	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	if (0 == roundInfo.m_leftMoves)
-		m_isRoundEnded = true;
+	if (checkActualRoundEnd())
+	{
+		const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+
+		int specialSushiNum = getSpecialSushiNum();
+
+		CRASH_MODE crashMode = GameController::getInstance()->getCurCrashMode();
+
+		if (crashMode == CRASH_MODE_NORMAL)
+		{
+			if (GameController::getInstance()->isPass(m_round))
+			{
+				GameController::getInstance()->curCrashModeFinish();
+			}
+			else
+			{
+				if (0 == roundInfo.m_leftMoves)
+					m_isRoundEnded = true;
+			}
+		}
+		//if (roundInfo.m_leftMoves > 0 && GameController::getInstance()->isPass(m_round))
+		//{
+		//	//提前结束  开始sushicursh效果   首先消除所有当前特殊sushi, 然后将步数转化为随机特殊sushi
+		//}
+		/*if (0 == roundInfo.m_leftMoves && specialSushiNum == 0)
+			m_isRoundEnded = true;*/
+	}
 }
 
 void PlayLayer::moveAction(Node *node, std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int startIndex, bool isCreate)
@@ -2256,6 +2529,7 @@ bool PlayLayer::canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int
 }
 
 void PlayLayer::animation5line(Point start, Point end){
+	m_isAnimationing = true;
 	auto sp = Sprite::createWithSpriteFrameName(s_starMidDone);
 	sp->setScale(0.5f);
 	this->addChild(sp);
@@ -2265,6 +2539,45 @@ void PlayLayer::animation5line(Point start, Point end){
 	sp->runAction(Sequence::create(MoveTo::create(0.5f, end), Hide::create(), nullptr));
 }
 
+void PlayLayer::animationGenerateSpecialSushi(int row, int col){
+	m_isAnimationing = true;
+	SushiSprite * sushi = m_sushiMatrix[row * m_width + col];
+	int randNum = rand() % 3;
+	if (randNum == 0)
+	{
+		sushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
+	}
+	else if (randNum == 1)
+	{
+		sushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
+	}
+	else if (randNum == 2)
+	{
+		sushi->setSushiType(SUSHI_TYPE_5_CROSS);
+	}
+	/*else if (randNum == 3)
+	{
+	sushi->setSushiType(SUSHI_TYPE_5_LINE);
+	}*/
+	sushi->setIgnoreCheck(true);
+	m_isAnimationing = true;
+	auto sp = Sprite::createWithSpriteFrameName(s_starMidDone);
+	sp->setScale(0.5f);
+	this->addChild(sp);
+	sp->setPosition(positionOfItem(10, 10));
+
+	sp->runAction(Sequence::create(MoveTo::create(1.0f, sushi->getPosition()), 
+		Hide::create(), 
+		CallFunc::create(CC_CALLBACK_0(PlayLayer::setSushiType, this, sushi)),
+		nullptr));
+}
+void PlayLayer::setSushiType(SushiSprite * sushi)
+{
+	sushi->applySushiType();
+	sushi->setIsNeedRemove(false);
+	markRemove(sushi);
+	GameController::getInstance()->onSwapSushiCompleted();
+}
 bool PlayLayer::isLock(int row, int col) {
 	if (!isValidGrid(row, col))
 		return true;

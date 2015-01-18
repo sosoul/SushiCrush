@@ -39,7 +39,8 @@ private:
 	void onRoundReady(Ref* obj);
 	void onRoundStart(Ref* obj);
 	void onRoundEnd(Ref* obj);
-
+	void onTargetComplate(Ref* obj);
+	void onCrashBegin(Ref* obj);
 	// button touch events
 	void onBackButtonTouched(Ref *pSender, ui::TouchEventType type);
 	void onRefreshButtonTouched(Ref *pSender, ui::TouchEventType type);
@@ -51,6 +52,8 @@ private:
 	//void OnSuccessfulTipsActionEnd();
 	//void OnFailTipsActionEnd();
 	void OnResultTipsActionEnd(bool result);
+	void onTargetComplateTipsActionEnd(bool result);
+	void onCrashBeginTipsActionEnd(bool result);
 
 	void showTipsLayer(TipsLayerType type, CallFunc* func);
 

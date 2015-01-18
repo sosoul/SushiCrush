@@ -34,9 +34,8 @@ void GameController::uninit() {
 }
 
 void GameController::onSwapSushiCompleted() {
-	m_curRoundInfo.m_leftMoves--;
-	movesChanged(m_curRoundInfo.m_leftMoves);
-	
+		m_curRoundInfo.m_leftMoves--;
+		movesChanged(m_curRoundInfo.m_leftMoves);
 }
 
 void GameController::onRoundEnd() {
@@ -51,19 +50,17 @@ void GameController::onRoundEnd() {
 	writeToDB(m_curRoundInfo);
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(true));
 	UpdateUnlockInfo(round+1, true);
-	setCurRound(round);
 }
 
 void GameController::onRoundReady(READY_ACTION_TYPE actionType) {
+	int round = m_curRoundInfo.m_round;
 	if (ACTION_NEXT_ROUND == actionType) {
-		int round = m_curRoundInfo.m_round;
 		round++;
 		CCASSERT(round >= 0, "Error round!");
 		CCASSERT(round != TOTAL_ROUND, "Game Over.");
 		writeToDB(m_curRoundInfo);
-		setCurRound(round);
 	}
-	
+	setCurRound(round);
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
 }
 
@@ -183,6 +180,7 @@ void GameController::resetRoundInfo(int round) {
 	m_curRoundInfo.m_mapGotTarget.clear();
 	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
 	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
+	m_curCrashMode = CRASH_MODE_NORMAL;
 }
 
 bool GameController::isPass(int round) {
@@ -200,4 +198,38 @@ bool GameController::isPass(int round) {
 		return true;
 	}
 	return false;
+}
+
+CRASH_MODE GameController::getCurCrashMode()
+{
+	return m_curCrashMode;
+}
+
+void GameController::changeCurCrashMode()
+{
+	if (m_curCrashMode == CRASH_MODE_NORMAL)
+	{
+		m_curCrashMode = CRASH_MODE_REMOVE_SPECIAL_SUSHI;
+	}
+	else if (m_curCrashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+	{
+		m_curCrashMode = CRASH_MODE_GENERATE_SPECIAL_SUSHI;
+	}
+	else
+	{
+		m_curCrashMode == CRASH_MODE_NORMAL;
+	}
+}
+void GameController::curCrashModeFinish()
+{
+	//正常应该某些等会结束后再调用下面的方法
+	if (m_curCrashMode == CRASH_MODE_NORMAL)
+	{
+		//弹出目标完成
+		NotificationCenter::getInstance()->postNotification(MSG_TARGET_COMPLATE, (Ref*)(true));
+	}
+	else if (m_curCrashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+	{
+		NotificationCenter::getInstance()->postNotification(MSG_CRASH_BEGIN, (Ref*)(true));
+	}
 }

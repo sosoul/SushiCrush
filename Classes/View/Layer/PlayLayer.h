@@ -56,6 +56,7 @@ private:
 	SushiSprite *m_destSushi;// 移动到哪个寿司
 	bool m_isAnimationing;
 	bool m_isRoundEnded;
+	bool m_isNeedCheck;
 	bool m_isNeedFillVacancies;//是否有空缺需要填补
 	bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
 	bool m_needStopDfs;//判断是否需要结束 dfs
@@ -63,6 +64,7 @@ private:
 	bool m_isPreDfs;
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
+	bool m_isTriggered;
 	ClippingNode* m_clipper;
 
 	void initMatrix();
@@ -72,6 +74,8 @@ private:
 	void createAndDropSushi(std::deque<int>* sushiStack, std::deque<DfsSearchDirection>* directionStack, int rowNow, int colNow, bool isCreate);
 
 	Point positionOfItem(int row, int col);
+	void triggerCrash();
+	SushiSprite* getAdjoiningSushi(SushiSprite* sushi);
 	void checkAndRemoveChain();
 	PriorityLevel getChainMaxPriority(std::list<SushiSprite *> &chainList);
 	void setChainMaxPriority(std::list<SushiSprite *> &chainList, PriorityLevel p);
@@ -104,6 +108,8 @@ private:
 	static bool isValidRow(int row);
 	static bool isValidCol(int col);
 	void animation5line(Point start, Point end);
+
+	void animationGenerateSpecialSushi(int row, int col);
 	// is the marix stay lock status.
 	bool isLock();
 	// is the sushi stay lock status.
@@ -112,6 +118,9 @@ private:
 	void didShowScoreNumber(LabelBMFont* label);
 	void changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map);
 	
+	int getSpecialSushiNum();
+	int getSpecialSushiNum(SushiType sushiType);
+	void setSushiType(SushiSprite * sushi);
 };
 
 #endif // __PLAY_LAYER_H__
