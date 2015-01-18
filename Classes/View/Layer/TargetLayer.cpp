@@ -127,8 +127,6 @@ void TargetLayer::createTargetPanel(int* x, int* y, int value, const std::string
 	else {
 		(*x) += kDeltaX;
 	}
-
-	
 }
 
 void TargetLayer::onRoundEnd(Ref* obj)

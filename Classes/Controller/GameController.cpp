@@ -85,20 +85,32 @@ void GameController::onRemoveSushiCompleted(const MapTarget& map) {
 		return;
 	}
 	MapTarget new_map = map;
+	bool need_notify = false;
 	
 	if (0 != new_map[TARGET_TYPE_SCORE]) {
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] += new_map[TARGET_TYPE_SCORE];
 		scoreChanged(m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE]);
+		need_notify = true;
 	}
 	
-	if (0 != new_map[TARGET_TYPE_JELLY])
+	if (0 != new_map[TARGET_TYPE_JELLY]) {
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] += new_map[TARGET_TYPE_JELLY];
-	if (0 != new_map[TARGET_TYPE_DOUBLE_JELLY])
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_DOUBLE_JELLY]) {
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] += new_map[TARGET_TYPE_DOUBLE_JELLY];
-	if (0 != new_map[TARGET_TYPE_DOUBLE_CREAM])
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_CREAM]) {
+		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_CREAM] += new_map[TARGET_TYPE_CREAM];
+		need_notify = true;
+	}
+	if (0 != new_map[TARGET_TYPE_DOUBLE_CREAM]) {
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_CREAM] += new_map[TARGET_TYPE_DOUBLE_CREAM];
+		need_notify = true;
+	}
 
-	if (!map.empty())
+	if (need_notify)
 		targetChanged();
 }
 

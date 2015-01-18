@@ -13,8 +13,8 @@ namespace {
 	const int kDoubleCreamZOrder = 0;
 }
 
-GridSprite::GridSprite() : m_col(0),
-m_row(0)
+GridSprite::GridSprite() : _col(0),
+_row(0)
 {
 }
 
@@ -24,9 +24,10 @@ GridSprite::~GridSprite() {
 GridSprite *GridSprite::create(int row, int col, GridType type)
 {
 	GridSprite *grid = new GridSprite();
-	grid->m_row = row;
-	grid->m_col = col;
-	grid->m_gridType = type;
+	grid->_row = row;
+	grid->_col = col;
+	grid->_gridType = type;
+	grid->_originGridType = type;
 	switch (type)
 	{
 	case GIRD_TYPE_NORMAL:
@@ -58,9 +59,9 @@ GridSprite *GridSprite::create(int row, int col, GridType type)
 
 void GridSprite::setGridType(GridType type)
 {
-	m_gridType = type;
+	_gridType = type;
 	SpriteFrame *frame;
-	switch (m_gridType)
+	switch (_gridType)
 	{
 	case GIRD_TYPE_NORMAL:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(s_gridNormal);

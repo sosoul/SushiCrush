@@ -3,6 +3,7 @@
 #include "Common/ConfigService.h"
 #include "Common/Messages.h"
 #include "Common/Resource.h"
+#include "Common/Utils.h"
 #include "Controller/GameController.h"
 #include "View/Sprite/SushiSprite.h"
 
@@ -1130,7 +1131,7 @@ void PlayLayer::removeSushi()
 	m_isAnimationing = true;
 
 	int score = 0;
-	MapTarget map;
+	MapTarget map =  createTargetMap();
 
 	for (int i = 0; i < m_height * m_width; i++) {
 		SushiSprite *sushi = m_sushiMatrix[i];
@@ -1348,23 +1349,9 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		{
 		case GRID_TYPE_CREAM:
 			grid->setGridType(GRID_TYPE_DOUBLE_JELLY);
-			if (map) {
-				MapTarget::iterator it = map->find(TARGET_TYPE_CREAM);
-				if (map->end() == it)
-					map->insert(MapTarget::value_type(TARGET_TYPE_CREAM, 0));
-				it = map->find(TARGET_TYPE_CREAM);
-				++it->second;
-			}
 			break;
 		case GRID_TYPE_DOUBLE_CREAM:
 			grid->setGridType(GRID_TYPE_CREAM);
-			if (map) {
-				MapTarget::iterator it = map->find(TARGET_TYPE_DOUBLE_CREAM);
-				if (map->end() == it)
-					map->insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_CREAM, 0));
-				it = map->find(TARGET_TYPE_DOUBLE_CREAM);
-				++it->second;
-			}
 			break;
 		default:
 			break;
@@ -1373,24 +1360,36 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		switch (type)
 		{
 		case GRID_TYPE_JELLY:
+		{
 			grid->setGridType(GIRD_TYPE_NORMAL);
-			if (map) {
-				MapTarget::iterator it = map->find(TARGET_TYPE_JELLY);
-				if (map->end() == it)
-					map->insert(MapTarget::value_type(TARGET_TYPE_JELLY, 0));
-				it = map->find(TARGET_TYPE_JELLY);
-				++it->second;
+			TargetType origin_target_type = TARGET_TYPE_SCORE;
+			switch (grid->getOriginGridType())
+			{
+			case GRID_TYPE_JELLY:
+				origin_target_type = TARGET_TYPE_JELLY;
+				break;
+			case GRID_TYPE_DOUBLE_JELLY:
+				origin_target_type = TARGET_TYPE_DOUBLE_JELLY;
+				break;
+			case GRID_TYPE_CREAM:
+				origin_target_type = TARGET_TYPE_CREAM;
+				break;
+			case GRID_TYPE_DOUBLE_CREAM:
+				origin_target_type = TARGET_TYPE_DOUBLE_CREAM;
+				break;
+			default:
+				break;
 			}
+			if (TARGET_TYPE_SCORE != origin_target_type) {
+				int value = map->at(origin_target_type);
+				map->at(origin_target_type) = value + 1;
+			}
+		}
 			break;
 		case GRID_TYPE_DOUBLE_JELLY:
+		{
 			grid->setGridType(GRID_TYPE_JELLY);
-			if (map) {
-				MapTarget::iterator it = map->find(TARGET_TYPE_DOUBLE_JELLY);
-				if (map->end() == it)
-					map->insert(MapTarget::value_type(TARGET_TYPE_DOUBLE_JELLY, 0));
-				it = map->find(TARGET_TYPE_DOUBLE_JELLY);
-				++it->second;
-			}
+		}
 			break;
 		default:
 			break;

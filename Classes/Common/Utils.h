@@ -1,5 +1,5 @@
-#ifndef  _TYPES_H_
-#define  _TYPES_H_
+#ifndef  _UTILS_H_
+#define  _UTILS_H_
 
 #include "cocos2d.h"
 #include "Common/ConfigService.h"
@@ -16,5 +16,5 @@ MapTarget createTargetMap() {
 	return map;
 }
 
-#endif // _TYPES_H_
+#endif // _UTILS_H_
 

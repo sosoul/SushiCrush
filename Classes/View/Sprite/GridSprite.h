@@ -13,9 +13,10 @@ public:
 	~GridSprite();
 	static GridSprite *create(int row, int col, GridType type);
 
-	CC_SYNTHESIZE(int, m_row, Row);
-	CC_SYNTHESIZE(int, m_col, Col);
-	CC_SYNTHESIZE_READONLY(GridType, m_gridType, GridType);
+	CC_SYNTHESIZE(int, _row, Row);
+	CC_SYNTHESIZE(int, _col, Col);
+	CC_SYNTHESIZE_READONLY(GridType, _gridType, GridType);
+	CC_SYNTHESIZE_READONLY(GridType, _originGridType, OriginGridType);
 	void setGridType(GridType type);
 
 private:
