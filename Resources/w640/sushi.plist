@@ -7,392 +7,392 @@
             <key>play_play_grid_cream.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{90,90}}</string>
+                <string>{{2,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>play_play_grid_double_cream.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{94,2},{90,90}}</string>
+                <string>{{74,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>play_play_grid_double_jelly.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{186,2},{90,90}}</string>
+                <string>{{146,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>play_play_grid_jelly.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{278,2},{90,90}}</string>
+                <string>{{218,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>play_play_grid_normal.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{370,2},{90,90}}</string>
+                <string>{{290,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_1c.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{462,2},{90,90}}</string>
+                <string>{{362,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_1h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{554,2},{90,90}}</string>
+                <string>{{434,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_1n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{646,2},{90,90}}</string>
+                <string>{{506,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_1v.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{738,2},{90,90}}</string>
+                <string>{{578,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_2c.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{830,2},{90,90}}</string>
+                <string>{{650,2},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_2h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{922,2},{90,90}}</string>
+                <string>{{2,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_2n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1014,2},{90,90}}</string>
+                <string>{{74,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_2v.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1106,2},{90,90}}</string>
+                <string>{{146,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_3c.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1198,2},{90,90}}</string>
+                <string>{{218,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_3h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1290,2},{90,90}}</string>
+                <string>{{290,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_3n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,94},{90,90}}</string>
+                <string>{{362,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_3v.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{94,94},{90,90}}</string>
+                <string>{{434,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_4c.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{186,94},{90,90}}</string>
+                <string>{{506,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_4h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{278,94},{90,90}}</string>
+                <string>{{578,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_4n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{370,94},{90,90}}</string>
+                <string>{{650,74},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_4v.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{462,94},{90,90}}</string>
+                <string>{{2,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_5c.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{554,94},{90,90}}</string>
+                <string>{{74,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_5h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{646,94},{90,90}}</string>
+                <string>{{146,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_5line.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{738,94},{90,90}}</string>
+                <string>{{218,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_5n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{830,94},{90,90}}</string>
+                <string>{{290,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_5v.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{922,94},{90,90}}</string>
+                <string>{{362,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_6c.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1014,94},{90,90}}</string>
+                <string>{{434,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_6h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1106,94},{90,90}}</string>
+                <string>{{506,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_6n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1198,94},{90,90}}</string>
+                <string>{{578,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
             <key>sushi_6v.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1290,94},{90,90}}</string>
+                <string>{{650,146},{70,70}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{90,90}}</string>
+                <string>{{0,0},{70,70}}</string>
                 <key>sourceSize</key>
-                <string>{90,90}</string>
+                <string>{70,70}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -402,9 +402,9 @@
             <key>realTextureFileName</key>
             <string>sushi.png</string>
             <key>size</key>
-            <string>{1382,186}</string>
+            <string>{722,218}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:f38da2c4dbb5cb66f5d6bfd9bd9bbca2:877343237bb43dc3c6d202ad3731d099:fed5e61a3335d79e87740786ff0a5f9e$</string>
+            <string>$TexturePacker:SmartUpdate:b47ca9655b28d57637edba4c4d8ab103:7782d400986ba8dbcd4fb4c95ddbb86c:fed5e61a3335d79e87740786ff0a5f9e$</string>
             <key>textureFileName</key>
             <string>sushi.png</string>
         </dict>

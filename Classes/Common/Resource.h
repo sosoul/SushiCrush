@@ -1,9 +1,9 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
-#define MATRIX_WIDTH (7)
-#define MATRIX_HEIGHT (8)
-#define SUSHI_GAP (1)
+#define MATRIX_WIDTH (9)
+#define MATRIX_HEIGHT (9)
+#define SUSHI_GAP (0)
 #define SUSHI_COUNT (6)
 #define GRID_COUNT (3)
 

@@ -3,7 +3,6 @@
 #include "Common/ConfigService.h"
 #include "Common/Messages.h"
 #include "Common/Resource.h"
-//#include "Common/Utils.h"
 #include "Controller/GameController.h"
 #include "View/Sprite/SushiSprite.h"
 
@@ -112,7 +111,7 @@ bool PlayLayer::init()
 
 	// init position value
 	m_matrixLeftBottomX = (visibleSize.width - SushiSprite::getContentWidth() * m_width - (m_width - 1) * SUSHI_GAP) / 2;
-	m_matrixLeftBottomY = Director::getInstance()->getVisibleOrigin().y + 5;
+	m_matrixLeftBottomY = Director::getInstance()->getVisibleOrigin().y + 50;
 
 	// init point array
 	int arraySize = sizeof(SushiSprite *) * m_width * m_height;
@@ -1455,9 +1454,15 @@ void PlayLayer::removeSushi()
 			explodeSushi(sushi, &score, &map);
 		}
 	}
-	if (!map.empty() || score)
-	{
+	if (score)
 		map[TARGET_TYPE_SCORE] = score;
+
+	if (map[TARGET_TYPE_SCORE] || map[TARGET_TYPE_SUSHI_1] ||
+		map[TARGET_TYPE_SUSHI_2] || map[TARGET_TYPE_SUSHI_3] ||
+		map[TARGET_TYPE_SUSHI_4] || map[TARGET_TYPE_SUSHI_5] ||
+		map[TARGET_TYPE_SUSHI_6] || map[TARGET_TYPE_JELLY] ||
+		map[TARGET_TYPE_DOUBLE_JELLY] || map[TARGET_TYPE_CREAM] ||
+		map[TARGET_TYPE_DOUBLE_CREAM]) {
 		GameController::getInstance()->onRemoveSushiCompleted(map);
 	}
 	else {

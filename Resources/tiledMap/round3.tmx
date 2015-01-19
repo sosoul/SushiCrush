@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="7" height="8" tilewidth="91" tileheight="91">
- <tileset firstgid="1" name="sushi" tilewidth="92" tileheight="92">
-  <image source="../w640/sushi.png" width="1382" height="186"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="9" height="9" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="sushi" tilewidth="70" tileheight="70" spacing="2" margin="2">
+  <image source="../w640/sushi.png" width="722" height="218"/>
  </tileset>
- <layer name="matrixLayer" width="7" height="8">
+ <layer name="matrixLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYIViBiQ2DLOgybFgUYOuDxlg45NrHzluAQBc6ADS
+   eJxjYGBgYMWBYQCXPLI6QmqoiYl1Ez511AQA2BwBFA==
   </data>
  </layer>
- <layer name="producerLayer" width="7" height="8">
+ <layer name="clipperLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYIViBiQ2jD/UAQAZuAAf
+   eJxjYGBgYMWBYQCXPLI6QmqoiYl1Ez511AQA2BwBFA==
   </data>
  </layer>
- <layer name="portalSrcLayer" width="7" height="8">
+ <layer name="producerLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjYCAPsAExO5oYBxBzkmkerQAAEvwAHw==
-  </data>
- </layer>
- <layer name="portalDestLayer" width="7" height="8">
-  <data encoding="base64" compression="zlib">
-   eJxjYKAvYANidjQxDiDmpJF9AAxsAB8=
-  </data>
- </layer>
- <layer name="clipperLayer" width="7" height="8">
-  <data encoding="base64" compression="zlib">
-   eJxjZWBgYIViBiQ2OsYnh00tunpsYoTMoIYcAGlAAOw=
+   eJxjYGBgYMWBYQCZjQ7wyZGjbigCADSYAC4=
   </data>
  </layer>
 </map>
