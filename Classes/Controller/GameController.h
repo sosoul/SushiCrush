@@ -12,13 +12,6 @@ enum READY_ACTION_TYPE
 	ACTION_NEXT_ROUND,
 };
 
-enum CRASH_MODE
-{
-	CRASH_MODE_NORMAL = 0,
-	CRASH_MODE_REMOVE_SPECIAL_SUSHI = 1,
-	CRASH_MODE_GENERATE_SPECIAL_SUSHI = 2,
-};
-
 struct CurRoundInfo : public Ref {
 	int m_round;
 	int m_totalMoves;
@@ -69,7 +62,7 @@ public:
 	void UpdateUnlockInfo(int round, bool isUnlock);
 	bool isUnlock(int round);
 	bool isPass(int round);
-	CRASH_MODE getCurCrashMode();
+	CrashMode getCurCrashMode();
 	void changeCurCrashMode();
 private:
 	void writeToDB(const CurRoundInfo& m_curRoundInfo);
@@ -77,7 +70,7 @@ private:
 
 	CurRoundInfo m_curRoundInfo;
 	int m_curRound;
-	CRASH_MODE m_curCrashMode;
+	CrashMode m_curCrashMode;
 	MapRoundUnLock _roundUnlock;
 };
 

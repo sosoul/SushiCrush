@@ -50,6 +50,13 @@ enum TipsLayerType {
 	TIPS_TYPE_CRASH_BEGIN,
 };
 
+enum CrashMode
+{
+	CRASH_MODE_NORMAL = 0,
+	CRASH_MODE_REMOVE_SPECIAL_SUSHI,
+	CRASH_MODE_GENERATE_SPECIAL_SUSHI,
+};
+
 typedef std::map<TargetType, int> MapTarget;
 
 #endif // _TYPES_H_

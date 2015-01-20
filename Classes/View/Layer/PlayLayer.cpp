@@ -25,7 +25,8 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_needRefresh(false),
 						 m_isRoundEnded(false),
 						 m_isNeedCheck(true),
-						 m_isTriggered(false)
+						 m_isTriggered(false),
+						 m_curCrashMode(CRASH_MODE_NORMAL)
 {
 	CCASSERT(m_round >= 0 && m_round < TOTAL_ROUND, "");
 }
@@ -570,6 +571,25 @@ void PlayLayer::triggerCrash()
 				if (!checkActualRoundEnd())
 				{
 					checkAndRemoveChain();
+				}
+				else
+				{
+					if (m_curCrashMode != CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+					{
+						return;
+					}
+
+					const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
+					if (roundInfo.m_leftMoves > 0)
+					{
+						m_curCrashMode = CRASH_MODE_GENERATE_SPECIAL_SUSHI;
+						GameController::getInstance()->onCrushBegin();
+					}
+					else
+					{
+						m_curCrashMode = CRASH_MODE_NORMAL;
+						m_isRoundEnded = true;
+					}
 				}
 			}
 		}
@@ -2180,13 +2200,14 @@ void PlayLayer::fillVacancies()
 
 		int specialSushiNum = getSpecialSushiNum();
 
-		CRASH_MODE crashMode = GameController::getInstance()->getCurCrashMode();
+		CrashMode crashMode = GameController::getInstance()->getCurCrashMode();
 
 		CCLOG("crashMode: %d\n", crashMode);
 		if (crashMode == CRASH_MODE_NORMAL)
 		{
 			if (GameController::getInstance()->isPass(m_round))
 			{
+				m_curCrashMode = CRASH_MODE_REMOVE_SPECIAL_SUSHI;
 				GameController::getInstance()->onTargetCompleted();
 			}
 			else
@@ -2199,6 +2220,7 @@ void PlayLayer::fillVacancies()
 		{
 			if (roundInfo.m_leftMoves > 0 && specialSushiNum == 0)
 			{
+				m_curCrashMode = CRASH_MODE_GENERATE_SPECIAL_SUSHI;
 				GameController::getInstance()->onCrushBegin();
 			}
 			else if (roundInfo.m_leftMoves == 0 && specialSushiNum == 0)

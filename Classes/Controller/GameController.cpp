@@ -200,7 +200,7 @@ bool GameController::isPass(int round) {
 	return false;
 }
 
-CRASH_MODE GameController::getCurCrashMode()
+CrashMode GameController::getCurCrashMode()
 {
 	return m_curCrashMode;
 }

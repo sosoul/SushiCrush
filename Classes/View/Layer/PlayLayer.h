@@ -65,6 +65,7 @@ private:
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
 	bool m_isTriggered;
+	CrashMode m_curCrashMode;
 	ClippingNode* m_clipper;
 
 	void initMatrix();
