@@ -1486,7 +1486,6 @@ void PlayLayer::removeSushi()
 	else {
 		if (isLock())
 		{
-			m_needRefresh = true;
 			refresh();
 		}
 	}
@@ -2516,6 +2515,7 @@ GridType PlayLayer::getGridType(int row, int col) {
 }
 
 void PlayLayer::refresh() {
+	m_needRefresh = true;
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
 			if (SushiSprite* sushi = m_sushiMatrix[row*m_width + col])
