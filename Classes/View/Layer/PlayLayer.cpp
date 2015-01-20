@@ -1478,7 +1478,10 @@ void PlayLayer::removeSushi()
 		map[TARGET_TYPE_SUSHI_6] || map[TARGET_TYPE_JELLY] ||
 		map[TARGET_TYPE_DOUBLE_JELLY] || map[TARGET_TYPE_CREAM] ||
 		map[TARGET_TYPE_DOUBLE_CREAM]) {
-		GameController::getInstance()->onRemoveSushiCompleted(map);
+		if (!m_needRefresh)
+		{
+			GameController::getInstance()->onRemoveSushiCompleted(map);
+		}
 	}
 	else {
 		if (isLock())
@@ -1615,43 +1618,44 @@ void PlayLayer::explodeSushi(SushiSprite *sushi, int* score, MapTarget* map)
 	particleStars->setPosition(sushi->getPosition());
 	particleStars->setScale(0.3);
 	addChild(particleStars, 20);
+	if (!m_needRefresh)
+	{
+		// 4. score animation
+		Point pos = sushi->getPosition();
+		auto label = LabelBMFont::create("+" + StringUtils::toString(sushi->getScore()), "fonts/boundsTestFont.fnt");
+		(*score) += sushi->getScore();
+		label->retain();
+		label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		label->setPosition(pos);
+		addChild(label);
 
-	// 4. score animation
-	Point pos = sushi->getPosition();
-	auto label = LabelBMFont::create("+" + StringUtils::toString(sushi->getScore()), "fonts/boundsTestFont.fnt");
-	(*score) += sushi->getScore();
-	label->retain();
-	label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	label->setPosition(pos);
-	addChild(label);
+		const float duration = 1.0f;
+		Vec2 dstPos = pos + Vec2(0, 10);
+		FadeOut* fadeOut = FadeOut::create(duration);
+		MoveTo* moveTo = MoveTo::create(duration, dstPos);
+		auto spawn = Spawn::create(moveTo, fadeOut, nullptr);
+		auto seq = Sequence::create(spawn,
+			CallFunc::create(CC_CALLBACK_0(PlayLayer::didShowScoreNumber, this, label)), nullptr);
+		label->runAction(seq);
 
-	const float duration = 1.0f;
-	Vec2 dstPos = pos + Vec2(0, 10);
-	FadeOut* fadeOut = FadeOut::create(duration);
-	MoveTo* moveTo = MoveTo::create(duration, dstPos);
-	auto spawn = Spawn::create(moveTo, fadeOut, nullptr);
-	auto seq = Sequence::create(spawn,
-		CallFunc::create(CC_CALLBACK_0(PlayLayer::didShowScoreNumber, this, label)), nullptr);
-	label->runAction(seq);
+		// deal with grids
+		int row = sushi->getRow();
+		int col = sushi->getCol();
+		GridSprite* grid = m_gridMatrix[row*m_width + col];
+		changeGridType(grid, getGridType(row, col), false, map);
 
-
-	// deal with grids
-	int row = sushi->getRow();
-	int col = sushi->getCol();
-	GridSprite* grid = m_gridMatrix[row*m_width + col];
-	changeGridType(grid, getGridType(row, col), false, map);
-	
-	if (isValidRow(row - 1)) {
-		changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true, map);
-	}
-	if (isValidCol(col + 1)) {
-		changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true, map);
-	}
-	if (isValidRow(row + 1)) {
-		changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true, map);
-	}
-	if (isValidCol(col - 1)) {
-		changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true, map);
+		if (isValidRow(row - 1)) {
+			changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true, map);
+		}
+		if (isValidCol(col + 1)) {
+			changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true, map);
+		}
+		if (isValidRow(row + 1)) {
+			changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true, map);
+		}
+		if (isValidCol(col - 1)) {
+			changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true, map);
+		}
 	}
 }
 
