@@ -52,11 +52,14 @@ public:
 	int getGotTargetValue(TargetType type);
 	void setCurRound(int round);
 
+	// notifications
 	void onSwapSushiCompleted();
 	void onRemoveSushiCompleted(const MapTarget& map);
 	void onRoundEnd();
 	void onRoundReady(READY_ACTION_TYPE actionType);
 	void onRoundStart();
+	void onTargetCompleted();
+	void onCrushBegin();
 
 	void movesChanged(int leftMoves);
 	void scoreChanged(int gotScore);
@@ -68,7 +71,6 @@ public:
 	bool isPass(int round);
 	CRASH_MODE getCurCrashMode();
 	void changeCurCrashMode();
-	void curCrashModeFinish();
 private:
 	void writeToDB(const CurRoundInfo& m_curRoundInfo);
 	void resetRoundInfo(int round);

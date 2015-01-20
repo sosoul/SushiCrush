@@ -220,15 +220,18 @@ void GameController::changeCurCrashMode()
 		m_curCrashMode == CRASH_MODE_NORMAL;
 	}
 }
-void GameController::curCrashModeFinish()
-{
+
+void GameController::onTargetCompleted() {
 	//正常应该某些等会结束后再调用下面的方法
 	if (m_curCrashMode == CRASH_MODE_NORMAL)
 	{
 		//弹出目标完成
 		NotificationCenter::getInstance()->postNotification(MSG_TARGET_COMPLATE, (Ref*)(true));
 	}
-	else if (m_curCrashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+}
+
+void GameController::onCrushBegin() {
+	if (m_curCrashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
 	{
 		NotificationCenter::getInstance()->postNotification(MSG_CRASH_BEGIN, (Ref*)(true));
 	}

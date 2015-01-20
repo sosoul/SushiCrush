@@ -567,19 +567,7 @@ void PlayLayer::triggerCrash()
 			}
 			else
 			{
-				if (checkActualRoundEnd())
-				{
-					const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-					if (roundInfo.m_leftMoves > 0)
-					{
-						GameController::getInstance()->curCrashModeFinish();//通知进入下一阶段
-					}
-					else
-					{
-						m_isRoundEnded = true;
-					}
-				}
-				else
+				if (!checkActualRoundEnd())
 				{
 					checkAndRemoveChain();
 				}
@@ -639,11 +627,7 @@ void PlayLayer::triggerCrash()
 				}
 				else
 				{
-					if (checkActualRoundEnd())
-					{
-						m_isRoundEnded = true;
-					}
-					else
+					if (!checkActualRoundEnd())
 					{
 						checkAndRemoveChain();
 					}
@@ -1217,9 +1201,9 @@ bool PlayLayer::checkActualRoundEnd()
 		if (sushi->getIsNeedRemove()) {
 			return false;
 		}
-		if (sushi->getIgnoreCheck()) {
+		/*if (sushi->getIgnoreCheck()) {
 			return false;
-		}
+			}*/
 
 		// start count chain
 		std::list<SushiSprite *> colChainList;
@@ -2175,38 +2159,7 @@ void PlayLayer::fillVacancies()
 		}
 	}
 
-	if (searchCount != m_width * m_height)
-	{
-		//SOMETHING WRONG!
-	}
-
-
-
-		/*while (!m_needStopBfs)
-		{
-		m_needStopBfs = true;
-		for (int row = 0; row < m_height; row++)
-		{
-		if (m_width % 2 == 0)
-		{
-		for (int col = 0; col < m_width / 2; col++)
-		{
-		fillVacancies(row, col);
-		fillVacancies(row, m_width - 1 - col);
-		}
-		}
-		else
-		{
-		for (int col = 0; col < m_width / 2; col++)
-		{
-		fillVacancies(row, col);
-		fillVacancies(row, m_width - 1 - col);
-		}
-
-		fillVacancies(row, m_width / 2);
-		}
-		}
-		}*/
+	CCASSERT(searchCount == m_width * m_height, "Tiled map config error!");
 
 	m_needRefresh = false;
 
@@ -2218,11 +2171,12 @@ void PlayLayer::fillVacancies()
 
 		CRASH_MODE crashMode = GameController::getInstance()->getCurCrashMode();
 
+		CCLOG("crashMode: %d\n", crashMode);
 		if (crashMode == CRASH_MODE_NORMAL)
 		{
 			if (GameController::getInstance()->isPass(m_round))
 			{
-				GameController::getInstance()->curCrashModeFinish();
+				GameController::getInstance()->onTargetCompleted();
 			}
 			else
 			{
@@ -2230,6 +2184,26 @@ void PlayLayer::fillVacancies()
 					m_isRoundEnded = true;
 			}
 		}
+		else if (crashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+		{
+			if (roundInfo.m_leftMoves > 0 && specialSushiNum == 0)
+			{
+				GameController::getInstance()->onCrushBegin();
+			}
+			else if (roundInfo.m_leftMoves == 0 && specialSushiNum == 0)
+			{
+				m_isRoundEnded = true;
+			}
+		}
+		else if (crashMode == CRASH_MODE_GENERATE_SPECIAL_SUSHI)
+		{
+			if (m_isTriggered && specialSushiNum == 0 && roundInfo.m_leftMoves == 0)
+			{
+				m_isRoundEnded = true;
+			}
+		}
+
+
 		//if (roundInfo.m_leftMoves > 0 && GameController::getInstance()->isPass(m_round))
 		//{
 		//	//提前结束  开始sushicursh效果   首先消除所有当前特殊sushi, 然后将步数转化为随机特殊sushi
