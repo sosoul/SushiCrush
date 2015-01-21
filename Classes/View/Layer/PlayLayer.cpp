@@ -232,6 +232,19 @@ bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)
 
 void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 {
+	if (m_isRoundEnded)
+	{
+		return;
+	}
+	if (GameController::getInstance()->getCurCrashMode() != CRASH_MODE_NORMAL)
+	{
+		return;
+	}
+	if (m_curCrashMode != CRASH_MODE_NORMAL)
+	{
+		return;
+	}
+
 	if (!m_srcSushi || !m_isTouchEnable) {
 		return;
 	}
