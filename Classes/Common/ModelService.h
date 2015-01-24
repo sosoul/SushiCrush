@@ -24,9 +24,10 @@ public:
 
 	void initUserData();
 
-	void setRoundData(int round, int score, int best_score, int star);
+	void setRoundData(int round, int score, int best_score, int best_star);
 
 	void setCurrentRound(int round);
+	void setMaxPassedRound(int round);
 
 	void setScore(int round, int score);
 	void setBestScore(int round, int score);
@@ -36,6 +37,7 @@ public:
 	bool getBestScore(int round, int& score);
 	bool getBestStar(int round, int& star);
 	bool getCurrentRound(int& round);
+	bool getMaxPassedRound(int& round);
 };
 
 

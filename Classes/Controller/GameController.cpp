@@ -2,6 +2,7 @@
 
 
 #include "Common/Messages.h"
+#include "Common/ModelService.h"
 #include "Common/Resource.h"
 
 static GameController *s_sharedGameController = nullptr;
@@ -26,7 +27,10 @@ void GameController::destroyInstance()
 }
 
 void GameController::init() {
-	setCurRound(0);
+	int curRound = 0;
+	bool canGetData = ModelService::getInstance()->getCurrentRound(curRound);
+	CCASSERT(canGetData == true, "GameController::init false : ModelService error");
+	setCurRound(curRound);
 	ReadUnlockInfo();
 }
 
@@ -58,7 +62,6 @@ void GameController::onRoundReady(READY_ACTION_TYPE actionType) {
 		round++;
 		CCASSERT(round >= 0, "Error round!");
 		CCASSERT(round != TOTAL_ROUND, "Game Over.");
-		writeToDB(m_curRoundInfo);
 	}
 	setCurRound(round);
 	NotificationCenter::getInstance()->postNotification(MSG_ROUND_READY, (Ref*)(&m_curRoundInfo));
@@ -141,6 +144,25 @@ void GameController::targetChanged() {
 }
 
 void GameController::writeToDB(const CurRoundInfo& m_curRoundInfo) {
+	int maxRound = 0;
+	ModelService::getInstance()->getMaxPassedRound(maxRound);
+
+	int curRound = m_curRoundInfo.m_round;
+	if (curRound > maxRound)
+	{
+		ModelService::getInstance()->setMaxPassedRound(curRound);
+	}
+	
+	int bestScore = 0;
+	ModelService::getInstance()->getBestScore(curRound, bestScore);
+
+	int curScore = GameController::getGotTargetValue(TARGET_TYPE_SCORE);
+	if (curScore > bestScore)
+	{
+		ModelService::getInstance()->setBestScore(curRound, curScore);
+	}
+
+	ModelService::getInstance()->setScore(curRound, curScore);
 }
 
 void GameController::setCurRound(int round) {
@@ -151,7 +173,19 @@ void GameController::setCurRound(int round) {
 void GameController::ReadUnlockInfo() {
 	for (int i = 0; i < TOTAL_ROUND; ++i)
 		_roundUnlock.insert(MapRoundUnLock::value_type(i, false));
-	_roundUnlock[0] = true;
+
+	int maxPassedRound = 0;
+	ModelService::getInstance()->getMaxPassedRound(maxPassedRound);
+	for (int j = 0; j <= maxPassedRound; j++)
+	{
+		_roundUnlock[j] = true;
+	}
+
+	if (maxPassedRound + 1 < TOTAL_ROUND)
+	{
+		_roundUnlock[maxPassedRound + 1] = true;
+	}
+
 }
 
 void GameController::UpdateUnlockInfo(int round, bool isUnlock) {

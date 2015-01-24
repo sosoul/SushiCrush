@@ -56,7 +56,7 @@ void ModelService::loadConfig()
 bool ModelService::createTableBasicData()
 {
 	std::ostringstream os;
-	os << "create table " << TABLE_USER_BASIC_DATA << "(ID integer primary key autoincrement, user_name nvarchar(32), current_round integer)";
+	os << "create table " << TABLE_USER_BASIC_DATA << "(ID integer primary key autoincrement, user_name nvarchar(32), current_round integer, max_passed_round integer)";
 
 	std::string sql = os.str();
 	if (!DataBase::getInstance()->createTable(sql))
@@ -84,7 +84,7 @@ void ModelService::initUserData()
 	if (DataBase::getInstance()->getDataCount(TABLE_USER_BASIC_DATA) == 0)
 	{
 		std::ostringstream os;
-		os << "insert into " << TABLE_USER_BASIC_DATA << "('user_name', 'current_round')  values('" << USER_NAME "', 0)";
+		os << "insert into " << TABLE_USER_BASIC_DATA << "('user_name', 'current_round', 'max_passed_round')  values('" << USER_NAME "', 0, 0)";
 		std::string sql = os.str();
 		DataBase::getInstance()->execute(sql.c_str());
 	}
@@ -94,6 +94,20 @@ void ModelService::setCurrentRound(int round)
 {
 	std::string keys[1];
 	keys[0] = "current_round";
+
+	std::string values[1];
+	values[0] = StringUtils::toString(round);
+
+	DataBaseDataType types[1];
+	types[0] = DATA_TYPE_INT;
+
+	DataBase::getInstance()->updateData(TABLE_USER_BASIC_DATA, "user_name", USER_NAME, keys, values, types, 1);
+}
+
+void ModelService::setMaxPassedRound(int round)
+{
+	std::string keys[1];
+	keys[0] = "max_passed_round";
 
 	std::string values[1];
 	values[0] = StringUtils::toString(round);
@@ -178,7 +192,7 @@ void ModelService::setBestStar(int round, int star)
 	keys[2] = "best_star";
 
 	std::string values[3];
-	values[0] = "usertest1";
+	values[0] = USER_NAME;
 	values[1] = StringUtils::toString(round);
 	values[2] = StringUtils::toString(star);
 
@@ -206,4 +220,9 @@ bool ModelService::getBestStar(int round, int& star)
 bool ModelService::getCurrentRound(int& round)
 {
 	return DataBase::getInstance()->queryValue(TABLE_USER_BASIC_DATA, "user_name", USER_NAME, "current_round", round);
+}
+
+bool ModelService::getMaxPassedRound(int& round)
+{
+	return DataBase::getInstance()->queryValue(TABLE_USER_BASIC_DATA, "user_name", USER_NAME, "max_passed_round", round);
 }
