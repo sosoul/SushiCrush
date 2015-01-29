@@ -19,7 +19,8 @@ public:
 	SushiSprite();
 	~SushiSprite();
 	static SushiSprite *create(int row, int col, int topImgIndex, int leftImgIndex, PriorityLevel priorityLevel);
-	static SushiSprite *create(int row, int col, int imgIndex, SushiType mode);
+	static SushiSprite *create(int row, int col, int imgIndex, SushiType type);
+	static SushiSprite *clone(const SushiSprite* sushi);
 	static float getContentWidth();
 
 	CC_SYNTHESIZE(int, m_row, Row);
@@ -30,7 +31,7 @@ public:
 	CC_SYNTHESIZE_READONLY(SushiType, m_sushiType, SushiType);
 	CC_SYNTHESIZE(int, m_score, Score);
 	CC_SYNTHESIZE(PriorityLevel, m_sushiPriorityLevel, SushiPriorityLevel);
-	void setSushiType(SushiType mode);
+	void setSushiType(SushiType type);
 	void applySushiType();
 
 private:

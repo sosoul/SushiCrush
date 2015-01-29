@@ -214,7 +214,7 @@ void GameController::resetRoundInfo(int round) {
 	m_curRoundInfo.m_mapGotTarget.clear();
 	m_curRoundInfo.m_totalMoves = roundInfo->_moves;
 	m_curRoundInfo.m_leftMoves = roundInfo->_moves;
-	m_curCrashMode = CRASH_MODE_NORMAL;
+	m_curCrushMode = CRUSH_MODE_NORMAL;
 }
 
 bool GameController::isPass(int round) {
@@ -234,30 +234,30 @@ bool GameController::isPass(int round) {
 	return false;
 }
 
-CrashMode GameController::getCurCrashMode()
+CrushMode GameController::getCurCrushMode()
 {
-	return m_curCrashMode;
+	return m_curCrushMode;
 }
 
-void GameController::changeCurCrashMode()
+void GameController::changeCurCrushMode()
 {
-	if (m_curCrashMode == CRASH_MODE_NORMAL)
+	if (m_curCrushMode == CRUSH_MODE_NORMAL)
 	{
-		m_curCrashMode = CRASH_MODE_REMOVE_SPECIAL_SUSHI;
+		m_curCrushMode = CRUSH_MODE_REMOVE_SPECIAL_SUSHI;
 	}
-	else if (m_curCrashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+	else if (m_curCrushMode == CRUSH_MODE_REMOVE_SPECIAL_SUSHI)
 	{
-		m_curCrashMode = CRASH_MODE_GENERATE_SPECIAL_SUSHI;
+		m_curCrushMode = CRUSH_MODE_GENERATE_SPECIAL_SUSHI;
 	}
 	else
 	{
-		m_curCrashMode == CRASH_MODE_NORMAL;
+		m_curCrushMode == CRUSH_MODE_NORMAL;
 	}
 }
 
 void GameController::onTargetCompleted() {
 	//正常应该某些等会结束后再调用下面的方法
-	if (m_curCrashMode == CRASH_MODE_NORMAL)
+	if (m_curCrushMode == CRUSH_MODE_NORMAL)
 	{
 		//弹出目标完成
 		NotificationCenter::getInstance()->postNotification(MSG_TARGET_COMPLATE, (Ref*)(true));
@@ -265,7 +265,7 @@ void GameController::onTargetCompleted() {
 }
 
 void GameController::onCrushBegin() {
-	if (m_curCrashMode == CRASH_MODE_REMOVE_SPECIAL_SUSHI)
+	if (m_curCrushMode == CRUSH_MODE_REMOVE_SPECIAL_SUSHI)
 	{
 		NotificationCenter::getInstance()->postNotification(MSG_CRASH_BEGIN, (Ref*)(true));
 	}

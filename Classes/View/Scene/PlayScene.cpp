@@ -296,7 +296,7 @@ void PlayScene::onTargetComplateTipsActionEnd(bool result) {
 		m_tipsLayer->release();
 		m_tipsLayer = nullptr;
 	}
-	GameController::getInstance()->changeCurCrashMode();
+	GameController::getInstance()->changeCurCrushMode();
 }
 
 void PlayScene::onCrashBeginTipsActionEnd(bool result) {
@@ -305,7 +305,7 @@ void PlayScene::onCrashBeginTipsActionEnd(bool result) {
 		m_tipsLayer->release();
 		m_tipsLayer = nullptr;
 	}
-	GameController::getInstance()->changeCurCrashMode();
+	GameController::getInstance()->changeCurCrushMode();
 }
 
 void PlayScene::showTipsLayer(TipsLayerType type, CallFunc* func) {

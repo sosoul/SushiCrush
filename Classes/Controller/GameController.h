@@ -62,15 +62,15 @@ public:
 	void UpdateUnlockInfo(int round, bool isUnlock);
 	bool isUnlock(int round);
 	bool isPass(int round);
-	CrashMode getCurCrashMode();
-	void changeCurCrashMode();
+	CrushMode getCurCrushMode();
+	void changeCurCrushMode();
 private:
 	void writeToDB(const CurRoundInfo& m_curRoundInfo);
 	void resetRoundInfo(int round);
 
 	CurRoundInfo m_curRoundInfo;
 	int m_curRound;
-	CrashMode m_curCrashMode;
+	CrushMode m_curCrushMode;
 	MapRoundUnLock _roundUnlock;
 };
 

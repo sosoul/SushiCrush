@@ -13,7 +13,7 @@
         <map>round1.tmx</map>
 		<target>
 			<score>50</score>
-			<sushi5>21</sushi5>
+			<sushi5>2</sushi5>
 		</target>
 		<moves>16</moves>
     </round>
@@ -21,8 +21,8 @@
         <map>round2.tmx</map>
 		<target>
 			<score>60</score>
-			<sushi1>16</sushi1>
-			<sushi2>16</sushi2>
+			<sushi1>1</sushi1>
+			<sushi2>1</sushi2>
 		</target>
 		<moves>18</moves>
     </round>
@@ -30,8 +30,8 @@
         <map>round3.tmx</map>
 		<target>
 			<score>800</score>
-			<sushi2>18</sushi2>
-			<sushi3>18</sushi3>
+			<sushi2>3</sushi2>
+			<sushi3>3</sushi3>
 		</target>
 		<moves>20</moves>
     </round>
@@ -39,8 +39,8 @@
         <map>round4.tmx</map>
 		<target>
 			<score>1000</score>
-			<sushi5>28</sushi5>
-			<sushi6>28</sushi6>
+			<sushi5>5</sushi5>
+			<sushi6>5</sushi6>
 		</target>
 		<moves>20</moves>
     </round>
