@@ -316,7 +316,6 @@ void PlayLayer::onTouchMoved(Touch *touch, Event *unused)  // pass
 
 void PlayLayer::swapSushi()
 {
-	m_isAnimationing = true;
 	m_isTouchEnable = false;
 	if (!m_srcSushi || !m_destSushi) {
 		return;
@@ -2370,6 +2369,8 @@ void PlayLayer::playDropAnimation(SushiSprite* sushi, std::deque<SushiDropPathIn
 		return;
 	if (dropPath->empty())
 		return;
+
+	m_isAnimationing = true;
 
 	int startIndex = dropPath->back().m_sushiIndex;
 	int row = getRowByIndex(startIndex);
