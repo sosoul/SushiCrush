@@ -175,13 +175,13 @@ void GameController::ReadUnlockInfo() {
 		_roundUnlock.insert(MapRoundUnLock::value_type(i, false));
 
 	int maxPassedRound = 0;
-	ModelService::getInstance()->getMaxPassedRound(maxPassedRound);
+	bool getDataSuccess = ModelService::getInstance()->getMaxPassedRound(maxPassedRound);
 	for (int j = 0; j <= maxPassedRound; j++)
 	{
 		_roundUnlock[j] = true;
 	}
 
-	if (maxPassedRound + 1 < TOTAL_ROUND)
+	if (maxPassedRound + 1 < TOTAL_ROUND && getDataSuccess)
 	{
 		_roundUnlock[maxPassedRound + 1] = true;
 	}

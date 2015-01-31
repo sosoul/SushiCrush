@@ -84,7 +84,7 @@ void ModelService::initUserData()
 	if (DataBase::getInstance()->getDataCount(TABLE_USER_BASIC_DATA) == 0)
 	{
 		std::ostringstream os;
-		os << "insert into " << TABLE_USER_BASIC_DATA << "('user_name', 'current_round', 'max_passed_round')  values('" << USER_NAME "', 0, 0)";
+		os << "insert into " << TABLE_USER_BASIC_DATA << "('user_name', 'current_round', 'max_passed_round')  values('" << USER_NAME "', 0, -1)";
 		std::string sql = os.str();
 		DataBase::getInstance()->execute(sql.c_str());
 	}
