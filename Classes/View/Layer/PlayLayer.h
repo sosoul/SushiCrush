@@ -56,7 +56,7 @@ private:
 	RefreshRetainMap m_mapRefreshRetain;
 	int* m_sushiModeMatrix;  // std::map<int, int>
 
-	int* m_preDfsMatrix;
+	bool* m_preDfsMatrix;
 	int* m_inDegreeMatrix;
 	int* m_dfsPathMatrix;
 
@@ -140,6 +140,7 @@ private:
 	void playAddScoreAnimation(SushiSprite *sushi);
 	void play5LineSushiTriggerAnimation(Point start, Point end);
 	void playGenerateSuperSushiAnimation(SushiSprite* sushi);
+	void playRefreshDropAnimation(SushiSprite* sushi);
 
 	// animation callbacks
 	void didPlayExplodeSushiAnimation(SushiSprite *sushi);
