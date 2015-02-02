@@ -47,18 +47,17 @@ void DataBase::loadConfig()
 
 bool DataBase::openDB()
 {
-	char *errMsg; //错误信息
 	std::string sqlStr; //sql指令
 	int result; //sql_exec返回指令
 
 	std::string fileName = CCFileUtils::getInstance()->fullPathForFilename("sushiData.db");
 
-	CCLOG("db path: %s", fileName);
+	CCLOG("db path: %s", fileName.c_str());
 
 	result = sqlite3_open(fileName.c_str(), &s_pointer_db);
 	if (result != SQLITE_OK)
 	{
-		CCLOG("fail open errCode:%d errMsg:%s", result, errMsg);
+		CCLOG("fail open errCode:%d\n", result);
 		return false;
 	}
 	return true;
@@ -114,7 +113,7 @@ char **DataBase::rawQuery(const char *sql, int *row, int *column, char **result)
 		if (!openDB())
 		{
 			CCLOG("createUserBasicData fail. Fail open database");
-			return false;
+			return result;
 		}
 	}
 
@@ -274,7 +273,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		
 		std::string sql = os.str();
 
-		CCLOG("updateData sql %s", sql);
+		CCLOG("updateData sql %s", sql.c_str());
 		execute(sql.c_str());
 	}
 	else
@@ -292,7 +291,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		os << " where " << key << " = " << value;
 		std::string sql = os.str();
 
-		CCLOG("updateData sql %s", sql);
+		CCLOG("updateData sql %s", sql.c_str());
 		execute(sql.c_str());
 	}
 }
@@ -323,7 +322,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 
 		std::string sql = os.str();
 
-		CCLOG("updateData sql %s", sql);
+		CCLOG("updateData sql %s", sql.c_str());
 		execute(sql.c_str());
 	}
 	else
@@ -341,7 +340,7 @@ void DataBase::updateData(const std::string& table_name, const std::string& key,
 		os << " where " << key << " = '" << value << "'";
 		std::string sql = os.str();
 
-		CCLOG("updateData sql %s", sql);
+		CCLOG("updateData sql %s", sql.c_str());
 		execute(sql.c_str());
 	}
 }
