@@ -109,10 +109,11 @@ private:
 	void fillVacancies();
 	void fillVacancies(int row, int col);
 	SushiSprite* getNeighborSushi(SushiSprite* sushi);
+	void Prompt(float time);
 
 	// play scene status
 	bool isLock();  // is the matrix stay lock status?
-	bool isLock(int row, int col);  // is the sushi which with row and col stay lock status?
+	bool isLock(int row, int col, std::vector<SushiSprite*>* sushis = NULL);  // is the sushi which with row and col stay lock status?
 	void triggerCrush();
 	
 
@@ -141,6 +142,10 @@ private:
 	void play5LineSushiTriggerAnimation(Point start, Point end);
 	void playGenerateSuperSushiAnimation(SushiSprite* sushi);
 	void playRefreshDropAnimation(SushiSprite* sushi);
+	void playPromptAnimation(std::vector<SushiSprite*> sushis);
+
+	// stop repeat animations
+	void stopAllPromptAnimation();
 
 	// animation callbacks
 	void didPlayExplodeSushiAnimation(SushiSprite *sushi);

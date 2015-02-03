@@ -101,7 +101,7 @@ SushiSprite* SushiSprite::create(int row, int col, int imgIndex, SushiType type)
 	sushi->m_sushiType = type;
 	sushi->m_imgIndex = imgIndex;
 	sushi->initWithSpriteFrameName(sushiNormal[sushi->m_imgIndex]);
-	sushi->autorelease();
+	//sushi->autorelease();
 	return sushi;
 }
 
@@ -110,6 +110,8 @@ SushiSprite* SushiSprite::clone(const SushiSprite* sushi) {
 		return NULL;
 	SushiSprite* sushiClone = SushiSprite::create(sushi->getRow(), sushi->getCol(), sushi->getImgIndex(), sushi->getSushiType());
 	sushiClone->setSushiPriorityLevel(sushi->getSushiPriorityLevel());
+	//sushiClone->autorelease();
+	return sushiClone;
 }
 
 float SushiSprite::getContentWidth()

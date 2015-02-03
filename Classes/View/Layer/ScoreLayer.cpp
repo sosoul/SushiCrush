@@ -57,7 +57,7 @@ bool ScoreLayer::init() {
 	// init score
 	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 	int gotScore = GameController::getInstance()->getGotTargetValue(TARGET_TYPE_SCORE);
-	onScoreChanged((Ref*)(intptr_t)gotScore);
+	onScoreChanged((Ref*)(&gotScore));
 	return true;
 }
 

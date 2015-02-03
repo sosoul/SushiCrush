@@ -132,11 +132,11 @@ void GameController::onRemoveSushiCompleted(const MapTarget& map) {
 }
 
 void GameController::movesChanged(int leftMoves) {
-	NotificationCenter::getInstance()->postNotification(MSG_MOVES_CHANGED, (Ref*)leftMoves);
+	NotificationCenter::getInstance()->postNotification(MSG_MOVES_CHANGED, (Ref*)(&leftMoves));
 }
 
 void GameController::scoreChanged(int gotScore) {
-	NotificationCenter::getInstance()->postNotification(MSG_SCORE_CHANGED, (Ref*)(intptr_t)gotScore);
+	NotificationCenter::getInstance()->postNotification(MSG_SCORE_CHANGED, (Ref*)(&gotScore));
 }
 
 void GameController::targetChanged() {

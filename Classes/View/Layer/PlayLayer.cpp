@@ -6,6 +6,14 @@
 #include "Controller/GameController.h"
 #include "View/Sprite/SushiSprite.h"
 
+namespace {
+enum {
+	kTagPromptAnimation,
+};
+
+const int kPromptTime = 10.0f;
+}
+
 PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_sushiMatrix(NULL),
 						 m_width(0),
@@ -142,6 +150,7 @@ bool PlayLayer::init()
 	initMatrix();
 
 	scheduleUpdate();
+	scheduleOnce((SEL_SCHEDULE)&PlayLayer::Prompt, kPromptTime);
 
 	// bind touch event
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -220,8 +229,23 @@ SushiSprite *PlayLayer::sushiOfPoint(Point *point)  // pass
 	return NULL;
 }
 
+void PlayLayer::Prompt(float time) {
+	std::vector<SushiSprite*> sushis;
+	for (int row = 0; row < m_height; row++) {
+		for (int col = 0; col < m_width; col++) {
+			if (!isLock(row, col, &sushis)) {
+				playPromptAnimation(sushis);
+				return;
+			}
+		}
+	}
+}
+
 bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)  // pass
 {
+	stopAllPromptAnimation();
+	unschedule((SEL_SCHEDULE)&PlayLayer::Prompt);
+	scheduleOnce((SEL_SCHEDULE)&PlayLayer::Prompt, 10.0f);
 	m_srcSushi = NULL;
 	m_destSushi = NULL;
 	if (m_isTouchEnable) {
@@ -2202,7 +2226,7 @@ void PlayLayer::setSushiType(SushiSprite * sushi)
 	m_isTriggered = false;
 }
 
-bool PlayLayer::isLock(int row, int col) {
+bool PlayLayer::isLock(int row, int col, std::vector<SushiSprite*>* sushis) {
 	if (!isValidGrid(row, col))
 		return true;
 	if (!isValidRow(row) || !isValidCol(col))
@@ -2226,20 +2250,38 @@ bool PlayLayer::isLock(int row, int col) {
 		if (isValidRow(topRow2) && isValidRow(topRow3)) {
 			sushi1 = m_sushiMatrix[topRow2*m_width + col];
 			sushi2 = m_sushiMatrix[topRow3*m_width + col];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidCol(topLeftCol1) && isValidCol(topLeftCol2) && isValidRow(topRow1)) {
 			sushi1 = m_sushiMatrix[topRow1*m_width + topLeftCol1];
 			sushi2 = m_sushiMatrix[topRow1*m_width + topLeftCol2];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidCol(topRightCol1) && isValidCol(topRightCol2) && isValidRow(topRow1)) {
 			sushi1 = m_sushiMatrix[topRow1*m_width + topRightCol1];
 			sushi2 = m_sushiMatrix[topRow1*m_width + topRightCol2];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 	}
 
@@ -2255,20 +2297,38 @@ bool PlayLayer::isLock(int row, int col) {
 		if (isValidCol(rightCol2) && isValidCol(rightCol3)) {
 			sushi1 = m_sushiMatrix[row*m_width + rightCol2];
 			sushi2 = m_sushiMatrix[row*m_width + rightCol3];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidRow(rightTopRow1) && isValidRow(rightTopRow2) && isValidCol(rightCol1)) {
 			sushi1 = m_sushiMatrix[rightTopRow1*m_width + rightCol1];
 			sushi2 = m_sushiMatrix[rightTopRow2*m_width + rightCol1];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidRow(rightBottomRow1) && isValidRow(rightBottomRow2) && isValidCol(rightCol1)) {
 			sushi1 = m_sushiMatrix[rightBottomRow1*m_width + rightCol1];
 			sushi2 = m_sushiMatrix[rightBottomRow2*m_width + rightCol1];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 	}
 
@@ -2284,20 +2344,38 @@ bool PlayLayer::isLock(int row, int col) {
 		if (isValidRow(bottomRow2) && isValidRow(bottomRow3)) {
 			sushi1 = m_sushiMatrix[bottomRow2*m_width + col];
 			sushi2 = m_sushiMatrix[bottomRow3*m_width + col];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidCol(bottomLeftCol1) && isValidCol(bottomLeftCol2) && isValidRow(bottomRow1)) {
 			sushi1 = m_sushiMatrix[bottomRow1*m_width + bottomLeftCol1];
 			sushi2 = m_sushiMatrix[bottomRow1*m_width + bottomLeftCol2];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidCol(bottomRightCol1) && isValidCol(bottomRightCol2) && isValidRow(bottomRow1)) {
 			sushi1 = m_sushiMatrix[bottomRow1*m_width + bottomRightCol1];
 			sushi2 = m_sushiMatrix[bottomRow1*m_width + bottomRightCol2];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 	}
 
@@ -2313,20 +2391,38 @@ bool PlayLayer::isLock(int row, int col) {
 		if (isValidCol(leftCol2) && isValidCol(leftCol3)) {
 			sushi1 = m_sushiMatrix[row*m_width + leftCol2];
 			sushi2 = m_sushiMatrix[row*m_width + leftCol3];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidRow(leftTopRow1) && isValidRow(leftTopRow2) && isValidCol(leftCol1)) {
 			sushi1 = m_sushiMatrix[leftTopRow1*m_width + leftCol1];
 			sushi2 = m_sushiMatrix[leftTopRow2*m_width + leftCol1];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 		if (isValidRow(leftBottomRow1) && isValidRow(leftBottomRow2) && isValidCol(leftCol1)) {
 			sushi1 = m_sushiMatrix[leftBottomRow1*m_width + leftCol1];
 			sushi2 = m_sushiMatrix[leftBottomRow2*m_width + leftCol1];
-			if (canbeRemovedSushis(sushi1, sushi2, index))
+			if (canbeRemovedSushis(sushi1, sushi2, index)) {
+				if (sushis) {
+					sushis->push_back(sushi);
+					sushis->push_back(sushi1);
+					sushis->push_back(sushi2);
+				}
 				return false;
+			}
 		}
 	}
 
@@ -2644,4 +2740,37 @@ void PlayLayer::playRefreshDropAnimation(SushiSprite* sushi) {
 	sushi->runAction(moveTo);
 	m_spriteSheet->addChild(sushi);
 	m_sushiMatrix[row * m_width + col] = sushi;
+}
+
+void PlayLayer::playPromptAnimation(std::vector<SushiSprite*> sushis) {
+	if (sushis.empty())
+		return;
+	std::vector<SushiSprite*>::iterator it = sushis.begin();
+	for (; sushis.end() != it; ++it) {
+		ScaleTo* scaleTo1 = ScaleTo::create(0.3f, 1.1f, 0.9f);
+		ScaleTo* scaleTo2 = ScaleTo::create(0.3f, 0.9f, 1.1f);
+		ScaleTo* scaleTo3 = ScaleTo::create(0.3f, 1.1f, 0.9f);
+		ScaleTo* scaleTo4 = ScaleTo::create(0.3f, 1.0f, 1.0f);
+		DelayTime* delay = DelayTime::create(1.0f);
+		Vector<FiniteTimeAction*> actions;
+		actions.pushBack(scaleTo1);
+		actions.pushBack(scaleTo2);
+		actions.pushBack(scaleTo3);
+		actions.pushBack(scaleTo4);
+		actions.pushBack(delay);
+		RepeatForever* repeat = RepeatForever::create(Sequence::create(actions));
+		repeat->setTag(kTagPromptAnimation);
+		(*it)->runAction(repeat);
+	}
+}
+
+void PlayLayer::stopAllPromptAnimation()
+{
+	for (int i = 0; i < m_height * m_width; i++) {
+		SushiSprite* sushi = m_sushiMatrix[i];
+		if (!sushi) {
+			continue;
+		}
+		sushi->stopAllActionsByTag(kTagPromptAnimation);
+	}
 }

@@ -57,7 +57,7 @@ bool MovesLayer::init() {
 
 	// init moves
 	const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
-	onMovesChanged((Ref*)(intptr_t)roundInfo.m_totalMoves);
+	onMovesChanged((Ref*)(&roundInfo.m_totalMoves));
 	return true;
 }
 
