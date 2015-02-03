@@ -163,7 +163,34 @@ bool PlayLayer::init()
 
 void PlayLayer::initMatrix()
 {
-	int index = 0;
+	int minCol = m_width - 1;
+	int maxCol = 0;
+	int minRow = m_height - 1;
+	int maxRow = 0;
+	
+	for (int row = 0; row < m_height; row++) {
+		for (int col = 0; col < m_width; col++) {
+			if (isValidGrid(row, col)) {
+				if (col < minCol)
+					minCol = col;
+				if (col > maxCol)
+					maxCol = col;
+
+				if (row < minRow)
+					minRow = row;
+				if (row > maxRow)
+					maxRow = row;
+			}
+		}
+	}
+
+	float middleCol = (maxCol + minCol) / 2.0f;
+	int widthOffset = m_width / 2;
+	m_matrixLeftBottomX -= (middleCol - m_width / 2) * (SushiSprite::getContentWidth() + SUSHI_GAP);
+
+	float middleRow = (maxRow + minRow) / 2.0f;
+	int heightOffset = m_height / 2;
+	m_matrixLeftBottomY -= (middleCol - m_height / 2) * (SushiSprite::getContentWidth() + SUSHI_GAP);
 
 	Node* stencil = Node::create();
 	// init sushi and grid matrix
@@ -175,7 +202,6 @@ void PlayLayer::initMatrix()
 				dropPath.push_back(SushiDropPathInfo(row * m_width + col, DFS_DIR_NONE));
 				createAndDropSushi(&dropPath, row, col, true);
 			}
-				
 		}
 	}
 
@@ -2157,7 +2183,9 @@ void PlayLayer::onRoundStart(Ref* obj) {
 }
 
 bool PlayLayer::isValidGrid(int row, int col) {
-	GridType type = getGridType(row, col);
+	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
+		return false;
+	GridType type = m_roundInfo->_matrix[m_width*row + col];
 	return (GIRD_TYPE_NORMAL == type || GRID_TYPE_JELLY == type || GRID_TYPE_DOUBLE_JELLY == type);
 }
 
