@@ -183,7 +183,7 @@ void PlayScene::onRoundEnd(Ref* obj) {
 	// play layer - run a hide action.
 	if (m_playLayer) {
 		m_playLayer->runAction(Sequence::create(MoveBy::create(1, Point(0, 800)), Hide::create(),
-			CallFunc::create(CC_CALLBACK_0(PlayScene::onPlayLayerActionEnded, this)), nullptr));
+			CallFunc::create(CC_CALLBACK_0(PlayScene::onPlayLayerEndActionEnded, this)), nullptr));
 	}
 
 	// target layer - run a hide action.
@@ -213,6 +213,11 @@ void PlayScene::onPrePlayLayerActionEnded() {
 	m_prePlayLayer = nullptr;
 }
 
+void PlayScene::onPlayLayerStartActionEnded() {
+	if (m_playLayer)
+		m_playLayer->tryPlayGuideAnimation();
+}
+
 void PlayScene::onBackButtonTouched(Ref *pSender, ui::TouchEventType type) {
 	if (ui::TOUCH_EVENT_ENDED == type) {
 		auto scene = GuideMapScene::create();
@@ -229,7 +234,7 @@ void PlayScene::onRefreshButtonTouched(Ref *pSender, ui::TouchEventType type) {
 	}
 }
 
-void PlayScene::onPlayLayerActionEnded() {
+void PlayScene::onPlayLayerEndActionEnded() {
 	m_playLayer->removeFromParentAndCleanup(true);
 	m_playLayer->release();
 	m_playLayer = nullptr;
@@ -256,7 +261,8 @@ void PlayScene::OnTargetTipsActionEnd() {
 	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
 	m_playLayer->setPosition(0, 0 + 500);
 	MoveBy* actMoveDown = MoveBy::create(1, Point(0, -500));
-	m_playLayer->runAction(Sequence::create(actMoveDown, nullptr));
+	m_playLayer->runAction(Sequence::create(actMoveDown,
+		CallFunc::create(CC_CALLBACK_0(PlayScene::onPlayLayerStartActionEnded, this)), nullptr));
 
 	if (!m_targetLayer) {
 		m_targetLayer = TargetLayer::create();

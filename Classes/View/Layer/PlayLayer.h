@@ -45,6 +45,7 @@ public:
 	void onRoundStart(Ref* obj);
 
 	void refresh();
+	void tryPlayGuideAnimation();
 
 private:
 	SpriteBatchNode* m_spriteSheet;
@@ -78,6 +79,7 @@ private:
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
 	bool m_isTriggered;
+	bool m_isGuide;
 	CrushMode m_curCrushMode;
 	ClippingNode* m_clipper;
 
@@ -118,7 +120,7 @@ private:
 	
 
 	// sushi related methods
-	void createAndDropSushi(std::deque<SushiDropPathInfo>* dropPath, int row, int col, bool isInit = false);
+	void createAndDropSushi(std::deque<SushiDropPathInfo>* dropPath, int row, int col, bool isInit = false, bool isGuide = false);
 	void dropExistSushi(std::deque<SushiDropPathInfo>* dropPath, int row, int col);
 	void swapSushi();
 	void removeSushi();
@@ -143,9 +145,11 @@ private:
 	void playGenerateSuperSushiAnimation(SushiSprite* sushi);
 	void playRefreshDropAnimation(SushiSprite* sushi);
 	void playPromptAnimation(std::vector<SushiSprite*> sushis);
+	void playGuideAnimation(float time);
 
 	// stop repeat animations
 	void stopAllPromptAnimation();
+	void stopGuideAnimation();
 
 	// animation callbacks
 	void didPlayExplodeSushiAnimation(SushiSprite *sushi);

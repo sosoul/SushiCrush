@@ -9,9 +9,11 @@
 namespace {
 enum {
 	kTagPromptAnimation,
+	kTagGuideAnimation,
 };
 
 const int kPromptTime = 10.0f;
+const int kGuideTime = 1.0f;
 }
 
 PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
@@ -33,6 +35,7 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_isRoundEnded(false),
 						 m_isNeedCheck(true),
 						 m_isTriggered(false),
+						 m_isGuide(false),
 						 m_curCrushMode(CRUSH_MODE_NORMAL)
 {
 	CCASSERT(m_round >= 0 && m_round < TOTAL_ROUND, "");
@@ -192,7 +195,13 @@ void PlayLayer::initMatrix()
 	int heightOffset = m_height / 2;
 	m_matrixLeftBottomY -= (middleCol - m_height / 2) * (SushiSprite::getContentWidth() + SUSHI_GAP);
 
+	std::string key = "round" + StringUtils::toString(m_round);
+	if (m_round < ConfigService::getInstance()->guideCount() &&
+		!UserDefault::sharedUserDefault()->getBoolForKey(key.c_str()))
+		m_isGuide = true;
+
 	Node* stencil = Node::create();
+	
 	// init sushi and grid matrix
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
@@ -200,10 +209,13 @@ void PlayLayer::initMatrix()
 			if (isValidGrid(row, col)) {
 				std::deque<SushiDropPathInfo> dropPath;
 				dropPath.push_back(SushiDropPathInfo(row * m_width + col, DFS_DIR_NONE));
-				createAndDropSushi(&dropPath, row, col, true);
+				createAndDropSushi(&dropPath, row, col, true, m_isGuide);
 			}
 		}
 	}
+
+	if (m_round < ConfigService::getInstance()->guideCount() && m_isGuide)
+		UserDefault::sharedUserDefault()->setBoolForKey(key.c_str(), true);
 
 	m_clipper = ClippingNode::create();
 	m_clipper->retain();
@@ -270,6 +282,8 @@ void PlayLayer::Prompt(float time) {
 bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)  // pass
 {
 	stopAllPromptAnimation();
+	if (m_isGuide)
+		stopGuideAnimation();
 	unschedule((SEL_SCHEDULE)&PlayLayer::Prompt);
 	scheduleOnce((SEL_SCHEDULE)&PlayLayer::Prompt, 10.0f);
 	m_srcSushi = NULL;
@@ -2019,15 +2033,20 @@ void PlayLayer::dropExistSushi(std::deque<SushiDropPathInfo>* dropPath, int rowD
 	playDropAnimation(sushi, dropPath, false);
 }
 
-void PlayLayer::createAndDropSushi(std::deque<SushiDropPathInfo>* dropPath, int row, int col, bool isInit)
+void PlayLayer::createAndDropSushi(std::deque<SushiDropPathInfo>* dropPath, int row, int col, bool isInit, bool isGuide)
 {
 	if (!dropPath)
 		return;
 
 	int topImgIndex = -1;
 	int leftImgIndex = -1;
+	int imgIndex = -1;
 
 	if (isInit) {  // if it is an initial round, make the sushis stay un-eliminated status.
+		if (isGuide) {
+			imgIndex = ConfigService::getInstance()->getImageIndexInGuideMap(m_round, row, col);
+		}
+		
 		// scan the sushis on the top
 		int topRow1 = row - 1;
 		int topRow2 = row - 2;
@@ -2049,7 +2068,11 @@ void PlayLayer::createAndDropSushi(std::deque<SushiDropPathInfo>* dropPath, int 
 		}
 	}
 
-	SushiSprite *sushi = SushiSprite::create(row, col, topImgIndex, leftImgIndex, PRIORITY_NORMAL);
+	SushiSprite* sushi = NULL;
+	if (-1 == imgIndex)
+		sushi = SushiSprite::create(row, col, topImgIndex, leftImgIndex, PRIORITY_NORMAL);
+	else
+		sushi = SushiSprite::create(row, col, imgIndex, SUSHI_TYPE_NORMAL);
 
 	if (m_needRefresh)
 	{
@@ -2801,4 +2824,57 @@ void PlayLayer::stopAllPromptAnimation()
 		}
 		sushi->stopAllActionsByTag(kTagPromptAnimation);
 	}
+}
+
+void PlayLayer::tryPlayGuideAnimation() {
+	if (!m_isGuide)
+		return;
+
+	scheduleOnce((SEL_SCHEDULE)&PlayLayer::playGuideAnimation, kGuideTime);
+}
+
+void PlayLayer::playGuideAnimation(float time) {	// ÏÈÐ´ËÀ°É
+	auto clip = ClippingNode::create();
+	clip->setInverted(true);
+	clip->setAlphaThreshold(0.0f);
+	addChild(clip, 10, kTagGuideAnimation);
+
+	auto layerColor = LayerColor::create(Color4B(0, 0, 0, 150));
+	clip->addChild(layerColor, 1);
+
+	auto stencil = Node::create();
+	SushiSprite* sushi = NULL;
+	switch (m_round)
+	{
+	case 0:
+		sushi = SushiSprite::clone(m_sushiMatrix[7 * m_width + 1]);
+		sushi->setPosition(positionOfItem(7, 1));
+		if (sushi)
+			stencil->addChild(sushi);
+		sushi = SushiSprite::clone(m_sushiMatrix[7 * m_width + 2]);
+		sushi->setPosition(positionOfItem(7, 2));
+		if (sushi)
+			stencil->addChild(sushi);
+		sushi = SushiSprite::clone(m_sushiMatrix[7 * m_width + 3]);
+		sushi->setPosition(positionOfItem(7, 3));
+		if (sushi)
+			stencil->addChild(sushi);
+		sushi = SushiSprite::clone(m_sushiMatrix[7 * m_width + 4]);
+		sushi->setPosition(positionOfItem(7, 4));
+		if (sushi)
+			stencil->addChild(sushi);
+		break;
+	case 1:
+		break;
+	default:
+		break;
+	}
+
+	clip->setStencil(stencil);
+}
+
+void PlayLayer::stopGuideAnimation() {
+	auto guide = getChildByTag(kTagGuideAnimation);
+	guide->removeFromParent();
+	m_isGuide = false;
 }

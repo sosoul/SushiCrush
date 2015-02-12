@@ -27,6 +27,7 @@ typedef std::map<int, int> MapPortal;
 
 struct RoundInfo {
 	std::string _mapFile;
+	std::string _guideMapFile;
 	int _clipper[MATRIX_WIDTH*MATRIX_HEIGHT];
 	GridType _matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
 	VecProducer _vecProducer;
@@ -42,9 +43,19 @@ struct RoundInfo {
 	}
 };
 
+struct GuideInfo
+{
+	std::string _mapFile;
+	int _matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
+	GuideInfo() {
+		memset((void*)_matrix, -1, MATRIX_WIDTH*MATRIX_HEIGHT);
+	}
+};
+
 typedef std::map<int, SushiInfo> MapSushiInfo;
 typedef std::map<int, GridInfo> MapGridInfo;
 typedef std::map<int, RoundInfo> MapRoundInfo;
+typedef std::map<int, GuideInfo> MapGuideInfo;
 
 class ConfigService : public Ref
 {
@@ -68,12 +79,20 @@ public:
 	int getPortalSrc(int round, int row, int col);
 	int getPortalDest(int round, int row, int col);
 
+	int roundCount() { return _roundCount; }
+	int guideCount() { return _guideCount; }
+
+	int getImageIndexInGuideMap(int round, int row, int col);
+
 private:
 	void parseMap(RoundInfo* roundInfo);
+	void parseGuideMap(GuideInfo* guideInfo);
 	int _roundCount;
+	int _guideCount;
 	MapSushiInfo _mapSushiInfo;
 	MapGridInfo _mapGridInfo;
 	MapRoundInfo _mapRoundInfo;
+	MapGuideInfo _mapGuideInfo;
 };
 
 

@@ -30,6 +30,7 @@ public:
 private:
 	void onPrePlayLayerActionEnded();
 	void onPostPlayLayerActionEnded();
+	void onPlayLayerStartActionEnded();
 
 	PostPlayLayer* m_postPlayLayer;
 	PrePlayLayer* m_prePlayLayer;
@@ -46,7 +47,7 @@ private:
 	void onRefreshButtonTouched(Ref *pSender, ui::TouchEventType type);
 
 	// animation callback
-	void onPlayLayerActionEnded();
+	void onPlayLayerEndActionEnded();
 	void onTargetLayerActionEnded();
 	void OnTargetTipsActionEnd();
 	//void OnSuccessfulTipsActionEnd();

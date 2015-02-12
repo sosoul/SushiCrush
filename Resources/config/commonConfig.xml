@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-<rounds count="20">
+<rounds count="20"> <!--每一关的信息-->
     <round id="0">
-        <map>round0.tmx</map>
+        <map>round0.tmx</map> <!--地图文件-->
 		<target>
 			<score>800</score>
 			<sushi4>7</sushi4>
@@ -11,14 +11,16 @@
     </round>
 	<round id="1">
         <map>round1.tmx</map>
+		<guideMap>guideRound1.tmx</guideMap>
 		<target>
-			<score>50</score>
+			<score>5000</score>
 			<sushi5>2</sushi5>
 		</target>
-		<moves>16</moves>
+		<moves>200</moves>
     </round>
 	<round id="2">
         <map>round2.tmx</map>
+		<guideMap>guideRound2.tmx</guideMap>
 		<target>
 			<score>60</score>
 			<sushi1>1</sushi1>
@@ -28,6 +30,7 @@
     </round>
 	<round id="3">
         <map>round3.tmx</map>
+		<guideMap>guideRound3.tmx</guideMap>
 		<target>
 			<score>800</score>
 			<sushi2>3</sushi2>
@@ -130,6 +133,12 @@
         <score>70</score>
     </grid>
 </grids>
+
+<guides count="1"><!--引导地图-->
+    <round id="0">
+        <map>guideMap0.tmx</map>
+    </round>
+</guides>
 
 </config>
 

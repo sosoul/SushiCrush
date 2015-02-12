@@ -193,6 +193,30 @@ void ConfigService::loadConfig() {
 		}
 	}
 
+	// _mapGuideInfo
+	if (XMLElement* guidesEle = configEle->FirstChildElement("guides")) {
+		XMLElement* roundEle = guidesEle->FirstChildElement("round");
+		if (attribute = guidesEle->FirstAttribute())
+			_guideCount = attribute->IntValue();
+		while (roundEle) {
+			int id = 0;
+			GuideInfo item;
+
+			// id
+			if (attribute = roundEle->FirstAttribute())
+				id = attribute->IntValue();
+			// map
+			if (XMLElement* mapEle = roundEle->FirstChildElement("map")) {
+				item._mapFile = mapEle->GetText();
+				parseGuideMap(&item);
+			}
+
+			_mapGuideInfo.insert(MapGuideInfo::value_type(id, item));
+
+			roundEle = roundEle->NextSiblingElement();
+		}
+	}
+
 	delete doc;
 }
 
@@ -282,6 +306,48 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 	}
 }
 
+void ConfigService::parseGuideMap(GuideInfo* guideInfo) {
+	if (!guideInfo)
+		return;
+
+	std::string filePath = FileUtils::getInstance()->fullPathForFilename(guideInfo->_mapFile);
+	TiledMapParser* tiledMapParser = TiledMapParser::create(filePath.c_str());
+	if (!tiledMapParser)
+		return;
+
+	int matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
+	Size size = tiledMapParser->getLayerSize("sushiLayer");
+	if (MATRIX_WIDTH == size.width && MATRIX_HEIGHT == size.height) {
+		tiledMapParser->getGidMatrix("sushiLayer", matrix, MATRIX_WIDTH*MATRIX_HEIGHT);
+		for (int i = 0; i < MATRIX_WIDTH*MATRIX_HEIGHT; ++i) {
+			int index = -1;
+			switch (matrix[i])
+			{
+			case 8:
+				index = 0;
+				break;
+			case 12:
+				index = 1;
+				break;
+			case 16:
+				index = 2;
+				break;
+			case 20:
+				index = 3;
+				break;
+			case 25:
+				index = 4;
+				break;
+			case 29:
+				index = 5;
+			default:
+				break;
+			}
+			guideInfo->_matrix[i] = index;
+		}
+	}
+}
+
 bool ConfigService::isProducer(int round, int row, int col) {
 	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
 	if (_mapRoundInfo.end() == it)
@@ -296,7 +362,7 @@ bool ConfigService::isProducer(int round, int row, int col) {
 int ConfigService::getPortalSrc(int round, int row, int col) {
 	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
 	if (_mapRoundInfo.end() == it)
-		return false;
+		return -1;
 	MapPortal::iterator itMap = it->second._mapPortalDestToSrc.find(MATRIX_WIDTH*row + col);
 	if (it->second._mapPortalDestToSrc.end() == itMap)
 		return -1;
@@ -307,9 +373,17 @@ int ConfigService::getPortalDest(int round, int row, int col) {
 	std::pair<int, int> pair;
 	MapRoundInfo::iterator it = _mapRoundInfo.find(round);
 	if (_mapRoundInfo.end() == it)
-		return false;
+		return -1;
 	MapPortal::iterator itMap = it->second._mapPortalSrcToDest.find(MATRIX_WIDTH*row + col);
 	if (it->second._mapPortalSrcToDest.end() == itMap)
 		return -1;
 	return itMap->second;
+}
+
+int ConfigService::getImageIndexInGuideMap(int round, int row, int col) {
+	CCASSERT(row >= 0 && row < MATRIX_WIDTH && col >= 0 && col < MATRIX_HEIGHT, "row or col is out of range!");
+	MapGuideInfo::iterator it = _mapGuideInfo.find(round);
+	if (_mapGuideInfo.end() == it)
+		return -1;
+	return it->second._matrix[MATRIX_WIDTH*row + col];
 }

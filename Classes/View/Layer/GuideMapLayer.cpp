@@ -82,7 +82,7 @@ void GuideMapLayer::onRoundButtonTouched(Ref *pSender, ui::TouchEventType type) 
 		return;
 	if (ui::TOUCH_EVENT_ENDED == type) {
 		ui::Button* button = static_cast<ui::Button*>(pSender);
-		int round = (int)(button->getUserData());
+		int round = button->getUserData() && 0xff;
 		GameController::getInstance()->setCurRound(round);
 
 		auto scene = PlayScene::create();
