@@ -1542,7 +1542,7 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		switch (type)
 		{
 		case GRID_TYPE_CREAM:
-			grid->setGridType(GRID_TYPE_DOUBLE_JELLY);
+			grid->setGridType(GIRD_TYPE_NORMAL);
 			break;
 		case GRID_TYPE_DOUBLE_CREAM:
 			grid->setGridType(GRID_TYPE_CREAM);
@@ -2208,7 +2208,7 @@ void PlayLayer::onRoundStart(Ref* obj) {
 bool PlayLayer::isValidGrid(int row, int col) {
 	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
 		return false;
-	GridType type = m_roundInfo->_matrix[m_width*row + col];
+	GridType type = getGridType(row, col);
 	return (GIRD_TYPE_NORMAL == type || GRID_TYPE_JELLY == type || GRID_TYPE_DOUBLE_JELLY == type);
 }
 
