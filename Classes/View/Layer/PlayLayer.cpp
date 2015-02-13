@@ -2236,6 +2236,7 @@ void PlayLayer::refresh() {
 		for (int col = 0; col < m_width; col++) {
 			if (SushiSprite* sushi = m_sushiMatrix[row*m_width + col])
 			{
+				sushi->setIgnoreCheck(false);
 				sushi->setIsNeedRemove(true);
 				m_sushiModeMatrix[row*m_width + col] = (int)sushi->getSushiType();
 				//m_mapRefreshRetain[row*m_width + col] = sushi->getSushiType();
@@ -2276,7 +2277,6 @@ void PlayLayer::generateSuperSushi(int row, int col) {
 	{
 		sushi->setSushiType(SUSHI_TYPE_5_CROSS);
 	}
-	sushi->setIgnoreCheck(true);
 	playGenerateSuperSushiAnimation(sushi);
 }
 
