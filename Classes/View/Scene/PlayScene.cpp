@@ -84,11 +84,11 @@ bool PlayScene::init()
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundStart),
 		MSG_ROUND_START, nullptr);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onTargetComplate),
-		MSG_TARGET_COMPLATE, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onTargetComplete),
+		MSG_TARGET_COMPLETE, nullptr);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onCrashBegin),
-		MSG_CRASH_BEGIN, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onCrushBegin),
+		MSG_CRUSH_BEGIN, nullptr);
 	// buttons
 	auto backButton = ui::Button::create();
 	backButton->setTouchEnabled(true);
@@ -120,11 +120,11 @@ void PlayScene::onEnter()
 	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onRoundStart),
 		MSG_ROUND_START, nullptr);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onTargetComplate),
-		MSG_TARGET_COMPLATE, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onTargetComplete),
+		MSG_TARGET_COMPLETE, nullptr);
 
-	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onCrashBegin),
-		MSG_CRASH_BEGIN, nullptr);
+	NotificationCenter::getInstance()->addObserver(this, CC_CALLFUNCO_SELECTOR(PlayScene::onCrushBegin),
+		MSG_CRUSH_BEGIN, nullptr);
 
 	GameController::getInstance()->onRoundReady(ACTION_RESUME);
 }
@@ -171,12 +171,12 @@ void PlayScene::onRoundStart(Ref* obj) {
 	m_prePlayLayer->runAction(sequence);
 }
 
-void PlayScene::onTargetComplate(Ref* obj) {
-	showTipsLayer(TIPS_TYPE_TARGET_COMPLATE, CallFunc::create(CC_CALLBACK_0(PlayScene::onTargetComplateTipsActionEnd, this, true)));
+void PlayScene::onTargetComplete(Ref* obj) {
+	showTipsLayer(TIPS_TYPE_TARGET_COMPLETE, CallFunc::create(CC_CALLBACK_0(PlayScene::onTargetCompleteTipsActionEnd, this, true)));
 }
 
-void PlayScene::onCrashBegin(Ref* obj) {
-	showTipsLayer(TIPS_TYPE_CRASH_BEGIN, CallFunc::create(CC_CALLBACK_0(PlayScene::onCrashBeginTipsActionEnd, this, true)));
+void PlayScene::onCrushBegin(Ref* obj) {
+	showTipsLayer(TIPS_TYPE_CRUSH_BEGIN, CallFunc::create(CC_CALLBACK_0(PlayScene::onCrushBeginTipsActionEnd, this, true)));
 }
 
 void PlayScene::onRoundEnd(Ref* obj) {
@@ -296,7 +296,7 @@ void PlayScene::OnResultTipsActionEnd(bool result) {
 	m_postPlayLayer->runAction(Repeat::create(movebyAction, 1));
 }
 
-void PlayScene::onTargetComplateTipsActionEnd(bool result) {
+void PlayScene::onTargetCompleteTipsActionEnd(bool result) {
 	if (m_tipsLayer) {
 		m_tipsLayer->removeFromParentAndCleanup(true);
 		m_tipsLayer->release();
@@ -305,7 +305,7 @@ void PlayScene::onTargetComplateTipsActionEnd(bool result) {
 	GameController::getInstance()->changeCurCrushMode();
 }
 
-void PlayScene::onCrashBeginTipsActionEnd(bool result) {
+void PlayScene::onCrushBeginTipsActionEnd(bool result) {
 	if (m_tipsLayer) {
 		m_tipsLayer->removeFromParentAndCleanup(true);
 		m_tipsLayer->release();

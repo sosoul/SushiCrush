@@ -40,8 +40,8 @@ private:
 	void onRoundReady(Ref* obj);
 	void onRoundStart(Ref* obj);
 	void onRoundEnd(Ref* obj);
-	void onTargetComplate(Ref* obj);
-	void onCrashBegin(Ref* obj);
+	void onTargetComplete(Ref* obj);
+	void onCrushBegin(Ref* obj);
 	// button touch events
 	void onBackButtonTouched(Ref *pSender, ui::TouchEventType type);
 	void onRefreshButtonTouched(Ref *pSender, ui::TouchEventType type);
@@ -50,11 +50,9 @@ private:
 	void onPlayLayerEndActionEnded();
 	void onTargetLayerActionEnded();
 	void OnTargetTipsActionEnd();
-	//void OnSuccessfulTipsActionEnd();
-	//void OnFailTipsActionEnd();
 	void OnResultTipsActionEnd(bool result);
-	void onTargetComplateTipsActionEnd(bool result);
-	void onCrashBeginTipsActionEnd(bool result);
+	void onTargetCompleteTipsActionEnd(bool result);
+	void onCrushBeginTipsActionEnd(bool result);
 
 	void showTipsLayer(TipsLayerType type, CallFunc* func);
 

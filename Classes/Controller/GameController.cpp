@@ -260,13 +260,13 @@ void GameController::onTargetCompleted() {
 	if (m_curCrushMode == CRUSH_MODE_NORMAL)
 	{
 		//弹出目标完成
-		NotificationCenter::getInstance()->postNotification(MSG_TARGET_COMPLATE, (Ref*)(true));
+		NotificationCenter::getInstance()->postNotification(MSG_TARGET_COMPLETE, (Ref*)(true));
 	}
 }
 
 void GameController::onCrushBegin() {
 	if (m_curCrushMode == CRUSH_MODE_REMOVE_SPECIAL_SUSHI)
 	{
-		NotificationCenter::getInstance()->postNotification(MSG_CRASH_BEGIN, (Ref*)(true));
+		NotificationCenter::getInstance()->postNotification(MSG_CRUSH_BEGIN, (Ref*)(true));
 	}
 }

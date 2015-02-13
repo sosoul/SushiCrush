@@ -77,21 +77,21 @@ bool TargetTipsLayer::init() {
 		label->setString("Failed to pass!");
 		addChild(label); }
 		break;
-	case TIPS_TYPE_TARGET_COMPLATE:
+	case TIPS_TYPE_TARGET_COMPLETE:
 	{
 		auto label = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
 		label->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 		label->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
-		label->setString("Target Complate!");
+		label->setString("Target Complete!");
 		addChild(label);
 	}
 		break;
-	case TIPS_TYPE_CRASH_BEGIN:
+	case TIPS_TYPE_CRUSH_BEGIN:
 	{
 		auto label = LabelBMFont::create("target", "fonts/boundsTestFont.fnt");
 		label->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
 		label->setPosition(Vec2(visibleOrigin.x + kLabelScoreX, visibleOrigin.y + kLabelScoreY));
-		label->setString("Crash Time!");
+		label->setString("Crush Time!");
 		addChild(label);
 	}
 		break;
