@@ -159,6 +159,7 @@ bool PlayLayer::init()
 	auto touchListener = EventListenerTouchOneByOne::create();
 	touchListener->onTouchBegan = CC_CALLBACK_2(PlayLayer::onTouchBegan, this);
 	touchListener->onTouchMoved = CC_CALLBACK_2(PlayLayer::onTouchMoved, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(PlayLayer::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
 	return true;
@@ -268,6 +269,13 @@ SushiSprite *PlayLayer::sushiOfPoint(Point *point)  // pass
 }
 
 void PlayLayer::Prompt(float time) {
+
+	if (GameController::getInstance()->getCurCrushMode() != CRUSH_MODE_NORMAL)
+	{
+		return;
+	}
+	stopAllPromptAnimation();
+
 	std::vector<SushiSprite*> sushis;
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
@@ -282,10 +290,9 @@ void PlayLayer::Prompt(float time) {
 bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)  // pass
 {
 	stopAllPromptAnimation();
+	unschedule((SEL_SCHEDULE)&PlayLayer::Prompt);
 	if (m_isGuide)
 		stopGuideAnimation();
-	unschedule((SEL_SCHEDULE)&PlayLayer::Prompt);
-	scheduleOnce((SEL_SCHEDULE)&PlayLayer::Prompt, 10.0f);
 	m_srcSushi = NULL;
 	m_destSushi = NULL;
 	if (m_isTouchEnable) {
@@ -293,6 +300,12 @@ bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)  // pass
 		m_srcSushi = sushiOfPoint(&location);
 	}
 	return m_isTouchEnable;
+}
+
+void PlayLayer::onTouchEnded(Touch *touch, Event *unused)
+{
+	unschedule((SEL_SCHEDULE)&PlayLayer::Prompt);
+	scheduleOnce((SEL_SCHEDULE)&PlayLayer::Prompt, 10.0f);
 }
 
 void PlayLayer::onTouchMoved(Touch *touch, Event *unused)  // pass
