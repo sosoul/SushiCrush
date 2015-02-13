@@ -60,7 +60,7 @@ bool PlayScene::init()
 	}
 	// background
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-	auto background = Sprite::createWithSpriteFrameName(s_mainBackground);
+	auto background = Sprite::create(s_mainBackground);
 	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	addChild(background);

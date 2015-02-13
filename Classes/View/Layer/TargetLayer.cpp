@@ -161,7 +161,7 @@ void TargetLayer::createTargetPanel(int* x, int* y, int value, const std::string
 		return;
 
 	// target icon
-	auto icon = Sprite::create(image);
+	auto icon = Sprite::createWithSpriteFrameName(image);
 	icon->setPosition(Vec2(*x, *y));
 	addChild(icon);
 

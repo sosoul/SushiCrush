@@ -21,7 +21,7 @@ bool StartLayer::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	// background
-	auto background = Sprite::createWithSpriteFrameName(s_startBackground);
+	auto background = Sprite::create(s_startBackground);
 	background->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2));
 	addChild(background);
