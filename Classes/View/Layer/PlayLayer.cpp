@@ -2794,13 +2794,26 @@ void PlayLayer::playRefreshDropAnimation(SushiSprite* sushi) {
 	if (!sushi)
 		return;
 	m_isAnimationing = true;
+	sushi->setVisible(false);
 	int row = sushi->getRow();
 	int col = sushi->getCol();
-	Point endPosition = positionOfItem(row, col);
-	Point startPosition = ccpAdd(Vec2(0, (SushiSprite::getContentWidth() + SUSHI_GAP)*m_height / 2), endPosition);
-	sushi->setPosition(startPosition);
-	MoveTo* moveTo = MoveTo::create(1.5, endPosition);
-	sushi->runAction(moveTo);
+	Point curPosition = positionOfItem(row, col);
+	sushi->setPosition(curPosition);
+	Vector<FiniteTimeAction*> moveVector;
+	moveVector.pushBack(DelayTime::create(0.2f));
+	moveVector.pushBack(Show::create());
+
+	auto sequence = Sequence::create(moveVector);
+	sushi->runAction(sequence);
+
+	// particle effect
+	auto particleStars = ParticleSystemQuad::create(s_stars);
+	particleStars->setAutoRemoveOnFinish(true);
+	particleStars->setBlendAdditive(false);
+	particleStars->setPosition(sushi->getPosition());
+	particleStars->setScale(0.3);
+	addChild(particleStars, 20);
+
 	m_spriteSheet->addChild(sushi);
 	m_sushiMatrix[row * m_width + col] = sushi;
 }
