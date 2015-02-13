@@ -270,12 +270,11 @@ SushiSprite *PlayLayer::sushiOfPoint(Point *point)  // pass
 
 void PlayLayer::Prompt(float time) {
 
+	stopAllPromptAnimation();
 	if (GameController::getInstance()->getCurCrushMode() != CRUSH_MODE_NORMAL)
 	{
 		return;
 	}
-	stopAllPromptAnimation();
-
 	std::vector<SushiSprite*> sushis;
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
