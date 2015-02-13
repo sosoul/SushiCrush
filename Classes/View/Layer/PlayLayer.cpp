@@ -190,11 +190,11 @@ void PlayLayer::initMatrix()
 
 	float middleCol = (maxCol + minCol) / 2.0f;
 	int widthOffset = m_width / 2;
-	m_matrixLeftBottomX -= (middleCol - m_width / 2) * (SushiSprite::getContentWidth() + SUSHI_GAP);
+	m_matrixLeftBottomX -= (middleCol - m_width / 2.0) * (SushiSprite::getContentWidth() + SUSHI_GAP);
 
 	float middleRow = (maxRow + minRow) / 2.0f;
 	int heightOffset = m_height / 2;
-	m_matrixLeftBottomY -= (middleCol - m_height / 2) * (SushiSprite::getContentWidth() + SUSHI_GAP);
+	m_matrixLeftBottomY -= (middleCol - m_height / 2.0) * (SushiSprite::getContentWidth() + SUSHI_GAP);
 
 	std::string key = "round" + StringUtils::toString(m_round);
 	if (m_round < ConfigService::getInstance()->guideCount() &&
@@ -275,6 +275,12 @@ void PlayLayer::Prompt(float time) {
 	{
 		return;
 	}
+
+	if (m_isAnimationing)
+	{
+		return;
+	}
+
 	std::vector<SushiSprite*> sushis;
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
@@ -630,6 +636,30 @@ void PlayLayer::triggerCrush()
 					}
 				}
 
+				if (count == 0)
+				{
+					SushiSprite *sushi;
+					for (int i = 0; i < m_height * m_width; i++) {
+						sushi = m_sushiMatrix[i];
+						if (!sushi) {
+							continue;
+						}
+						if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
+						{
+							sushi->setIsNeedRemove(false);
+							sushi->setIsNeedRemove(false);
+							markRemove(sushi);
+						}
+					}
+					checkAndRemoveChain();
+
+					if (roundInfo.m_leftMoves > 0)
+					{
+						m_isTriggered = false;
+					}
+					return;
+				}
+
 				int sushiIndex = rand() % count + 1;
 
 				for (int i = 0; i < m_height * m_width; i++) {
@@ -751,10 +781,10 @@ void PlayLayer::checkAndRemoveChain()
 	{
 		if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE)
 		{
-			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIgnoreCheck(false);
 			m_destSushi->setIsNeedRemove(true);
 
-			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIgnoreCheck(false);
 			m_srcSushi->setIsNeedRemove(true);
 
 			//两个5消产生的互换 消除全部sushi
@@ -788,7 +818,7 @@ void PlayLayer::checkAndRemoveChain()
 		}
 		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE && (m_destSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE || m_destSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE))
 		{
-			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIgnoreCheck(false);
 			m_srcSushi->setIsNeedRemove(true);
 
 			//5消和四消交换 把同种类型sushi全部变为四消类型并消除
@@ -814,7 +844,7 @@ void PlayLayer::checkAndRemoveChain()
 
 		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && (m_srcSushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE || m_srcSushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE))
 		{
-			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIgnoreCheck(false);
 			m_destSushi->setIsNeedRemove(true);
 
 			//5消和四消交换 把同种类型sushi全部变为四消类型并消除
@@ -840,7 +870,7 @@ void PlayLayer::checkAndRemoveChain()
 
 		else if (m_srcSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_destSushi->getSushiType() == SUSHI_TYPE_5_CROSS)
 		{
-			m_srcSushi->setIgnoreCheck(true);
+			m_srcSushi->setIgnoreCheck(false);
 			m_srcSushi->setIsNeedRemove(true);
 
 			//5消和T形交换 把同种类型sushi全部变为T型并消除
@@ -866,7 +896,7 @@ void PlayLayer::checkAndRemoveChain()
 
 		else if (m_destSushi->getSushiType() == SUSHI_TYPE_5_LINE && m_srcSushi->getSushiType() == SUSHI_TYPE_5_CROSS)
 		{
-			m_destSushi->setIgnoreCheck(true);
+			m_destSushi->setIgnoreCheck(false);
 			m_destSushi->setIsNeedRemove(true);
 
 			//5消和T形交换 把同种类型sushi全部变为T型并消除
