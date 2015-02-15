@@ -50,7 +50,7 @@ bool DataBase::openDB()
 	std::string sqlStr; //sqlÖ¸Áî
 	int result; //sql_exec·µ»ØÖ¸Áî
 
-	std::string fileName = CCFileUtils::getInstance()->fullPathForFilename("sushiData.db");
+	std::string fileName = CCFileUtils::getInstance()->getWritablePath() + "sushiData.db";
 
 	CCLOG("db path: %s", fileName.c_str());
 
