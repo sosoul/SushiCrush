@@ -43,7 +43,7 @@ void GameController::onSwapSushiCompleted() {
 }
 
 void GameController::onRoundEnd() {
-	if (!isPass(m_curRoundInfo.m_round)) {
+	if (!isTargetCompleted(m_curRoundInfo.m_round)) {
 		NotificationCenter::getInstance()->postNotification(MSG_ROUND_END, (Ref*)(false));
 		return;
 	}
@@ -217,7 +217,7 @@ void GameController::resetRoundInfo(int round) {
 	m_curCrushMode = CRUSH_MODE_NORMAL;
 }
 
-bool GameController::isPass(int round) {
+bool GameController::isTargetCompleted(int round) {
 	if (m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_SCORE] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_SCORE] &&
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_JELLY] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_JELLY] &&
 		m_curRoundInfo.m_mapGotTarget[TARGET_TYPE_DOUBLE_JELLY] >= m_curRoundInfo.m_mapTarget[TARGET_TYPE_DOUBLE_JELLY] &&
@@ -256,10 +256,10 @@ void GameController::changeCurCrushMode()
 }
 
 void GameController::onTargetCompleted() {
-	//正常应该某些等会结束后再调用下面的方法
+	// 正常应该某些等会结束后再调用下面的方法
 	if (m_curCrushMode == CRUSH_MODE_NORMAL)
 	{
-		//弹出目标完成
+		// 弹出目标完成
 		NotificationCenter::getInstance()->postNotification(MSG_TARGET_COMPLETE, (Ref*)(true));
 	}
 }

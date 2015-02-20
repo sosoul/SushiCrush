@@ -281,7 +281,7 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 				type = GRID_TYPE_JELLY;
 				break;
 			case 5:
-				type = GIRD_TYPE_NORMAL;
+				type = GRID_TYPE_NORMAL;
 				break;
 			default:
 				break;
@@ -368,7 +368,7 @@ void ConfigService::parseGuideMap(GuideInfo* guideInfo) {
 				type = GRID_TYPE_JELLY;
 				break;
 			case 5:
-				type = GIRD_TYPE_NORMAL;
+				type = GRID_TYPE_NORMAL;
 				break;
 			default:
 				break;

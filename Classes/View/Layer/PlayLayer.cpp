@@ -12,7 +12,7 @@ enum {
 	kTagGuideAnimation,
 };
 
-const int kPromptTime = 10.0f;
+const int kPromptTime = 5.0f;
 const int kGuideTime = 1.0f;
 }
 
@@ -32,6 +32,7 @@ PlayLayer::PlayLayer(int round) : m_spriteSheet(NULL),
 						 m_isPreDfs(false),
 						 m_roundInfo(NULL),
 						 m_needRefresh(false),
+						 m_isRefreshing(false),
 						 m_isRoundEnded(false),
 						 m_isNeedCheck(true),
 						 m_isTriggered(false),
@@ -176,7 +177,7 @@ void PlayLayer::initMatrix()
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
 			GridType type = m_roundInfo->_grid[m_width*row + col];
-			bool validGrid = ( (GIRD_TYPE_NORMAL == type) ||
+			bool validGrid = ((GRID_TYPE_NORMAL == type) ||
 				(GRID_TYPE_JELLY == type) ||
 				(GRID_TYPE_DOUBLE_JELLY == type) );
 			if (validGrid) {
@@ -249,7 +250,7 @@ void PlayLayer::createGrid(int row, int col, Node* stencil, bool isGuide) {  // 
 	m_gridMatrix[row * m_width + col] = grid;
 
 	if (m_roundInfo->_clipper[m_width*row + col]) {
-		grid = GridSprite::create(row, col, GIRD_TYPE_NORMAL);
+		grid = GridSprite::create(row, col, GRID_TYPE_NORMAL);
 		grid->setPosition(positionOfItem(row, col));
 		stencil->addChild(grid);
 	}
@@ -299,6 +300,19 @@ void PlayLayer::Prompt(float time) {
 	}
 }
 
+bool PlayLayer::existObstacle() {
+	for (int row = 0; row < m_height; row++) {
+		for (int col = 0; col < m_width; col++) {
+			if (!isValidRow(row) || !isValidCol(col))
+				continue;
+			GridType type = getGridType(row, col);
+			if (GRID_TYPE_NONE != type && GRID_TYPE_NORMAL != type)
+				return true;
+		}
+	}
+	return false;
+}
+
 bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)  // pass
 {
 	stopAllPromptAnimation();
@@ -322,22 +336,11 @@ void PlayLayer::onTouchEnded(Touch *touch, Event *unused)
 
 void PlayLayer::onTouchMoved(Touch *touch, Event *unused)  // pass
 {
-	if (m_isRoundEnded)
-	{
+	if (m_isRoundEnded ||
+		(GameController::getInstance()->getCurCrushMode() != CRUSH_MODE_NORMAL) ||
+		(m_curCrushMode != CRUSH_MODE_NORMAL) ||
+		(!m_srcSushi || !m_isTouchEnable))
 		return;
-	}
-	if (GameController::getInstance()->getCurCrushMode() != CRUSH_MODE_NORMAL)
-	{
-		return;
-	}
-	if (m_curCrushMode != CRUSH_MODE_NORMAL)
-	{
-		return;
-	}
-
-	if (!m_srcSushi || !m_isTouchEnable) {
-		return;
-	}
 
 	int row = m_srcSushi->getRow();
 	int col = m_srcSushi->getCol();
@@ -1522,15 +1525,15 @@ void PlayLayer::removeSushi()
 		map[TARGET_TYPE_DOUBLE_JELLY] || map[TARGET_TYPE_CREAM] ||
 		map[TARGET_TYPE_DOUBLE_CREAM]) {
 		if (!m_needRefresh)
-		{
 			GameController::getInstance()->onRemoveSushiCompleted(map);
-		}
 	}
 	else {
-		if (isLock())
+		if (!m_isRefreshing)
 		{
-			refresh();
+			if (isLock())
+				refresh();
 		}
+		
 	}
 }
 
@@ -1591,7 +1594,7 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		switch (type)
 		{
 		case GRID_TYPE_CREAM:
-			grid->setGridType(GIRD_TYPE_NORMAL);
+			grid->setGridType(GRID_TYPE_NORMAL);
 			break;
 		case GRID_TYPE_DOUBLE_CREAM:
 			grid->setGridType(GRID_TYPE_CREAM);
@@ -1604,7 +1607,7 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		{
 		case GRID_TYPE_JELLY:
 		{
-			grid->setGridType(GIRD_TYPE_NORMAL);
+			grid->setGridType(GRID_TYPE_NORMAL);
 			TargetType origin_target_type = TARGET_TYPE_SCORE;
 			switch (grid->getOriginGridType())
 			{
@@ -2031,7 +2034,8 @@ void PlayLayer::fillVacancies()
 
 		if (crushMode == CRUSH_MODE_NORMAL)
 		{
-			if (GameController::getInstance()->isPass(m_round))
+			if (GameController::getInstance()->isTargetCompleted(m_round) &&
+				!existObstacle())
 			{
 				m_curCrushMode = CRUSH_MODE_REMOVE_SPECIAL_SUSHI;
 				GameController::getInstance()->onTargetCompleted();
@@ -2255,10 +2259,10 @@ void PlayLayer::onRoundStart(Ref* obj) {
 }
 
 bool PlayLayer::isValidGrid(int row, int col) {
-	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
+	if (!isValidRow(row) || !isValidCol(col))
 		return false;
 	GridType type = getGridType(row, col);
-	return (GIRD_TYPE_NORMAL == type || GRID_TYPE_JELLY == type || GRID_TYPE_DOUBLE_JELLY == type);
+	return (GRID_TYPE_NORMAL == type || GRID_TYPE_JELLY == type || GRID_TYPE_DOUBLE_JELLY == type);
 }
 
 GridType PlayLayer::getGridType(int row, int col) {
@@ -2268,6 +2272,7 @@ GridType PlayLayer::getGridType(int row, int col) {
 }
 
 void PlayLayer::refresh() {
+	m_isRefreshing = true;
 	playRefreshTipsAnimation();
 }
 
@@ -2545,6 +2550,7 @@ void PlayLayer::didPlayRefreshTipsAnimation(LabelBMFont* label) {
 	label->removeFromParent();
 	label->release();
 	didRefresh();
+	m_isRefreshing = false;
 }
 
 void PlayLayer::playSwapAnimation(bool success) {
@@ -2837,7 +2843,7 @@ void PlayLayer::playRefreshTipsAnimation() {
 	label->runAction(seq);
 }
 
-void PlayLayer::play5LineSushiTriggerAnimation(Point start, Point end){
+void PlayLayer::play5LineSushiTriggerAnimation(Point start, Point end) {
 	m_isAnimationing = true;
 	auto sp = Sprite::createWithSpriteFrameName(s_starMidDone);
 	sp->setScale(0.5f);

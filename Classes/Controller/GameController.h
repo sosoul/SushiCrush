@@ -61,7 +61,7 @@ public:
 	void ReadUnlockInfo();
 	void UpdateUnlockInfo(int round, bool isUnlock);
 	bool isUnlock(int round);
-	bool isPass(int round);
+	bool isTargetCompleted(int round);
 	CrushMode getCurCrushMode();
 	void changeCurCrushMode();
 private:

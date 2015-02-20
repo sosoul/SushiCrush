@@ -30,7 +30,7 @@ GridSprite *GridSprite::create(int row, int col, GridType type)
 	grid->_originGridType = type;
 	switch (type)
 	{
-	case GIRD_TYPE_NORMAL:
+	case GRID_TYPE_NORMAL:
 		grid->initWithSpriteFrameName(s_gridNormal);
 		grid->setZOrder(kNormalZOrder);
 		break;
@@ -63,7 +63,7 @@ void GridSprite::setGridType(GridType type)
 	SpriteFrame *frame;
 	switch (_gridType)
 	{
-	case GIRD_TYPE_NORMAL:
+	case GRID_TYPE_NORMAL:
 		frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(s_gridNormal);
 		setZOrder(kNormalZOrder);
 		break;

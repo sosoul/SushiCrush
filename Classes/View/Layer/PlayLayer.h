@@ -80,6 +80,7 @@ private:
 	bool m_isPreDfs;
 	RoundInfo* m_roundInfo;
 	bool m_needRefresh;
+	bool m_isRefreshing;
 	bool m_isTriggered;
 	bool m_isGuide;
 	CrushMode m_curCrushMode;
@@ -114,6 +115,7 @@ private:
 	void fillVacancies(int row, int col);
 	SushiSprite* getNeighborSushi(SushiSprite* sushi);
 	void Prompt(float time);
+	bool existObstacle();
 
 	// play scene status
 	bool isLock();  // is the matrix stay lock status?
