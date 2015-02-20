@@ -594,7 +594,7 @@ void PlayLayer::triggerCrush()
 			}
 			else
 			{
-				if (!hasNoCrush())
+				if (!isStopCrush())
 				{
 					checkAndRemoveChain();
 				}
@@ -708,7 +708,7 @@ void PlayLayer::triggerCrush()
 				}
 				else
 				{
-					if (!hasNoCrush())
+					if (!isStopCrush())
 					{
 						checkAndRemoveChain();
 					}
@@ -1269,7 +1269,7 @@ void PlayLayer::checkAndRemoveChain()
 	}
 }
 
-bool PlayLayer::hasNoCrush()
+bool PlayLayer::isStopCrush()
 {
 	SushiSprite *sushi;
 	for (int i = 0; i < m_height * m_width; i++) {
@@ -2021,7 +2021,7 @@ void PlayLayer::fillVacancies()
 
 	m_needRefresh = false;
 
-	if (hasNoCrush())
+	if (isStopCrush())
 	{
 		const CurRoundInfo& roundInfo = GameController::getInstance()->get_cur_round_info();
 
@@ -2268,6 +2268,10 @@ GridType PlayLayer::getGridType(int row, int col) {
 }
 
 void PlayLayer::refresh() {
+	playRefreshTipsAnimation();
+}
+
+void PlayLayer::didRefresh() {
 	m_needRefresh = true;
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
@@ -2276,7 +2280,6 @@ void PlayLayer::refresh() {
 				sushi->setIgnoreCheck(false);
 				sushi->setIsNeedRemove(true);
 				m_sushiModeMatrix[row*m_width + col] = (int)sushi->getSushiType();
-				//m_mapRefreshRetain[row*m_width + col] = sushi->getSushiType();
 			}
 		}
 	}
@@ -2530,8 +2533,18 @@ bool PlayLayer::isLock(int row, int col, std::vector<SushiSprite*>* sushis) {
 }
 
 void PlayLayer::didPlayAddScoreAnimation(LabelBMFont* label) {
+	if (!label)
+		return;
 	label->removeFromParent();
 	label->release();
+}
+
+void PlayLayer::didPlayRefreshTipsAnimation(LabelBMFont* label) {
+	if (!label)
+		return;
+	label->removeFromParent();
+	label->release();
+	didRefresh();
 }
 
 void PlayLayer::playSwapAnimation(bool success) {
@@ -2786,7 +2799,7 @@ void PlayLayer::playAddScoreAnimation(SushiSprite *sushi) {
 
 	m_isAnimationing = true;
 
-	// 4. score animation
+	// score animation
 	Point pos = sushi->getPosition();
 	auto label = LabelBMFont::create("+" + StringUtils::toString(sushi->getScore()), "fonts/boundsTestFont.fnt");
 
@@ -2802,6 +2815,25 @@ void PlayLayer::playAddScoreAnimation(SushiSprite *sushi) {
 	auto spawn = Spawn::create(moveTo, fadeOut, nullptr);
 	auto seq = Sequence::create(spawn,
 		CallFunc::create(CC_CALLBACK_0(PlayLayer::didPlayAddScoreAnimation, this, label)), nullptr);
+	label->runAction(seq);
+}
+
+void PlayLayer::playRefreshTipsAnimation() {
+	m_isAnimationing = true;
+
+	auto label = LabelBMFont::create("No sushi can be swapped!", "fonts/boundsTestFont.fnt");
+
+	label->retain();
+	label->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	label->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+	addChild(label);
+
+	Show* show = Show::create();
+	DelayTime* delay = DelayTime::create(1.0f);
+	FadeOut* fadeOut = FadeOut::create(0.5f);
+	auto seq = Sequence::create(show, delay, fadeOut,
+		CallFunc::create(CC_CALLBACK_0(PlayLayer::didPlayRefreshTipsAnimation, this, label)), nullptr);
 	label->runAction(seq);
 }
 
@@ -2937,6 +2969,8 @@ void PlayLayer::playGuideAnimation(float time) {	// ÏÈÐ´ËÀ°É
 
 void PlayLayer::stopGuideAnimation() {
 	auto guide = getChildByTag(kTagGuideAnimation);
+	if (!guide)
+		return;
 	guide->removeFromParent();
 	m_isGuide = false;
 }

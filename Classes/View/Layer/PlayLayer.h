@@ -46,6 +46,7 @@ public:
 	void onRoundStart(Ref* obj);
 
 	void refresh();
+	void didRefresh();
 	void tryPlayGuideAnimation();
 
 private:
@@ -103,7 +104,7 @@ private:
 	void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
 	void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
 	PriorityLevel getChainMaxPriority(std::list<SushiSprite *> &chainList);
-	bool hasNoCrush();
+	bool isStopCrush();
 	bool canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex);
 	void markRemove(SushiSprite* sushi);
 	void setChainMaxPriority(std::list<SushiSprite *> &chainList, PriorityLevel p);
@@ -147,6 +148,7 @@ private:
 	void playRefreshDropAnimation(SushiSprite* sushi);
 	void playPromptAnimation(std::vector<SushiSprite*> sushis);
 	void playGuideAnimation(float time);
+	void playRefreshTipsAnimation();
 
 	// stop repeat animations
 	void stopAllPromptAnimation();
@@ -155,6 +157,7 @@ private:
 	// animation callbacks
 	void didPlayExplodeSushiAnimation(SushiSprite *sushi);
 	void didPlayAddScoreAnimation(LabelBMFont* label);
+	void didPlayRefreshTipsAnimation(LabelBMFont* label);
 
 };
 
