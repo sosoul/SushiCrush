@@ -15,7 +15,7 @@ enum SushiType {
 
 
 enum GridType {
-	GIRD_TYPE_NONE = 0,
+	GRID_TYPE_NONE = 0,
 	GIRD_TYPE_NORMAL,  // 1
 	GRID_TYPE_JELLY,  // 2
 	GRID_TYPE_DOUBLE_JELLY,  // 3

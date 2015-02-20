@@ -10,7 +10,7 @@
 #include "View/Layer/ScoreLayer.h"
 #include "View/Layer/TargetLayer.h"
 #include "View/Layer/TargetTipsLayer.h"
-#include "View/Scene/GuideMapScene.h"
+#include "View/Scene/SelectRoundScene.h"
 #include "ui/UIButton.h"
 
 PlayScene::PlayScene() : m_prePlayLayer(nullptr),
@@ -220,7 +220,7 @@ void PlayScene::onPlayLayerStartActionEnded() {
 
 void PlayScene::onBackButtonTouched(Ref *pSender, ui::TouchEventType type) {
 	if (ui::TOUCH_EVENT_ENDED == type) {
-		auto scene = GuideMapScene::create();
+		auto scene = SelectRoundScene::create();
 		float time = 1.0f;
 		CCTransitionScene * transScene = CCTransitionCrossFade::create(time, scene);
 		CCDirector::sharedDirector()->replaceScene(transScene);

@@ -175,7 +175,7 @@ void PlayLayer::initMatrix()
 	
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
-			GridType type = m_roundInfo->_matrix[m_width*row + col];
+			GridType type = m_roundInfo->_grid[m_width*row + col];
 			bool validGrid = ( (GIRD_TYPE_NORMAL == type) ||
 				(GRID_TYPE_JELLY == type) ||
 				(GRID_TYPE_DOUBLE_JELLY == type) );
@@ -209,7 +209,7 @@ void PlayLayer::initMatrix()
 	// init sushi and grid matrix
 	for (int row = 0; row < m_height; row++) {
 		for (int col = 0; col < m_width; col++) {
-			createGrid(row, col, stencil);
+			createGrid(row, col, stencil, m_isGuide);
 			if (isValidGrid(row, col)) {
 				std::deque<SushiDropPathInfo> dropPath;
 				dropPath.push_back(SushiDropPathInfo(row * m_width + col, DFS_DIR_NONE));
@@ -231,13 +231,17 @@ void PlayLayer::initMatrix()
 	m_clipper->addChild(m_spriteSheet);
 }
 
-void PlayLayer::createGrid(int row, int col, Node* stencil) {  //  pass
+void PlayLayer::createGrid(int row, int col, Node* stencil, bool isGuide) {  //  pass
 	if (!isValidRow(row) || !isValidCol(col) || !m_roundInfo)
 		return;
 
-	GridType type = m_roundInfo->_matrix[m_width*row + col];
+	GridType type = GRID_TYPE_NONE;
+	if (isGuide)
+		type = ConfigService::getInstance()->getGridTypeInGuideMap(m_round, row, col);
+	else
+		type = m_roundInfo->_grid[m_width*row + col];
 	GridSprite* grid = NULL;
-	if (GIRD_TYPE_NONE != type) {
+	if (GRID_TYPE_NONE != type) {
 		grid = GridSprite::create(row, col, type);
 		grid->setPosition(positionOfItem(row, col));
 		m_spriteSheet->addChild(grid);
@@ -2259,7 +2263,7 @@ bool PlayLayer::isValidGrid(int row, int col) {
 
 GridType PlayLayer::getGridType(int row, int col) {
 	if (!isValidRow(row) || !isValidCol(col) || !m_gridMatrix[row*m_width + col])
-		return GIRD_TYPE_NONE;
+		return GRID_TYPE_NONE;
 	return m_gridMatrix[row*m_width + col]->getGridType();
 }
 

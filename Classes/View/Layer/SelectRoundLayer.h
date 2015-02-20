@@ -1,17 +1,17 @@
-#ifndef __VIEW_LAYER_GUIDE_MAP_LAYER_H__
-#define __VIEW_LAYER_GUIDE_MAP_LAYER_H__
+#ifndef __VIEW_LAYER_SELECT_ROUND_LAYER_H__
+#define __VIEW_LAYER_SELECT_ROUND_LAYER_H__
 
 #include "cocos2d.h"
 #include "ui/UIWidget.h"
 
 USING_NS_CC;
 
-class GuideMapLayer : public Layer
+class SelectRoundLayer : public Layer
 {
 public:
-	GuideMapLayer();
-	~GuideMapLayer();
-	CREATE_FUNC(GuideMapLayer);
+	SelectRoundLayer();
+	~SelectRoundLayer();
+	CREATE_FUNC(SelectRoundLayer);
 
 	virtual bool init() override;
 	virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event) override;
@@ -39,4 +39,4 @@ private:
 };
 
 
-#endif // __VIEW_LAYER_GUIDE_MAP_LAYER_H__
+#endif // __VIEW_LAYER_SELECT_ROUND_LAYER_H__

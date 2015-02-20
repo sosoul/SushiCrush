@@ -260,13 +260,13 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 		}
 	}
 
-	int matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
-	size = tiledMapParser->getLayerSize("matrixLayer");
+	int grid[MATRIX_WIDTH*MATRIX_HEIGHT];
+	size = tiledMapParser->getLayerSize("gridLayer");
 	if (MATRIX_WIDTH == size.width && MATRIX_HEIGHT == size.height) {
-		tiledMapParser->getGidMatrix("matrixLayer", matrix, MATRIX_WIDTH*MATRIX_HEIGHT);
+		tiledMapParser->getGidMatrix("gridLayer", grid, MATRIX_WIDTH*MATRIX_HEIGHT);
 		for (int i = 0; i < MATRIX_WIDTH*MATRIX_HEIGHT; ++i) {
-			GridType type = GIRD_TYPE_NONE;
-			switch (matrix[i])
+			GridType type = GRID_TYPE_NONE;
+			switch (grid[i])
 			{
 			case 1:
 				type = GRID_TYPE_CREAM;
@@ -286,7 +286,7 @@ void ConfigService::parseMap(RoundInfo* roundInfo) {
 			default:
 				break;
 			}
-			roundInfo->_matrix[i] = type;
+			roundInfo->_grid[i] = type;
 		}
 	}
 
@@ -315,13 +315,13 @@ void ConfigService::parseGuideMap(GuideInfo* guideInfo) {
 	if (!tiledMapParser)
 		return;
 
-	int matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
+	int sushi[MATRIX_WIDTH*MATRIX_HEIGHT];
 	Size size = tiledMapParser->getLayerSize("sushiLayer");
 	if (MATRIX_WIDTH == size.width && MATRIX_HEIGHT == size.height) {
-		tiledMapParser->getGidMatrix("sushiLayer", matrix, MATRIX_WIDTH*MATRIX_HEIGHT);
+		tiledMapParser->getGidMatrix("sushiLayer", sushi, MATRIX_WIDTH*MATRIX_HEIGHT);
 		for (int i = 0; i < MATRIX_WIDTH*MATRIX_HEIGHT; ++i) {
 			int index = -1;
-			switch (matrix[i])
+			switch (sushi[i])
 			{
 			case 8:
 				index = 0;
@@ -343,7 +343,37 @@ void ConfigService::parseGuideMap(GuideInfo* guideInfo) {
 			default:
 				break;
 			}
-			guideInfo->_matrix[i] = index;
+			guideInfo->_sushi[i] = index;
+		}
+	}
+
+	int grid[MATRIX_WIDTH*MATRIX_HEIGHT];
+	size = tiledMapParser->getLayerSize("gridLayer");
+	if (MATRIX_WIDTH == size.width && MATRIX_HEIGHT == size.height) {
+		tiledMapParser->getGidMatrix("gridLayer", grid, MATRIX_WIDTH*MATRIX_HEIGHT);
+		for (int i = 0; i < MATRIX_WIDTH*MATRIX_HEIGHT; ++i) {
+			GridType type = GRID_TYPE_NONE;
+			switch (grid[i])
+			{
+			case 1:
+				type = GRID_TYPE_CREAM;
+				break;
+			case 2:
+				type = GRID_TYPE_DOUBLE_CREAM;
+				break;
+			case 3:
+				type = GRID_TYPE_DOUBLE_JELLY;
+				break;
+			case 4:
+				type = GRID_TYPE_JELLY;
+				break;
+			case 5:
+				type = GIRD_TYPE_NORMAL;
+				break;
+			default:
+				break;
+			}
+			guideInfo->_grid[i] = type;
 		}
 	}
 }
@@ -385,5 +415,13 @@ int ConfigService::getImageIndexInGuideMap(int round, int row, int col) {
 	MapGuideInfo::iterator it = _mapGuideInfo.find(round);
 	if (_mapGuideInfo.end() == it)
 		return -1;
-	return it->second._matrix[MATRIX_WIDTH*row + col];
+	return it->second._sushi[MATRIX_WIDTH*row + col];
+}
+
+GridType ConfigService::getGridTypeInGuideMap(int round, int row, int col) {
+	CCASSERT(row >= 0 && row < MATRIX_WIDTH && col >= 0 && col < MATRIX_HEIGHT, "row or col is out of range!");
+	MapGuideInfo::iterator it = _mapGuideInfo.find(round);
+	if (_mapGuideInfo.end() == it)
+		return GRID_TYPE_NONE;
+	return it->second._grid[MATRIX_WIDTH*row + col];
 }

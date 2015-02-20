@@ -29,7 +29,7 @@ struct RoundInfo {
 	std::string _mapFile;
 	std::string _guideMapFile;
 	int _clipper[MATRIX_WIDTH*MATRIX_HEIGHT];
-	GridType _matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
+	GridType _grid[MATRIX_WIDTH*MATRIX_HEIGHT];
 	VecProducer _vecProducer;
 	MapPortal _mapPortalSrcToDest;
 	MapPortal _mapPortalDestToSrc;
@@ -38,7 +38,7 @@ struct RoundInfo {
 
 	RoundInfo() : _moves(0) {
 		memset((void*)_clipper, 0, MATRIX_WIDTH*MATRIX_HEIGHT);
-		memset((void*)_matrix, GIRD_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
+		memset((void*)_grid, GRID_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
 		initTargetMap(&_mapTarget);
 	}
 };
@@ -46,9 +46,11 @@ struct RoundInfo {
 struct GuideInfo
 {
 	std::string _mapFile;
-	int _matrix[MATRIX_WIDTH*MATRIX_HEIGHT];
+	int _sushi[MATRIX_WIDTH*MATRIX_HEIGHT];
+	GridType _grid[MATRIX_WIDTH*MATRIX_HEIGHT];
 	GuideInfo() {
-		memset((void*)_matrix, -1, MATRIX_WIDTH*MATRIX_HEIGHT);
+		memset((void*)_sushi, -1, MATRIX_WIDTH*MATRIX_HEIGHT);
+		memset((void*)_grid, GRID_TYPE_NONE, MATRIX_WIDTH*MATRIX_HEIGHT);
 	}
 };
 
@@ -83,6 +85,7 @@ public:
 	int guideCount() { return _guideCount; }
 
 	int getImageIndexInGuideMap(int round, int row, int col);
+	GridType getGridTypeInGuideMap(int round, int row, int col);
 
 private:
 	void parseMap(RoundInfo* roundInfo);

@@ -85,7 +85,7 @@ private:
 	ClippingNode* m_clipper;
 
 	void initMatrix();
-	void createGrid(int row, int col, Node* stencil);
+	void createGrid(int row, int col, Node* stencil, bool isGuide);
 
 	// basic utility methods
 	int getRowByIndex(int index);

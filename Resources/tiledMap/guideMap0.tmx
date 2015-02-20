@@ -8,4 +8,9 @@
    eJxjYIAADiDmgbJBtAADKhCBYlkoLQnVI4mkhgfKF4DKCSDpQVYD0y+LpJaHARUgy4lgkUdWJwlVgw9IEpCnBAAAD6oCdA==
   </data>
  </layer>
+ <layer name="gridLayer" width="9" height="9">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAVihGZzOgiWHD1FaDSx02QEgeWR2tAACTcACr
+  </data>
+ </layer>
 </map>

@@ -71,12 +71,6 @@
     <ClCompile Include="..\Classes\View\Layer\PrePlayLayer.cpp">
       <Filter>View\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\View\Scene\GuideMapScene.cpp">
-      <Filter>View\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\View\Layer\GuideMapLayer.cpp">
-      <Filter>View\Layer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\View\Layer\TargetTipsLayer.cpp">
       <Filter>View\Layer</Filter>
     </ClCompile>
@@ -106,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Utiles\sqlite3.c">
       <Filter>Utiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Layer\SelectRoundLayer.cpp">
+      <Filter>View\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\View\Scene\SelectRoundScene.cpp">
+      <Filter>View\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,12 +145,6 @@
       <Filter>View\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\View\Layer\PrePlayLayer.h">
-      <Filter>View\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\View\Scene\GuideMapScene.h">
-      <Filter>View\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\View\Layer\GuideMapLayer.h">
       <Filter>View\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\View\Layer\TargetTipsLayer.h">
@@ -194,6 +188,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Utiles\sqlite3ext.h">
       <Filter>Utiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Layer\SelectRoundLayer.h">
+      <Filter>View\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\View\Scene\SelectRoundScene.h">
+      <Filter>View\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

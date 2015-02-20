@@ -3,7 +3,7 @@
 #include "Common/Messages.h"
 #include "Common/Resource.h"
 #include "Controller/GameController.h"
-#include "View/Scene/GuideMapScene.h"
+#include "View/Scene/SelectRoundScene.h"
 #include "ui/UIButton.h"
 
 namespace{
@@ -167,7 +167,7 @@ void PostPlayLayer::nextRound(Ref* object, ui::TouchEventType type)
 
 void PostPlayLayer::backToStartMap(Ref *pSender, ui::TouchEventType type) {
 	if (ui::TOUCH_EVENT_ENDED == type) {
-		auto scene = GuideMapScene::create();
+		auto scene = SelectRoundScene::create();
 		float time = 1.0f;
 		CCTransitionScene * transScene = CCTransitionCrossFade::create(time, scene);
 		CCDirector::sharedDirector()->replaceScene(transScene);

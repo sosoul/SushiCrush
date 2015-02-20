@@ -1,4 +1,4 @@
-#include "View/Layer/GuideMapLayer.h"
+#include "View/Layer/SelectRoundLayer.h"
 
 #include "Common/Resource.h"
 #include "Controller/GameController.h"
@@ -7,22 +7,22 @@
 #include "ui/UIButton.h"
 #include "Common/TiledMapParser.h"
 
-GuideMapLayer::GuideMapLayer()
+SelectRoundLayer::SelectRoundLayer()
 {
 }
 
-GuideMapLayer::~GuideMapLayer()
+SelectRoundLayer::~SelectRoundLayer()
 {
 	NotificationCenter::getInstance()->removeAllObservers(this);
 }
 
-bool GuideMapLayer::init()
+bool SelectRoundLayer::init()
 {
 	if (!Layer::init())
 		return false;
 
 	// background
-	std::string filePath = FileUtils::getInstance()->fullPathForFilename("guideMap.tmx");
+	std::string filePath = FileUtils::getInstance()->fullPathForFilename("selectRound.tmx");
 	TiledMapParser* tiledMapParser = TiledMapParser::create(filePath);
 	TMXLayer* layer = tiledMapParser->createLayer("backgroundLayer");
 	addChild(layer);
@@ -41,7 +41,7 @@ bool GuideMapLayer::init()
 	return true;
 }
 
-void GuideMapLayer::createRoundButton(int round, bool isUnlock, const Point& pos) {
+void SelectRoundLayer::createRoundButton(int round, bool isUnlock, const Point& pos) {
 	auto roundButton = ui::Button::create();
 
 	std::string normalButton;
@@ -60,13 +60,13 @@ void GuideMapLayer::createRoundButton(int round, bool isUnlock, const Point& pos
 	roundButton->setPosition(ccpAdd(visibleOrigin, pos));
 	roundButton->setUserData((void*)round);
 	addChild(roundButton);
-	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&GuideMapLayer::onRoundButtonTouched));
+	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&SelectRoundLayer::onRoundButtonTouched));
 }
 
-void GuideMapLayer::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event) {
+void SelectRoundLayer::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event) {
 }
 
-void GuideMapLayer::onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event) {
+void SelectRoundLayer::onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event) {
 	if (1 == touches.size()) {
 		std::vector<Touch*>::const_iterator it = touches.begin();
 		CCPoint delta = (*it)->getDelta();
@@ -74,10 +74,10 @@ void GuideMapLayer::onTouchesMoved(const std::vector<Touch*>& touches, Event *un
 	}
 }
 
-void GuideMapLayer::onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event) {
+void SelectRoundLayer::onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event) {
 }
 
-void GuideMapLayer::onRoundButtonTouched(Ref *pSender, ui::TouchEventType type) {
+void SelectRoundLayer::onRoundButtonTouched(Ref *pSender, ui::TouchEventType type) {
 	if (!pSender)
 		return;
 	if (ui::TOUCH_EVENT_ENDED == type) {
