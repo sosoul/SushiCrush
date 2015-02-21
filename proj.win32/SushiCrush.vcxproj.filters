@@ -31,6 +31,9 @@
     <Filter Include="Utiles">
       <UniqueIdentifier>{0c1b02ef-5fd4-4af9-9ae3-ce85338cd13a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utiles\zlib">
+      <UniqueIdentifier>{0c4079db-f0cd-42b3-b7a3-bb2a637fbeaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -106,6 +109,54 @@
     </ClCompile>
     <ClCompile Include="..\Classes\View\Scene\SelectRoundScene.cpp">
       <Filter>View\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\PackageLoader.cpp">
+      <Filter>Utiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zpack.cpp">
+      <Filter>Utiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zpCompressedFile.cpp">
+      <Filter>Utiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zpFile.cpp">
+      <Filter>Utiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zpPackage.cpp">
+      <Filter>Utiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\adler32.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\compress.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\crc32.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\deflate.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\infback.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\inffast.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\inflate.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\inftrees.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\trees.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\uncompr.c">
+      <Filter>Utiles\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Utiles\zlib\zutil.c">
+      <Filter>Utiles\zlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +245,54 @@
     </ClInclude>
     <ClInclude Include="..\Classes\View\Scene\SelectRoundScene.h">
       <Filter>View\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\PackageLoader.h">
+      <Filter>Utiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zpack.h">
+      <Filter>Utiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zpCompressedFile.h">
+      <Filter>Utiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zpFile.h">
+      <Filter>Utiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zpPackage.h">
+      <Filter>Utiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\crc32.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\deflate.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\inffast.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\inffixed.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\inflate.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\inftrees.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\trees.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\zconf.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\zconf.in.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\zlib.h">
+      <Filter>Utiles\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utiles\zlib\zutil.h">
+      <Filter>Utiles\zlib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

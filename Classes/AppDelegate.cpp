@@ -5,9 +5,11 @@
 #include "Common/ModelService.h"
 #include "Common/Resource.h"
 #include "Controller/GameController.h"
+#include "Utiles/PackageLoader.h"
 #include "View/Scene/StartScene.h"
 
 USING_NS_CC;
+using namespace hex;
 
 const Size kDesignResolutionSize = Size(640.0, 1138.0);
 const Size kResourceResolution = Size(640.0, 1138.0);
@@ -90,7 +92,7 @@ void AppDelegate::applicationWillEnterForeground() {
 }
 
 void AppDelegate::initialize() {
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_resPlist);
+	PackageLoader::instance().genUIPackage(s_resPlist);
 	GameDB::getInstance()->init();
 	DataBase::getInstance()->init();
 	ModelService::getInstance()->init();
