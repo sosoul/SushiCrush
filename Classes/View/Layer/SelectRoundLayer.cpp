@@ -45,9 +45,9 @@ void SelectRoundLayer::createRoundButton(int round, bool isUnlock, const Point& 
 	auto roundButton = ui::Button::create();
 
 	std::string normalButton;
-	std::string selectedButton = s_roundButtonsSelected[round];
+	std::string selectedButton = s_roundButtonBackgroundSelected;
 	if (isUnlock) {
-		normalButton = s_roundButtonsNormal[round];
+		normalButton = s_roundButtonBackgroundNormal;
 		roundButton->setTouchEnabled(true);
 	}
 	else {
@@ -61,6 +61,10 @@ void SelectRoundLayer::createRoundButton(int round, bool isUnlock, const Point& 
 	roundButton->setUserData((void*)round);
 	addChild(roundButton);
 	roundButton->addTouchEventListener(this, ui::SEL_TouchEvent(&SelectRoundLayer::onRoundButtonTouched));
+
+	auto labelRound = LabelBMFont::create(StringUtils::toString(round+1), "fonts/boundsTestFont.fnt");
+	labelRound->setPosition(ccpAdd(visibleOrigin, pos));
+	addChild(labelRound);
 }
 
 void SelectRoundLayer::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event) {

@@ -998,13 +998,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>sushi.png</string>
+            <string>smallImages.png</string>
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:9f4163beff3741423218b8609b754a45$</string>
+            <string>$TexturePacker:SmartUpdate:7abc2f9e80c5aab382a71732c5c25411$</string>
             <key>textureFileName</key>
-            <string>sushi.png</string>
+            <string>smallImages.png</string>
         </dict>
     </dict>
 </plist>

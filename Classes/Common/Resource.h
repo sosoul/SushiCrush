@@ -4,7 +4,7 @@
 #define MATRIX_WIDTH (9)
 #define MATRIX_HEIGHT (9)
 #define SUSHI_GAP (0)
-#define SUSHI_COUNT (6)
+#define SUSHI_COUNT (5)
 #define GRID_COUNT (3)
 
 #define BASE_DB_IS_INITED "BASE_DB_IS_INITED"
@@ -48,6 +48,8 @@ const char s_roundButtonsSelected[][26] = { "round1ButtonSelected.png",
 											"round8ButtonSelected.png",
 											"round9ButtonSelected.png",
 											"round10ButtonSelected.png" };
+const char s_roundButtonBackgroundNormal[] = "round_button_background_normal.png";
+const char s_roundButtonBackgroundSelected[] = "round_button_background_selected.png";
 
 // Play scene
 const char s_pathLose[] = "play_main_lose_img_normal.png";

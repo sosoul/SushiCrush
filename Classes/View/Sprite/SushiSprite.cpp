@@ -12,8 +12,7 @@ const char *sushiNormal[SUSHI_COUNT] = {
 	"sushi_2n.png",
 	"sushi_3n.png",
 	"sushi_4n.png",
-	"sushi_5n.png",
-	"sushi_6n.png"
+	"sushi_5n.png"
 };
 
 const char *sushiVertical[SUSHI_COUNT] = {
@@ -21,8 +20,7 @@ const char *sushiVertical[SUSHI_COUNT] = {
 	"sushi_2v.png",
 	"sushi_3v.png",
 	"sushi_4v.png",
-	"sushi_5v.png",
-	"sushi_6v.png"
+	"sushi_5v.png"
 };
 
 const char *sushiHorizontal[SUSHI_COUNT] = {
@@ -30,8 +28,7 @@ const char *sushiHorizontal[SUSHI_COUNT] = {
 	"sushi_2h.png",
 	"sushi_3h.png",
 	"sushi_4h.png",
-	"sushi_5h.png",
-	"sushi_6h.png"
+	"sushi_5h.png"
 };
 
 const char *sushi5Cross[SUSHI_COUNT] = {
@@ -40,7 +37,6 @@ const char *sushi5Cross[SUSHI_COUNT] = {
 	"sushi_3c.png",
 	"sushi_4c.png",
 	"sushi_5c.png",
-	"sushi_6c.png"
 };
 
 const char sushi5Line[] = "sushi_5line.png";
