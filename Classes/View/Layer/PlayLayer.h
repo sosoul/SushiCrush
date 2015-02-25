@@ -110,7 +110,8 @@ private:
 	void markRemove(SushiSprite* sushi);
 	void setChainMaxPriority(std::list<SushiSprite *> &chainList, PriorityLevel p);
 	void checkAndRemoveChain();
-	void changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map);
+	void changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map, int* score);
+	int computeScore(ScoreType scoreType, GridType gridType = GRID_TYPE_NONE, SushiType sushiType = SUSHI_TYPE_NORMAL);
 	void fillVacancies();
 	void fillVacancies(int row, int col);
 	SushiSprite* getNeighborSushi(SushiSprite* sushi);

@@ -1563,31 +1563,33 @@ void PlayLayer::explodeSushi(SushiSprite *sushi, int* score, MapTarget* map)
 	
 	if (!m_needRefresh)
 	{
-		playAddScoreAnimation(sushi);
-		(*score) += sushi->getScore();
-
 		// deal with grids
 		int row = sushi->getRow();
 		int col = sushi->getCol();
 		GridSprite* grid = m_gridMatrix[row*m_width + col];
-		changeGridType(grid, getGridType(row, col), false, map);
+		int gridScore = 0;
+		changeGridType(grid, getGridType(row, col), false, map, &gridScore);
 
 		if (isValidRow(row - 1)) {
-			changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true, map);
+			changeGridType(m_gridMatrix[(row - 1)*m_width + col], getGridType(row - 1, col), true, map, &gridScore);
 		}
 		if (isValidCol(col + 1)) {
-			changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true, map);
+			changeGridType(m_gridMatrix[row*m_width + (col + 1)], getGridType(row, col + 1), true, map, &gridScore);
 		}
 		if (isValidRow(row + 1)) {
-			changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true, map);
+			changeGridType(m_gridMatrix[(row + 1)*m_width + col], getGridType(row + 1, col), true, map, &gridScore);
 		}
 		if (isValidCol(col - 1)) {
-			changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true, map);
+			changeGridType(m_gridMatrix[row*m_width + (col - 1)], getGridType(row, col - 1), true, map, &gridScore);
 		}
+
+		(*score) += sushi->getScore() + gridScore;
+		sushi->setScore(sushi->getScore() + gridScore);
+		playAddScoreAnimation(sushi);
 	}
 }
 
-void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map) {
+void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor, MapTarget* map, int* score) {
 	if (!grid)
 		return;
 	if (isNeighbor) {
@@ -1595,9 +1597,11 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		{
 		case GRID_TYPE_CREAM:
 			grid->setGridType(GRID_TYPE_NORMAL);
+			(*score) += computeScore(SCORE_TYPE_CHANGE_GRID_TYPE, GRID_TYPE_CREAM, SUSHI_TYPE_NORMAL);
 			break;
 		case GRID_TYPE_DOUBLE_CREAM:
 			grid->setGridType(GRID_TYPE_CREAM);
+			(*score) += computeScore(SCORE_TYPE_CHANGE_GRID_TYPE, GRID_TYPE_DOUBLE_CREAM, SUSHI_TYPE_NORMAL);
 			break;
 		default:
 			break;
@@ -1607,6 +1611,7 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		{
 		case GRID_TYPE_JELLY:
 		{
+			(*score)  += computeScore(SCORE_TYPE_CHANGE_GRID_TYPE, GRID_TYPE_JELLY, SUSHI_TYPE_NORMAL);
 			grid->setGridType(GRID_TYPE_NORMAL);
 			TargetType origin_target_type = TARGET_TYPE_SCORE;
 			switch (grid->getOriginGridType())
@@ -1634,6 +1639,7 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 			break;
 		case GRID_TYPE_DOUBLE_JELLY:
 		{
+			(*score)  += computeScore(SCORE_TYPE_CHANGE_GRID_TYPE, GRID_TYPE_DOUBLE_JELLY, SUSHI_TYPE_NORMAL);
 			grid->setGridType(GRID_TYPE_JELLY);
 		}
 			break;
@@ -1642,6 +1648,103 @@ void PlayLayer::changeGridType(GridSprite* grid, GridType type, bool isNeighbor,
 		}
 	}
 	
+}
+
+int PlayLayer::computeScore(ScoreType scoreType, GridType gridTypeBefore, SushiType sushiType)
+{
+	switch (scoreType)
+	{
+		case SCORE_TYPE_REMOVE:
+		{
+			switch (sushiType)
+			{
+			case SUSHI_TYPE_NORMAL:
+				return 10;
+				break;
+			case SUSHI_TYPE_4_HORIZONTAL_LINE:
+				return 30;
+				break;
+			case SUSHI_TYPE_4_VERTICAL_LINE:
+				return 30;
+				break;
+			case SUSHI_TYPE_5_LINE:
+				return 30;
+				break;
+			case SUSHI_TYPE_5_CROSS:
+				return 30;
+				break;
+			default:
+				break;
+			}
+		}
+			break;
+		case SCORE_TYPE_REMOVE_CAUSED_BY_SPECIAL:
+		{
+			switch (sushiType)
+			{
+			case SUSHI_TYPE_4_HORIZONTAL_LINE:
+				return 15;
+				break;
+			case SUSHI_TYPE_4_VERTICAL_LINE:
+				return 15;
+				break;
+			case SUSHI_TYPE_5_LINE:
+				return 15;
+				break;
+			case SUSHI_TYPE_5_CROSS:
+				return 15;
+				break;
+			default:
+				break;
+			}
+
+		}
+			break;
+		case SCORE_TYPE_GENERATE_SPECIAL:
+		{
+			switch (sushiType)
+			{
+			case SUSHI_TYPE_4_HORIZONTAL_LINE:
+				return 30;
+				break;
+			case SUSHI_TYPE_4_VERTICAL_LINE:
+				return 30;
+				break;
+			case SUSHI_TYPE_5_LINE:
+				return 30;
+				break;
+			case SUSHI_TYPE_5_CROSS:
+				return 30;
+				break;
+			default:
+				break;
+			}
+
+		}
+			break;
+		case SCORE_TYPE_CHANGE_GRID_TYPE:
+		{
+			switch (gridTypeBefore)
+			{
+			case GRID_TYPE_JELLY:
+				return 50;
+				break;
+			case GRID_TYPE_DOUBLE_JELLY:
+				return 100;
+				break;
+			case GRID_TYPE_CREAM:
+				return 50;
+				break;
+			case GRID_TYPE_DOUBLE_CREAM:
+				return 100;
+				break;
+			default:
+				break;
+			}
+		}
+			break;
+	}
+	return 0;
 }
 
 bool PlayLayer::canCreateNewSushi(int index)
@@ -2156,8 +2259,15 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 
 	// mark self
 	sushi->setIsNeedRemove(true);
+	int score = 0;
+	score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, sushi->getSushiType());
+	sushi->setScore(score);
 
 	if (sushi->getSushiType() == SUSHI_TYPE_5_LINE) {  // 所有相同的寿司消除
+
+		score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, SUSHI_TYPE_5_LINE);
+		sushi->setScore(score);
+
 		int index = -1;
 		if (sushi == m_srcSushi && m_destSushi)
 			index = m_destSushi->getImgIndex();
@@ -2175,14 +2285,22 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 				{
 					if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
 						tmp->setIsNeedRemove(true);
+
+						score = computeScore(SCORE_TYPE_REMOVE_CAUSED_BY_SPECIAL, GRID_TYPE_NONE, SUSHI_TYPE_5_LINE);
+						tmp->setScore(score);
 					}
 					else if (tmp->getSushiType() != SUSHI_TYPE_NORMAL) {
+						score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, tmp->getSushiType());
+						tmp->setScore(score);
 						markRemove(tmp);
 					}
 				}
 			}
 		}
 	} else if (sushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE) {
+		score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, SUSHI_TYPE_4_VERTICAL_LINE);
+		sushi->setScore(score);
+
 		// check for type and mark for certical neighbour
 		for (int row = 0; row < m_height; row++) {
 			SushiSprite *tmp = m_sushiMatrix[row * m_width + sushi->getCol()];
@@ -2191,14 +2309,23 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 			}
 
 			if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
+				score = computeScore(SCORE_TYPE_REMOVE_CAUSED_BY_SPECIAL, GRID_TYPE_NONE, SUSHI_TYPE_4_VERTICAL_LINE);
+				tmp->setScore(score);
+
 				tmp->setIsNeedRemove(true);
 			}
 			else {
+				score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, tmp->getSushiType());
+				tmp->setScore(score);
+
 				markRemove(tmp);
 			}
 		}
 		
 	} else if (sushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE) {
+		score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, SUSHI_TYPE_4_HORIZONTAL_LINE);
+		sushi->setScore(score);
+
 		// check for type and mark for horizontal neighbour
 		for (int col = 0; col < m_width; col++) {
 			SushiSprite *tmp = m_sushiMatrix[sushi->getRow() * m_width + col];
@@ -2207,14 +2334,24 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 			}
 
 			if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
+				score = computeScore(SCORE_TYPE_REMOVE_CAUSED_BY_SPECIAL, GRID_TYPE_NONE, SUSHI_TYPE_4_HORIZONTAL_LINE);
+				tmp->setScore(score);
+
 				tmp->setIsNeedRemove(true);
 			}
 			else {
+				score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, tmp->getSushiType());
+				tmp->setScore(score);
+
 				markRemove(tmp);
 			}
 		}
 	}
 	else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {  // 九宫格内的寿司消除
+
+		score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, SUSHI_TYPE_5_CROSS);
+		sushi->setScore(score);
+
 		int startX = sushi->getRow() - 1;
 		if (startX < 0) startX = 0;
 		int startY = sushi->getCol() - 1;
@@ -2230,9 +2367,15 @@ void PlayLayer::markRemove(SushiSprite *sushi)
 					continue;
 				}
 				if (tmp->getSushiType() == SUSHI_TYPE_NORMAL) {
+					score = computeScore(SCORE_TYPE_REMOVE_CAUSED_BY_SPECIAL, GRID_TYPE_NONE, SUSHI_TYPE_5_CROSS);
+					tmp->setScore(score);
+
 					tmp->setIsNeedRemove(true);
 				}
 				else {
+					score = computeScore(SCORE_TYPE_REMOVE, GRID_TYPE_NONE, tmp->getSushiType());
+					tmp->setScore(score);
+
 					markRemove(tmp);
 				}
 			}
