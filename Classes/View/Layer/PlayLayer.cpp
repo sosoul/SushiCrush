@@ -3002,7 +3002,10 @@ void PlayLayer::playGenerateSuperSushiAnimation(SushiSprite* sushi) {
 	this->addChild(sp);
 	sp->setPosition(positionOfItem(11, 2));
 
-	sp->runAction(Sequence::create(MoveTo::create(1.0f, sushi->getPosition()),
+	float time = sp->getPosition().distance(sushi->getPosition()) / 600.0f;
+
+
+	sp->runAction(Sequence::create(MoveTo::create(time, sushi->getPosition()),
 		Hide::create(),
 		CallFunc::create(CC_CALLBACK_0(PlayLayer::setSushiType, this, sushi)),
 		nullptr));
