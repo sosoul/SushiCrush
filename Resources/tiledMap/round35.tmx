@@ -5,7 +5,7 @@
  </tileset>
  <layer name="gridLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYMWDGUiUJ8Sn1Hx6yTMQqR+EAeJEAV8=
+   eJxjZWBgYMWDGUiUJ8Sn1HxqyjPhkWcgQj/MDADhYAFZ
   </data>
  </layer>
  <layer name="clipperLayer" width="9" height="9" visible="0">

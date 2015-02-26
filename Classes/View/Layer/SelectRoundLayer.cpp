@@ -82,7 +82,7 @@ void SelectRoundLayer::onRoundButtonTouched(Ref *pSender, ui::TouchEventType typ
 		return;
 	if (ui::TOUCH_EVENT_ENDED == type) {
 		ui::Button* button = static_cast<ui::Button*>(pSender);
-		int round = button->getUserData() && 0xff;
+		int round = reinterpret_cast<int>(button->getUserData());
 		GameController::getInstance()->setCurRound(round);
 
 		auto scene = PlayScene::create();

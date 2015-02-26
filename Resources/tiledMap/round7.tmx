@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="7" height="8" tilewidth="91" tileheight="91">
- <tileset firstgid="1" name="sushi" tilewidth="92" tileheight="92">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="9" height="9" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="sushi" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="../w640/sushi.png" width="722" height="218"/>
-  <tile id="3">
-   <properties>
-    <property name="GridType" value="2"/>
-   </properties>
-  </tile>
-  <tile id="4">
-   <properties>
-    <property name="GridType" value="1"/>
-   </properties>
-  </tile>
  </tileset>
- <layer name="matrixLayer" width="7" height="8">
+ <layer name="gridLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYKUAsyBhaslREwMAeRABEA==
+   eJxjYGBgYMWDYQCZz4pFjFQ16PLkqqGmewj5HZcaAKeEAQo=
+  </data>
+ </layer>
+ <layer name="clipperLayer" width="9" height="9" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBgYMWDYWBUDW41AMsQATw=
+  </data>
+ </layer>
+ <layer name="producerLayer" width="9" height="9">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBgYMWDRwFhAAArYAAk
   </data>
  </layer>
 </map>

@@ -5,17 +5,17 @@
  </tileset>
  <layer name="gridLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjYGBgYMWC0QE2NejqcKlhpZIaariHGH8RUoMOAK9oAQA=
+   eJxjZcAPWJEwIXls6rDJI6vDJ09rzEQEZiECAwCntAEi
   </data>
  </layer>
  <layer name="clipperLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjYGBgYMWBkQEuNayDTA0xbiakBh0QkgcAvvQBFA==
+   eJxjZcAPWJEwIXls6rDJI6vDJz9UMACuUAFG
   </data>
  </layer>
  <layer name="producerLayer" width="9" height="9" visible="0">
   <data encoding="base64" compression="zlib">
-   eJxjYGBgYMWCRwHxAAAfvAAa
+   eJxjZcAPWNFoXPLE8ok1l5D+wQQALCgALg==
   </data>
  </layer>
 </map>

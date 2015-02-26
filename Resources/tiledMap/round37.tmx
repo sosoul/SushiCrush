@@ -5,27 +5,27 @@
  </tileset>
  <layer name="gridLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYMWDGUiUJ8Sn1Hx6yTMQqR+EAeJEAV8=
+   eJxjYGBgYMWDYYBYNehqGbCoYURTw4hFDbrcYHEPNrsAs7ABFA==
   </data>
  </layer>
  <layer name="clipperLayer" width="9" height="9" visible="0">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYMWDGUiUJ8Sn1Hx6yTMQqR+EAeJEAV8=
+   eJxjYGBgYMWDYYBYNehqGbCooZZdg8U9AL5AASg=
   </data>
  </layer>
- <layer name="producerLayer" width="9" height="9">
+ <layer name="producerLayer" width="9" height="9" visible="0">
   <data encoding="base64" compression="zlib">
-   eJxjZWBgYMWDiQHEqhuuAAA2tAAu
+   eJxjYGBgYMWDRwFhAAArYAAk
   </data>
  </layer>
  <layer name="portalSrcLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjYMAN2ND47Gh8Djx6QYCTgDwXAXluAvI8BOR5cYjzEdBHKgAAP1QAWw==
+   eJxjYCAesKHx2UnQSwvAgcbnHBBXMDAAABeEAB8=
   </data>
  </layer>
  <layer name="portalDestLayer" width="9" height="9">
   <data encoding="base64" compression="zlib">
-   eJxjYKA9YEPjs6PxOQjo5yQgz0VAnpuAPB8BeX4c4gJQGgAm1ABh
+   eJxjYKA/YEPjsw+AG5ABBxqfk0T9AA8UAB8=
   </data>
  </layer>
 </map>
