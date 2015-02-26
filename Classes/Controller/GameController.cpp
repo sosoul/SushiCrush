@@ -7,7 +7,9 @@
 
 static GameController *s_sharedGameController = nullptr;
 
-GameController::GameController() {
+GameController::GameController() : m_curRound(0),
+								   _maxPassedRound(0),
+								   m_curCrushMode(CRUSH_MODE_NORMAL) {
 }
 GameController::~GameController() {
 }
@@ -174,18 +176,16 @@ void GameController::ReadUnlockInfo() {
 	for (int i = 0; i < TOTAL_ROUND; ++i)
 		_roundUnlock.insert(MapRoundUnLock::value_type(i, false));
 
-	int maxPassedRound = 0;
-	bool getDataSuccess = ModelService::getInstance()->getMaxPassedRound(maxPassedRound);
-	for (int j = 0; j <= maxPassedRound; j++)
+	bool getDataSuccess = ModelService::getInstance()->getMaxPassedRound(_maxPassedRound);
+	for (int j = 0; j <= _maxPassedRound; j++)
 	{
 		_roundUnlock[j] = true;
 	}
 
-	if (maxPassedRound + 1 < TOTAL_ROUND && getDataSuccess)
+	if (_maxPassedRound + 1 < TOTAL_ROUND && getDataSuccess)
 	{
-		_roundUnlock[maxPassedRound + 1] = true;
+		_roundUnlock[_maxPassedRound + 1] = true;
 	}
-
 }
 
 void GameController::UpdateUnlockInfo(int round, bool isUnlock) {

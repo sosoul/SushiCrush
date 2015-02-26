@@ -64,6 +64,8 @@ public:
 	bool isTargetCompleted(int round);
 	CrushMode getCurCrushMode();
 	void changeCurCrushMode();
+	int maxPassedRound() { return _maxPassedRound; }
+
 private:
 	void writeToDB(const CurRoundInfo& m_curRoundInfo);
 	void resetRoundInfo(int round);
@@ -72,6 +74,7 @@ private:
 	int m_curRound;
 	CrushMode m_curCrushMode;
 	MapRoundUnLock _roundUnlock;
+	int _maxPassedRound;
 };
 
 

@@ -27,6 +27,9 @@ bool SelectRoundLayer::init()
 	TMXLayer* layer = tiledMapParser->createLayer("backgroundLayer");
 	addChild(layer);
 
+	int max_passed_round = GameController::getInstance()->maxPassedRound();
+	Point pos;
+
 	// round buttons
 	MapGidToGamePos map;
 	tiledMapParser->getGidToGamePosMap("roundIconLayer", &map);
@@ -34,7 +37,15 @@ bool SelectRoundLayer::init()
 	for (; map.end() != it; ++it) {
 		int round = it->first - 1;
 		createRoundButton(round, GameController::getInstance()->isUnlock(round), it->second);
+		if (max_passed_round == round)
+			pos = it->second;
 	}
+
+	Size layer_size = layer->getLayerSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	int height_offset = layer_size.height - visibleSize.height;
+	Vec2 visibleOrigin = Director::getInstance()->getVisibleOrigin();
+	setPosition(Vec2(visibleOrigin.x, visibleOrigin.y + height_offset));
 
 	setTouchEnabled(true);
 
