@@ -4,7 +4,7 @@
 #include "Common/Types.h"
 #include "Common/ConfigService.h"
 
-#define TOTAL_ROUND	(50)
+#define TOTAL_ROUND	(51)
 
 enum READY_ACTION_TYPE
 {

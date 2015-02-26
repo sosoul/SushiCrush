@@ -152,7 +152,7 @@ void TargetLayer::createTargetPanels() {
 	}
 	value = GameController::getInstance()->getTargetValue(TARGET_TYPE_SUSHI_6);
 	if (value) {
-		createTargetPanel(&x, &y, value, s_sushi5Target, &got_sushi_6_label_);
+		createTargetPanel(&x, &y, value, s_sushi6Target, &got_sushi_6_label_);
 	}
 }
 

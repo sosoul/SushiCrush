@@ -91,7 +91,7 @@ void ConfigService::loadConfig() {
 				parseMap(&item);
 			}
 
-			// targetScore
+			// target
 			if (XMLElement* targetEle = roundEle->FirstChildElement("target")) {
 				XMLElement* targetItemEle = nullptr;
 				if (targetItemEle = targetEle->FirstChildElement("score")) {

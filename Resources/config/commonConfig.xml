@@ -43,7 +43,7 @@
 		<target>
 			<score>1000</score>
 			<sushi5>5</sushi5>
-			<sushi6>5</sushi6>
+			<sushi4>5</sushi4>
 		</target>
 		<moves>20</moves>
     </round>
@@ -151,7 +151,7 @@
         <map>round18.tmx</map>
 		<target>
 			<score>1000</score>
-			<sushi6>20</sushi6>
+			<sushi5>20</sushi5>
 		</target>
 		<moves>25</moves>
     </round>

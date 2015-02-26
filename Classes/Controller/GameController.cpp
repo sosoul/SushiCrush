@@ -251,7 +251,7 @@ void GameController::changeCurCrushMode()
 	}
 	else
 	{
-		m_curCrushMode == CRUSH_MODE_NORMAL;
+		m_curCrushMode = CRUSH_MODE_NORMAL;
 	}
 }
 
