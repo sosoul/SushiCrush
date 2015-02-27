@@ -105,6 +105,7 @@ private:
 	void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
 	void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
 	PriorityLevel getChainMaxPriority(std::list<SushiSprite *> &chainList);
+	void changeSushiType(SushiSprite* sushi, SushiType typeBefore, SushiType typeNow);
 	bool isStopCrush();
 	bool canbeRemovedSushis(SushiSprite* sushi1, SushiSprite* sushi2, int imgIndex);
 	void markRemove(SushiSprite* sushi);

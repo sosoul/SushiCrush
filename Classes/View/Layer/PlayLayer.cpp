@@ -1065,15 +1065,15 @@ void PlayLayer::checkAndRemoveChain()
 		if (colChainList.size() >= 5 || rowChainList.size() >= 5)
 		{
 			m_srcSushi->setIgnoreCheck(true);
-			m_srcSushi->setSushiType(SUSHI_TYPE_5_LINE);
 			m_srcSushi->setIsNeedRemove(false);
+			changeSushiType(m_srcSushi, m_srcSushi->getSushiType(), SUSHI_TYPE_5_LINE);
 			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_5_LINE));
 		}
 		else if (colChainList.size() >= 3 && rowChainList.size() >= 3)
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(false);
-			m_srcSushi->setSushiType(SUSHI_TYPE_5_CROSS);
+			changeSushiType(m_srcSushi, m_srcSushi->getSushiType(), SUSHI_TYPE_5_CROSS);
 
 			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_5_CROSS));
 		}
@@ -1081,7 +1081,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(false);
-			m_srcSushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
+			changeSushiType(m_srcSushi, m_srcSushi->getSushiType(), SUSHI_TYPE_4_HORIZONTAL_LINE);
 
 			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_4_HORIZONTAL_LINE));
 		}
@@ -1089,8 +1089,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			m_srcSushi->setIgnoreCheck(true);
 			m_srcSushi->setIsNeedRemove(false);
-			m_srcSushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
-
+			changeSushiType(m_srcSushi, m_srcSushi->getSushiType(), SUSHI_TYPE_4_VERTICAL_LINE);
 			superSushiModeMap.insert(SushiModeMap::value_type(m_srcSushi, SUSHI_TYPE_4_VERTICAL_LINE));
 		}
 
@@ -1120,15 +1119,15 @@ void PlayLayer::checkAndRemoveChain()
 		if (colChainList.size() >= 5 || rowChainList.size() >= 5)
 		{
 			m_destSushi->setIgnoreCheck(true);
-			m_destSushi->setSushiType(SUSHI_TYPE_5_LINE);
 			m_destSushi->setIsNeedRemove(false);
+			changeSushiType(m_destSushi, m_destSushi->getSushiType(), SUSHI_TYPE_5_LINE);
 			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_5_LINE));
 		}
 		else if (colChainList.size() >= 3 && rowChainList.size() >= 3)
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(false);
-			m_destSushi->setSushiType(SUSHI_TYPE_5_CROSS);
+			changeSushiType(m_destSushi, m_destSushi->getSushiType(), SUSHI_TYPE_5_CROSS);
 
 			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_5_CROSS));
 		}
@@ -1136,7 +1135,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(false);
-			m_destSushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
+			changeSushiType(m_destSushi, m_destSushi->getSushiType(), SUSHI_TYPE_4_HORIZONTAL_LINE);
 
 			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_4_HORIZONTAL_LINE));
 		}
@@ -1144,7 +1143,7 @@ void PlayLayer::checkAndRemoveChain()
 		{
 			m_destSushi->setIgnoreCheck(true);
 			m_destSushi->setIsNeedRemove(false);
-			m_destSushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
+			changeSushiType(m_destSushi, m_destSushi->getSushiType(), SUSHI_TYPE_4_VERTICAL_LINE);
 
 			superSushiModeMap.insert(SushiModeMap::value_type(m_destSushi, SUSHI_TYPE_4_VERTICAL_LINE));
 		}
@@ -1216,7 +1215,7 @@ void PlayLayer::checkAndRemoveChain()
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setSushiType(SUSHI_TYPE_5_LINE);
+				changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_5_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_5_LINE);
 				setChainMaxPriority(colChainList, PRIORITY_5_LINE);
 
@@ -1226,7 +1225,7 @@ void PlayLayer::checkAndRemoveChain()
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setSushiType(SUSHI_TYPE_5_LINE);
+				changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_5_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_5_LINE);
 				setChainMaxPriority(rowChainList, PRIORITY_5_LINE);
 
@@ -1236,7 +1235,7 @@ void PlayLayer::checkAndRemoveChain()
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setSushiType(SUSHI_TYPE_5_CROSS);
+				changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_5_CROSS);
 				sushi->setSushiPriorityLevel(PRIORITY_5_CROSS);
 
 				setChainMaxPriority(rowChainList, PRIORITY_5_CROSS);
@@ -1248,7 +1247,7 @@ void PlayLayer::checkAndRemoveChain()
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
+				changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_4_HORIZONTAL_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_4_LINE);
 				setChainMaxPriority(colChainList, PRIORITY_4_LINE);
 
@@ -1258,7 +1257,7 @@ void PlayLayer::checkAndRemoveChain()
 			{
 				sushi->setIgnoreCheck(true);
 				sushi->setIsNeedRemove(false);
-				sushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
+				changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_4_VERTICAL_LINE);
 				sushi->setSushiPriorityLevel(PRIORITY_4_LINE);
 				setChainMaxPriority(rowChainList, PRIORITY_4_LINE);
 
@@ -1268,6 +1267,20 @@ void PlayLayer::checkAndRemoveChain()
 		removeSushi();
 		for (SushiModeMap::iterator it = superSushiModeMap.begin(); it != superSushiModeMap.end(); ++it) {
 			it->first->applySushiType();
+		}
+	}
+}
+
+void PlayLayer::changeSushiType(SushiSprite* sushi, SushiType typeBefore, SushiType typeNow)
+{
+	if (typeBefore != typeNow)
+	{
+		sushi->setSushiType(typeNow);
+		if (m_curCrushMode != CRUSH_MODE_GENERATE_SPECIAL_SUSHI)
+		{
+			int score = computeScore(SCORE_TYPE_GENERATE_SPECIAL, GRID_TYPE_NONE, typeNow);
+			sushi->setScore(score);
+			playAddScoreAnimation(sushi);
 		}
 	}
 }
@@ -1452,68 +1465,81 @@ void PlayLayer::removeSushi()
 			continue;
 		}
 
-		if (sushi->getIgnoreCheck())
+		if (sushi->getScore() > 0)
 		{
-			continue;
-		}
-
-		if (sushi->getIsNeedRemove()) {
-			m_isNeedFillVacancies = true;  // 需要掉落
-			// TODO: 检查类型，并播放一行消失的动画
-			if (sushi->getSushiType() == SUSHI_TYPE_5_LINE) {
-				playExplode5LineSushiAnimation(sushi);
-			} else if (sushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
-			{
-				playExplode4HorizonytalLineSushiAnimation(sushi);
-			} else if (sushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE)
-			{
-				playExplode4VerticalLineSushiAnimation(sushi);
-			} else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {
-				playExplode5CrossSushiAnimation(sushi);
-			}
 			switch (sushi->getImgIndex())
 			{
 			case 0:
 			{
-				int value = map.at(TARGET_TYPE_SUSHI_1);
-				map.at(TARGET_TYPE_SUSHI_1) = value + 1;
+					  int value = map.at(TARGET_TYPE_SUSHI_1);
+					  map.at(TARGET_TYPE_SUSHI_1) = value + 1;
 			}
 				break;
 			case 1:
 			{
-				int value = map.at(TARGET_TYPE_SUSHI_2);
-				map.at(TARGET_TYPE_SUSHI_2) = value + 1;
+					  int value = map.at(TARGET_TYPE_SUSHI_2);
+					  map.at(TARGET_TYPE_SUSHI_2) = value + 1;
 			}
 				break;
 			case 2:
 			{
-				int value = map.at(TARGET_TYPE_SUSHI_3);
-				map.at(TARGET_TYPE_SUSHI_3) = value + 1;
+					  int value = map.at(TARGET_TYPE_SUSHI_3);
+					  map.at(TARGET_TYPE_SUSHI_3) = value + 1;
 			}
 				break;
 			case 3:
 			{
-				int value = map.at(TARGET_TYPE_SUSHI_4);
-				map.at(TARGET_TYPE_SUSHI_4) = value + 1;
+					  int value = map.at(TARGET_TYPE_SUSHI_4);
+					  map.at(TARGET_TYPE_SUSHI_4) = value + 1;
 			}
 				break;
 			case 4:
 			{
-				int value = map.at(TARGET_TYPE_SUSHI_5);
-				map.at(TARGET_TYPE_SUSHI_5) = value + 1;
+					  int value = map.at(TARGET_TYPE_SUSHI_5);
+					  map.at(TARGET_TYPE_SUSHI_5) = value + 1;
 			}
 				break;
 			case 5:
 			{
-				int value = map.at(TARGET_TYPE_SUSHI_6);
-				map.at(TARGET_TYPE_SUSHI_6) = value + 1;
+					  int value = map.at(TARGET_TYPE_SUSHI_6);
+					  map.at(TARGET_TYPE_SUSHI_6) = value + 1;
 			}
 				break;
 			default:
 				break;
 			}
+
+			if (!sushi->getIsNeedRemove())
+			{
+				score += sushi->getScore();
+			}
+		}
+
+		if (sushi->getIgnoreCheck())
+		{
+			continue;
+		}
+		if (sushi->getIsNeedRemove()) {
+			m_isNeedFillVacancies = true;  // 需要掉落
+			// TODO: 检查类型，并播放一行消失的动画
+			if (sushi->getSushiType() == SUSHI_TYPE_5_LINE) {
+				playExplode5LineSushiAnimation(sushi);
+			}
+			else if (sushi->getSushiType() == SUSHI_TYPE_4_HORIZONTAL_LINE)
+			{
+				playExplode4HorizonytalLineSushiAnimation(sushi);
+			}
+			else if (sushi->getSushiType() == SUSHI_TYPE_4_VERTICAL_LINE)
+			{
+				playExplode4VerticalLineSushiAnimation(sushi);
+			}
+			else if (sushi->getSushiType() == SUSHI_TYPE_5_CROSS) {
+				playExplode5CrossSushiAnimation(sushi);
+			}
 			explodeSushi(sushi, &score, &map);
 		}
+
+		sushi->setScore(0);
 	}
 	if (score)
 		map[TARGET_TYPE_SCORE] = score;
@@ -2455,15 +2481,15 @@ void PlayLayer::generateSuperSushi(int row, int col) {
 	int randNum = rand() % 3;
 	if (randNum == 0)
 	{
-		sushi->setSushiType(SUSHI_TYPE_4_VERTICAL_LINE);
+		changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_4_VERTICAL_LINE);
 	}
 	else if (randNum == 1)
 	{
-		sushi->setSushiType(SUSHI_TYPE_4_HORIZONTAL_LINE);
+		changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_4_HORIZONTAL_LINE);
 	}
 	else if (randNum == 2)
 	{
-		sushi->setSushiType(SUSHI_TYPE_5_CROSS);
+		changeSushiType(sushi, sushi->getSushiType(), SUSHI_TYPE_5_CROSS);
 	}
 	playGenerateSuperSushiAnimation(sushi);
 }

@@ -57,7 +57,7 @@ SushiSprite::SushiSprite() : m_col(0),
 							 m_isNeedRemove(false),
 							 m_ignoreCheck(false),
 							 m_sushiType(SUSHI_TYPE_NORMAL),
-							 m_score(20),
+							 m_score(0),
 							 m_sushiPriorityLevel(PRIORITY_NORMAL)
 {
 }
@@ -126,7 +126,6 @@ void SushiSprite::setSushiType(SushiType mode)
 	const SushiInfo* sushiInfo = ConfigService::getInstance()->getSushiInfo(m_sushiType);
 	if (!sushiInfo)
 		return;
-	m_score = sushiInfo->_score;
 	if (mode == SUSHI_TYPE_5_LINE)
 	{
 		m_imgIndex = 6;
