@@ -631,6 +631,24 @@ void PlayLayer::triggerCrush()
 				{
 					return;
 				}
+
+				for (int i = 0; i < m_height * m_width; i++) {
+					SushiSprite * sushi = m_sushiMatrix[i];
+					if (!sushi) {
+						continue;
+					}
+					sushi->setIsNeedRemove(false);
+				}
+				int specialSushiNum = getSpecialSushiNum();
+				if (!isStopCrush())
+				{
+					checkAndRemoveChain();
+				}
+				if (m_isNeedFillVacancies)
+				{
+					return;
+				}
+
 				m_isTriggered = true;
 				SushiSprite *sushi;
 				int count = 0;
@@ -645,8 +663,7 @@ void PlayLayer::triggerCrush()
 						count++;
 					}
 				}
-
-				if (count == 0)
+				if (count == 0 || specialSushiNum >= 5)
 				{
 					SushiSprite *sushi;
 					for (int i = 0; i < m_height * m_width; i++) {
@@ -656,7 +673,7 @@ void PlayLayer::triggerCrush()
 						}
 						if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
 						{
-							sushi->setIsNeedRemove(false);
+							sushi->setIgnoreCheck(false);
 							sushi->setIsNeedRemove(false);
 							markRemove(sushi);
 						}
@@ -680,10 +697,11 @@ void PlayLayer::triggerCrush()
 
 					if (sushi->getSushiType() == SUSHI_TYPE_NORMAL)
 					{
-						sushiIndex--;
+						--sushiIndex;
 						if (sushiIndex == 0)
 						{
 							generateSuperSushi(sushi->getRow(), sushi->getCol());
+							++specialSushiNum;
 							break;
 						}
 					}
@@ -697,15 +715,15 @@ void PlayLayer::triggerCrush()
 				
 					SushiSprite *sushi;
 					for (int i = 0; i < m_height * m_width; i++) {
-					sushi = m_sushiMatrix[i];
-					if (!sushi) {
-					continue;
-					}
-					if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
-					{
-					sushi->setIsNeedRemove(false);
-					markRemove(sushi);
-					}
+						sushi = m_sushiMatrix[i];
+						if (!sushi) {
+						continue;
+						}
+						if (sushi->getSushiType() != SUSHI_TYPE_NORMAL)
+						{
+						sushi->setIsNeedRemove(false);
+						markRemove(sushi);
+						}
 					}
 					checkAndRemoveChain();
 				}

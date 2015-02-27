@@ -13,10 +13,10 @@
         <map>round1.tmx</map>
 		<guideMap>guideRound1.tmx</guideMap>
 		<target>
-			<score>1000</score>
+			<score>100</score>
 			<sushi5>2</sushi5>
 		</target>
-		<moves>20</moves>
+		<moves>70</moves>
     </round>
 	<round id="2">
         <map>round2.tmx</map>
